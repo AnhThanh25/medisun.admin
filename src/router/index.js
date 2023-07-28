@@ -6,7 +6,7 @@ export const constantRoutes = [
     redirect: "/dashboard",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Trang chủ", icon: "file_copy" },
+    meta: { title: "Trang chủ", icon: "mdi-home" },
     children: [
       {
         name: "Dashboard",
@@ -32,11 +32,11 @@ export const constantRoutes = [
     ],
   },
   {
-    path: "/",
+    path: "/ui-components",
     redirect: "/dashboard",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Trang chủ", icon: "file_copy" },
+    meta: { title: "Khám bệnh", icon: "mdi-hospital" },
     children: [
       {
         name: "Cards",
@@ -61,6 +61,13 @@ export const constantRoutes = [
       },
     ],
   },
+  {
+    path: "/ui-hospital",
+    redirect: "/dashboard",
+    component: () => import("@/layouts/full/FullLayout.vue"),
+    role: 1,
+    meta: { title: "Bệnh nhân", icon: "mdi-library" },
+  }
 ];
 
 const router = createRouter({

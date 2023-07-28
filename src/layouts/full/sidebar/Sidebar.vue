@@ -1,9 +1,28 @@
-<script setup lang="ts">
-import { ref, watch } from "vue";
+<script>
 // import sidebarItems from "./sidebarItem";
 import LogoDark from "../logo/LogoDark.vue";
 import { constantRoutes } from "@/router/index";
-const sidebarMenu = ref(constantRoutes);
+
+export default {
+  data() {
+    return {
+      sidebarMenu: constantRoutes,
+    };
+  },
+  components: {
+    LogoDark,
+  },
+  methods: {
+    btclick(data, child) {
+      if (data) {
+        data = null;
+      } else {
+        data = child;
+      }
+      console.log(data, child);
+    },
+  },
+};
 </script>
 
 <template>
@@ -23,29 +42,83 @@ const sidebarMenu = ref(constantRoutes);
         <!-- ---------------------------------------------- -->
         <!---Menu Loop -->
         <!-- ---------------------------------------------- -->
-        <template v-for="(child, index) in sidebarMenu" :key="index">
+        <template v-for="(item, index) in sidebarMenu" :key="index">
           <!-- ---------------------------------------------- -->
           <!---Single Item-->
           <!-- ---------------------------------------------- -->
+          <v-list-item-group
+            v-if="item.children"
+            class="v-list-group__header"
+          >
+            <v-list-item
+              rounded="lg"
+              class="mb-1"
+              @click="
+                () => {
+                  if (item.childrens) {
+                    item.childrens = null;
+                  } else {
+                    item.childrens = item.children;
+                  }
+                }
+              "
+            >
+              <v-list-item-avatar start class="v-list-item-avatar--start">
+                <v-icon
+                  class="feather-sm v-icon v-icon--size-default"
+                  v-if="item.meta.icon"
+                  >{{ item.meta.icon }}</v-icon
+                >
+              </v-list-item-avatar>
+              <v-list-item-title
+                class="v-list-item__content"
+                style="font-size: 16px; width: 100%; font-weight:500"
+                >{{ item.meta.title }}</v-list-item-title
+              >
+              <v-list-item-avatar end class="v-list-item__append">
+                <v-icon class="feather-sm v-icon v-icon--size-default"
+                  >mdi-chevron-down</v-icon
+                >
+              </v-list-item-avatar>
+            </v-list-item>
 
-          <v-list-item :to="child.path" rounded="lg" class="mb-1">
+            <v-list-item
+              :to="child.path"
+              rounded="lg"
+              class="mb-1"
+              v-for="(child, i) in item.childrens"
+              :key="i"
+            >
+              <v-list-item-avatar start class="v-list-item-avatar--start">
+                <v-icon class="feather-sm v-icon v-icon--size-default" style="font-size:14px;margin-left:10px"
+                  >mdi-crosshairs-gps</v-icon
+                >
+              </v-list-item-avatar>
+              <v-list-item-title
+                class="v-list-item__content"
+                style="font-size: 14px; width: 100%"
+                >{{ child.meta.title }}</v-list-item-title
+              >
+            </v-list-item>
+          </v-list-item-group>
+          <v-list-item :to="item.path" rounded="lg" class="mb-1" v-else>
             <v-list-item-avatar start class="v-list-item-avatar--start">
               <v-icon
                 class="feather-sm v-icon v-icon--size-default"
-                v-if="child.meta.icon"
-                >{{ child.meta.icon }}</v-icon
+                v-if="item.meta.icon"
+                >{{ item.meta.icon }}</v-icon
               >
             </v-list-item-avatar>
             <v-list-item-title
               class="v-list-item__content"
-              style="font-size: 14px; width: 100%"
-              >{{ child.meta.title }}</v-list-item-title
+              style="font-size: 16px; width: 100%;font-weight:500"
+              >{{ item.meta.title }}</v-list-item-title
             >
-            <v-list-item-avatar end class="v-list-item__append">
+            <!-- <v-list-item-avatar end class="v-list-item__append">
               <v-icon class="feather-sm v-icon v-icon--size-default"
                 >mdi-chevron-down</v-icon
               >
-            </v-list-item-avatar>
+            </v-list-item-avatar> -->
           </v-list-item>
         </template>
       </v-list>
