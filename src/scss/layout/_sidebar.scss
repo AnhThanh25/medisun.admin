@@ -12,7 +12,24 @@
     }
     .v-list-item--active {
       background: rgb(var(--v-theme-secondary));
+      background: #03c9d7;
       color: white;
+    }
+    .v-list-group__header {
+      .itemGroup:focus {
+        background: rgb(var(--v-theme-secondary));
+        color: white;
+      }
+      .v-list-item--active {
+        background: rgb(var(--v-theme-secondary));
+        color: #fff;
+      }
+      .item-custom {
+        .v-list-item--active {
+          background: #fff !important;
+          color: #03c9d7 !important;
+        }
+      }
     }
   }
 }

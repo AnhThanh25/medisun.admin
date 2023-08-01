@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 export const constantRoutes = [
   {
-    path: "/",
+    path: "/dash",
     redirect: "/dashboard",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
@@ -17,14 +17,14 @@ export const constantRoutes = [
       },
       {
         name: "Alerts",
-        path: "/ui-components/alert",
+        path: "/dashboard/alert",
         component: () => import("@/views/ui-components/Alerts.vue"),
         meta: { title: "Thông báo", icon: "mdi-alert-circle-outline" },
         role: 1,
       },
       {
         name: "Buttons",
-        path: "/ui-components/buttons",
+        path: "/dashboard/buttons",
         component: () => import("@/views/ui-components/Buttons.vue"),
         meta: { title: "Nút bấm", icon: "mdi-radiobox-blank" },
         role: 1,
@@ -32,29 +32,28 @@ export const constantRoutes = [
     ],
   },
   {
-    path: "/ui-components",
-    redirect: "/dashboard",
+    path: "/kham-benh",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
     meta: { title: "Khám bệnh", icon: "mdi-hospital" },
     children: [
       {
         name: "Cards",
-        path: "/ui-components/cards",
+        path: "/kham-benh/cards",
         component: () => import("@/views/ui-components/Cards.vue"),
         meta: { title: "Thẻ", icon: "mdi-card-outline" },
         role: 1,
       },
       {
         name: "Menus",
-        path: "/ui-components/menus",
+        path: "/kham-benh/menus",
         component: () => import("@/views/ui-components/Menus.vue"),
         meta: { title: "Menu", icon: "mdi-form-dropdown" },
         role: 1,
       },
       {
         name: "Tables",
-        path: "/ui-components/tables",
+        path: "/kham-benh/tables",
         component: () => import("@/views/ui-components/Tables.vue"),
         meta: { title: "Bảng", icon: "mdi-table" },
         role: 1,
@@ -63,10 +62,19 @@ export const constantRoutes = [
   },
   {
     path: "/ui-hospital",
-    redirect: "/dashboard",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
     meta: { title: "Bệnh nhân", icon: "mdi-library" },
+    children:[
+      {
+        name: "Khách hàng",
+        path: "/ui-components/user",
+        component: () => import("@/views/ui-components/Tables.vue"),
+
+        meta: { title: "Khách hàng", icon: "mdi-card-outline" },
+        role: 1,
+      },
+    ]
   }
 ];
 

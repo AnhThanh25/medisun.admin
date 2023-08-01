@@ -34,7 +34,7 @@ onMounted(() => {
     <!---Header -->
     <!-- ---------------------------------------------- -->
     <v-app-bar elevation="0" class="v-topbar">
-      <v-app-bar-nav-icon class="hidden-md-and-up" @click="drawer = !drawer" />
+      <v-app-bar-nav-icon class="" @click="drawer = !drawer" />
       <v-spacer />
       <!-- ---------------------------------------------- -->
       <!-- User Profile -->
