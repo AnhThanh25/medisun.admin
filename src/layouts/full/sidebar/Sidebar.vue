@@ -13,32 +13,25 @@ export default {
     LogoDark,
   },
   methods: {
-    btclick(data, child) {
-      if (data) {
-        data = null;
-      } else {
-        data = child;
-      }
-      console.log(data, child);
-    },
     isRouteActive(item) {
-      // console.log("123123: ", item);
-      // console.log("Anh : ", useRoute());
-
       return item.path === useRoute().fullPath;
     },
     isRouteActivePath(item) {
-      console.log("123123: ", item);
-      console.log("Anh : ", useRoute());
-      this.sidebarMenu = [...constantRoutes];
+      
       return useRoute().fullPath.includes(item.path);
+    },
+    isShowItemSidebar(item) {
+      if (item.hidden) {
+        return false;
+      }
+      return true;
     },
   },
 };
 </script>
 
 <template>
-  <div>
+  <div style="height: 100vh">
     <!-- ---------------------------------------------- -->
     <!---Logo part -->
     <!-- ---------------------------------------------- -->
@@ -58,24 +51,73 @@ export default {
           <!-- ---------------------------------------------- -->
           <!---Single Item-->
           <!-- ---------------------------------------------- -->
-          <v-list-item-group
-            v-if="item.children.length > 1"
-            class="v-list-group__header"
-          >
-            <v-list-item
-              rounded="lg"
-              class="mb-1"
-              @click="
-                () => {
-                  if (item.childrens) {
-                    item.childrens = null;
-                  } else {
-                    item.childrens = item.children;
-                  }
-                }
-              "
-              :active="isRouteActivePath(item)"
+          <div v-if="isShowItemSidebar(item)">
+            <v-list-item-group
+              v-if="item.children.length > 1"
+              class="v-list-group__header"
             >
+              <v-list-item
+                rounded="lg"
+                class="mb-1"
+                @click="
+                  () => {
+                    if (item.childrens) {
+                      item.childrens = null;
+                    } else {
+                      item.childrens = item.children;
+                    }
+                  }
+                "
+                :active="isRouteActivePath(item)"
+              >
+                <v-list-item-avatar start class="v-list-item-avatar--start">
+                  <v-icon
+                    class="feather-sm v-icon v-icon--size-default"
+                    v-if="item.meta.icon"
+                    >{{ item.meta.icon }}</v-icon
+                  >
+                </v-list-item-avatar>
+                <v-list-item-title
+                  class="v-list-item__content"
+                  style="font-size: 16px; width: 100%; font-weight: 500"
+                  >{{ item.meta.title }}</v-list-item-title
+                >
+                <v-list-item-avatar end class="v-list-item__append">
+                  <v-icon
+                    class="feather-sm v-icon v-icon--size-default"
+                    v-if="item.childrens"
+                    >mdi-chevron-down</v-icon
+                  >
+                  <v-icon class="feather-sm v-icon v-icon--size-default" v-else
+                    >mdi-chevron-up</v-icon
+                  >
+                </v-list-item-avatar>
+              </v-list-item>
+              <div class="item-custom">
+                <v-list-item
+                  :to="child.path"
+                  rounded="lg"
+                  class="mb-1"
+                  v-for="(child, i) in item.childrens"
+                  :key="i"
+                  :active="isRouteActive(child)"
+                >
+                  <v-list-item-avatar start class="v-list-item-avatar--start">
+                    <v-icon
+                      class="feather-sm v-icon v-icon--size-default"
+                      style="font-size: 14px; margin-left: 10px"
+                      >mdi-crosshairs-gps</v-icon
+                    >
+                  </v-list-item-avatar>
+                  <v-list-item-title
+                    class="v-list-item__content"
+                    style="font-size: 14px; width: 100%"
+                    >{{ child.meta.title }}</v-list-item-title
+                  >
+                </v-list-item>
+              </div>
+            </v-list-item-group>
+            <v-list-item :to="item.path" rounded="lg" class="mb-1" v-else>
               <v-list-item-avatar start class="v-list-item-avatar--start">
                 <v-icon
                   class="feather-sm v-icon v-icon--size-default"
@@ -88,55 +130,8 @@ export default {
                 style="font-size: 16px; width: 100%; font-weight: 500"
                 >{{ item.meta.title }}</v-list-item-title
               >
-              <v-list-item-avatar end class="v-list-item__append">
-                <v-icon class="feather-sm v-icon v-icon--size-default"
-                  >mdi-chevron-down</v-icon
-                >
-              </v-list-item-avatar>
             </v-list-item>
-            <div class="item-custom">
-              <v-list-item
-                :to="child.path"
-                rounded="lg"
-                class="mb-1"
-                v-for="(child, i) in item.childrens"
-                :key="i"
-                :active="isRouteActive(child)"
-              >
-                <v-list-item-avatar start class="v-list-item-avatar--start">
-                  <v-icon
-                    class="feather-sm v-icon v-icon--size-default"
-                    style="font-size: 14px; margin-left: 10px"
-                    >mdi-crosshairs-gps</v-icon
-                  >
-                </v-list-item-avatar>
-                <v-list-item-title
-                  class="v-list-item__content"
-                  style="font-size: 14px; width: 100%"
-                  >{{ child.meta.title }}</v-list-item-title
-                >
-              </v-list-item>
-            </div>
-          </v-list-item-group>
-          <v-list-item :to="item.path" rounded="lg" class="mb-1" v-else>
-            <v-list-item-avatar start class="v-list-item-avatar--start">
-              <v-icon
-                class="feather-sm v-icon v-icon--size-default"
-                v-if="item.meta.icon"
-                >{{ item.meta.icon }}</v-icon
-              >
-            </v-list-item-avatar>
-            <v-list-item-title
-              class="v-list-item__content"
-              style="font-size: 16px; width: 100%; font-weight: 500"
-              >{{ item.meta.title }}</v-list-item-title
-            >
-            <!-- <v-list-item-avatar end class="v-list-item__append">
-              <v-icon class="feather-sm v-icon v-icon--size-default"
-                >mdi-chevron-down</v-icon
-              >
-            </v-list-item-avatar> -->
-          </v-list-item>
+          </div>
         </template>
       </v-list>
     </div>
@@ -153,3 +148,22 @@ export default {
     </div> -->
   </div>
 </template>
+<style lang="scss" scoped>
+.scrollnavbar {
+  height: calc(100vh - 77px);
+  overflow-y: auto;
+  &::-webkit-scrollbar-track-piece {
+    background: #ffffff;
+    padding-right: 2px;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 20px;
+  }
+}
+</style>

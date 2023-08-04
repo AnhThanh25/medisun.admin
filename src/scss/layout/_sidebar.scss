@@ -4,6 +4,25 @@
     .v-list-item {
       padding-inline-start: 12px !important;
       padding-left: 12px;
+      &:hover {
+        color: rgb(var(--v-theme-primary));
+      }
+
+      .v-list-item__prepend {
+        margin-inline-end: 13px;
+      }
+
+      .v-list-item__append {
+        font-size: 0.875rem;
+
+        .v-icon {
+          margin-inline-start: 13px;
+        }
+      }
+
+      .v-list-item-title {
+        font-size: 0.875rem;
+      }
     }
     .v-list-group__items .v-list-item .v-avatar.v-avatar--density-default,
     .v-avatar.v-avatar--density-default {

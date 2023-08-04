@@ -1,0 +1,29 @@
+.v-input--density-default,
+.v-field--variant-solo,
+.v-field--variant-filled {
+    --v-input-control-height: 51px;
+    --v-input-padding-top: 8px;
+    border-radius: 12px;
+}
+.v-input--density-comfortable {
+    --v-input-control-height: 56px;
+    --v-input-padding-top: 17px;
+}
+.v-field--variant-outlined {
+    border-radius: 20px;
+    // border: 2px solid #000;
+}
+.v-field__field{
+    border-radius: 20px !important;
+
+}
+.v-switch .v-label,
+.v-checkbox .v-label {
+    opacity: 1;
+}
+.v-label{
+    opacity: 1;
+    font-size: 0.875rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+}

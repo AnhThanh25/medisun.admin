@@ -2,6 +2,20 @@ import { createRouter, createWebHistory } from "vue-router";
 
 export const constantRoutes = [
   {
+    path: "/login",
+    component: () => import("@/views/auth/login.vue"),
+    hidden: true,
+  },
+  {
+    path: "/",
+    redirect: "/dashboard",
+    component: () => import("@/layouts/full/FullLayout.vue"),
+    role: 1,
+    meta: { title: "Trang chủ", icon: "mdi-home" },
+    hidden: true,
+  },
+
+  {
     path: "/dash",
     redirect: "/dashboard",
     component: () => import("@/layouts/full/FullLayout.vue"),
@@ -61,21 +75,27 @@ export const constantRoutes = [
     ],
   },
   {
-    path: "/ui-hospital",
+    path: "/khach-hang",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Bệnh nhân", icon: "mdi-library" },
-    children:[
+    meta: { title: "Khách hàng", icon: "mdi-library" },
+    children: [
       {
-        name: "Khách hàng",
-        path: "/ui-components/user",
+        name: "Danh sách",
+        path: "/khach-hang/danh-sach",
         component: () => import("@/views/ui-components/Tables.vue"),
-
-        meta: { title: "Khách hàng", icon: "mdi-card-outline" },
+        meta: { title: "Danh sách", icon: "mdi-card-outline" },
         role: 1,
       },
-    ]
-  }
+    ],
+  },
+  // { path: "*", redirect: "/404", hidden: true, role: 1 },
+  {
+    path: "/404",
+    redirect: "/",
+    component: () => import("@/views/404"),
+    hidden: true,
+  },
 ];
 
 const router = createRouter({

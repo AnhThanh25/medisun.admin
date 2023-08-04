@@ -5,6 +5,7 @@ import vuetify from "./plugins/vuetify";
 import "@/scss/style.scss";
 import VueApexCharts from "vue3-apexcharts";
 // @ts-ignore:next-line
+import '@/permission' // permission control
 
 const app = createApp(App);
 
