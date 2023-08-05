@@ -83,7 +83,7 @@ export const constantRoutes = [
       {
         name: "Danh sách",
         path: "/khach-hang/danh-sach",
-        component: () => import("@/views/ui-components/Tables.vue"),
+        component: () => import("@/views/customer/index.vue"),
         meta: { title: "Danh sách", icon: "mdi-card-outline" },
         role: 1,
       },

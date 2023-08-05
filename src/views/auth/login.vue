@@ -19,7 +19,7 @@ import LoginForm from "@/components/auth/LoginForm.vue";
               <div class="d-flex justify-center py-4">
                 <Logo />
               </div>
-              <div class="text-body-1 text-muted text-center mb-3">
+              <div class=" text-muted text-center mb-3">
                 Quản lý phòng khám
               </div>
               <LoginForm />

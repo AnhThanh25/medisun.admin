@@ -1,20 +1,21 @@
 <template>
-  <v-row class="d-flex mb-3" style="padding: 32px">
+  <v-row class=" mb-3" style="padding: 32px">
     <v-col cols="12">
       <v-label class="font-weight-bold mb-1">Tài khoản</v-label>
       <v-text-field
         variant="outlined"
         hide-details
-        color="primary"
+        color="secondary"
+        style="border-radius: 10px !important"
       ></v-text-field>
     </v-col>
     <v-col cols="12">
       <v-label class="font-weight-bold mb-1">Mật khẩu</v-label>
       <v-text-field
-        variant="outlined"
-        type="password"
         hide-details
-        color="primary"
+        color="secondary"
+        variant="outlined"
+        :rounded='10'
       ></v-text-field>
     </v-col>
     <v-col cols="12" class="pt-0">
@@ -32,7 +33,7 @@
       </div>
     </v-col>
     <v-col cols="12" class="pt-0">
-      <v-btn to="/" color="primary" size="large" block flat @click="login"
+      <v-btn to="/" color="secondary" size="large" block flat @click="login"
         >Đăng nhập</v-btn
       >
     </v-col>
@@ -55,5 +56,4 @@ export default {
 .v-input__control {
   border-radius: 8px;
 }
-
 </style>

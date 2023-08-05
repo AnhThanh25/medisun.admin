@@ -38,5 +38,8 @@ export default createVuetify({
       flat: true,
       elevation: 10,
     },
+    VTextField:{
+      rounded: "10px"
+    }
   },
 });

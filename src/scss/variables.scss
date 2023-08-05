@@ -4,50 +4,8 @@ $border-radius: 20px;
 
 $btn-font-weight: 400 !default;
 $btn-letter-spacing : 0 !default;
+$text-field-border-radius: 16px !default;
 
 $font-family: "Montserrat";
 /* css font gradution */
-@use 'sass:math';
-@use 'sass:map';
-@use 'sass:meta';
-@use 'vuetify/lib/styles/tools/functions' as *;
 
-// This will false all colors which is not necessory for theme
-$color-pack: false;
-
-// Global font size and border radius 
-$font-size-root: 1rem;
-$border-radius-root: 4px;
-$body-font-family: 'Plus Jakarta Sans', sans-serif !default;
-$heading-font-family: $body-font-family !default;
-$btn-font-weight: 400 !default;
-$btn-letter-spacing: 0 !default;
-
-// Global Radius as per breakeven point
-$rounded: () !default;
-$rounded: map-deep-merge(
-    (
-        0: 0,
-        'sm': $border-radius-root * 0.5,
-        null: $border-radius-root,
-        'md': $border-radius-root * 1,
-        'lg': $border-radius-root * 2,
-        'xl': $border-radius-root * 6,
-        'pill': 9999px,
-        'circle': 50%,
-        'shaped': $border-radius-root * 6 0
-    ),
-    $rounded
-);
-// Global Typography
-
-// Custom Variables
-// colors
-$white: #fff !default;
-
-// cards
-$card-item-spacer-xy: 20px 24px !default;
-$card-text-spacer: 24px !default;
-$card-title-size: 18px !default;
-// Global Shadow
-$box-shadow: rgb(145 158 171 / 20%) 0px 0px 2px 0px, rgb(145 158 171 / 12%) 0px 12px 24px -4px;

@@ -68,7 +68,7 @@ export default {
                     }
                   }
                 "
-                :active="isRouteActivePath(item)"
+                :active="isRouteActivePath(item.path)"
               >
                 <v-list-item-avatar start class="v-list-item-avatar--start">
                   <v-icon
