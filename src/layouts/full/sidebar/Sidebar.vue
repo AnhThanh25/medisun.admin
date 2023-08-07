@@ -17,7 +17,6 @@ export default {
       return item.path === useRoute().fullPath;
     },
     isRouteActivePath(item) {
-      
       return useRoute().fullPath.includes(item.path);
     },
     isShowItemSidebar(item) {
@@ -25,6 +24,16 @@ export default {
         return false;
       }
       return true;
+    },
+    singlePathActice(item) {
+      if (item.children) {
+        if (item.children.filter((p) => p.hidden != true).length == 1) {
+          return item.children[0].path;
+        }
+      } else {
+        return item.path;
+      }
+      return item.path;
     },
   },
 };
@@ -51,83 +60,70 @@ export default {
           <!-- ---------------------------------------------- -->
           <!---Single Item-->
           <!-- ---------------------------------------------- -->
-          <div v-if="isShowItemSidebar(item)">
-            <v-list-item-group
-              v-if="item.children.length > 1"
+          <div v-if="isShowItemSidebar(item)" class="subSidebar">
+            <v-list-group
               class="v-list-group__header"
+              v-if="item.children && item.children.length > 1"
             >
-              <v-list-item
-                rounded="lg"
-                class="mb-1"
-                @click="
-                  () => {
-                    if (item.childrens) {
-                      item.childrens = null;
-                    } else {
-                      item.childrens = item.children;
-                    }
-                  }
-                "
-                :active="isRouteActivePath(item.path)"
-              >
-                <v-list-item-avatar start class="v-list-item-avatar--start">
-                  <v-icon
-                    class="feather-sm v-icon v-icon--size-default"
-                    v-if="item.meta.icon"
-                    >{{ item.meta.icon }}</v-icon
-                  >
-                </v-list-item-avatar>
-                <v-list-item-title
-                  class="v-list-item__content"
-                  style="font-size: 16px; width: 100%; font-weight: 500"
-                  >{{ item.meta.title }}</v-list-item-title
-                >
-                <v-list-item-avatar end class="v-list-item__append">
-                  <v-icon
-                    class="feather-sm v-icon v-icon--size-default"
-                    v-if="item.childrens"
-                    >mdi-chevron-down</v-icon
-                  >
-                  <v-icon class="feather-sm v-icon v-icon--size-default" v-else
-                    >mdi-chevron-up</v-icon
-                  >
-                </v-list-item-avatar>
-              </v-list-item>
-              <div class="item-custom">
-                <v-list-item
-                  :to="child.path"
-                  rounded="lg"
-                  class="mb-1"
-                  v-for="(child, i) in item.childrens"
-                  :key="i"
-                  :active="isRouteActive(child)"
-                >
-                  <v-list-item-avatar start class="v-list-item-avatar--start">
+              <template v-slot:activator="{ props }">
+                <v-list-item v-bind="props" style="margin-bottom:4px">
+                  <template v-slot:prepend>
                     <v-icon
                       class="feather-sm v-icon v-icon--size-default"
-                      style="font-size: 14px; margin-left: 10px"
-                      >mdi-crosshairs-gps</v-icon
+                      v-if="item.meta.icon"
+                      style="font-size: 20px"
+                      >{{ item.meta.icon }}</v-icon
                     >
-                  </v-list-item-avatar>
+                  </template>
                   <v-list-item-title
                     class="v-list-item__content"
-                    style="font-size: 14px; width: 100%"
-                    >{{ child.meta.title }}</v-list-item-title
-                  >
+                    style="font-size: 14px; width: 100%; font-weight: 500"
+                    v-text="item.meta.title"
+                  ></v-list-item-title>
                 </v-list-item>
-              </div>
-            </v-list-item-group>
-            <v-list-item :to="item.path" rounded="lg" class="mb-1" v-else>
-              <v-list-item-avatar start class="v-list-item-avatar--start">
+              </template>
+              <!-- </v-list-item> -->
+              <!-- <div class="item-custom"> -->
+              <v-list-item
+                :to="child.path"
+                rounded="lg"
+                class="mb-1 "
+                v-for="(child, i) in item.children"
+                :key="i"
+                :active="isRouteActive(child)"
+              >
+                <template v-slot:prepend>
+                  <v-icon
+                    class="feather-sm v-icon v-icon--size-default"
+                    style="font-size: 14px; margin-left: 10px"
+                    >mdi-crosshairs-gps</v-icon
+                  >
+                </template>
+                <v-list-item-title
+                  class="v-list-item__content"
+                  style="font-size: 14px; width: 100%"
+                  >{{ child.meta.title }}</v-list-item-title
+                >
+              </v-list-item>
+              <!-- </div> -->
+            </v-list-group>
+            <v-list-item
+              :to="singlePathActice(item)"
+              rounded="lg"
+              class="mb-1"
+              v-else
+            >
+              <template v-slot:prepend>
                 <v-icon
                   class="feather-sm v-icon v-icon--size-default"
+                  style="font-size: 20px"
                   v-if="item.meta.icon"
                   >{{ item.meta.icon }}</v-icon
                 >
-              </v-list-item-avatar>
+              </template>
               <v-list-item-title
                 class="v-list-item__content"
-                style="font-size: 16px; width: 100%; font-weight: 500"
+                style="font-size: 14px; width: 100%; font-weight: 500"
                 >{{ item.meta.title }}</v-list-item-title
               >
             </v-list-item>

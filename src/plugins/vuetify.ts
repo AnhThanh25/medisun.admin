@@ -2,44 +2,52 @@ import { createVuetify } from "vuetify";
 import type { ThemeDefinition } from "vuetify";
 
 import "@mdi/font/css/materialdesignicons.css";
-import * as components from "vuetify/components";
+// import * as component from "vuetify/components";
 import * as directives from "vuetify/directives";
-
+import { VDataTable } from "vuetify/labs/VDataTable";
 const Lighttheme: ThemeDefinition = {
   variables: {},
   colors: {
     primary: "#ee8a6a",
-    info: "#0cb9c5",
+    info: "#03c9d7",
     success: "#05b187",
     accent: "#fc4b6c",
     warning: "#fec90f",
     error: "#fc4b6c",
-    secondary: "#0cb9c5",
+    secondary: "#03c9d7",
   },
 };
 
 export default createVuetify({
-  components,
+  // component,
   directives,
   theme: {
     themes: {
       light: Lighttheme,
     },
   },
+  components: {
+    VDataTable,
+  },
   defaults: {
+  //   global: {
+  //     variant: "outlined",
+  // },
     VBtn: {
       color: "primary",
-      rounded: "md",
+      rounded: "lg",
       flat: true,
       fontWeight: "400",
       letterSpacing: "0",
     },
     VCard: {
       flat: true,
-      elevation: 10,
+      elevation: 0,
+      padding:20
     },
-    VTextField:{
-      rounded: "10px"
-    }
+    VTextField: {
+      rounded: "lg",
+      color:"secondary"
+    },
   },
 });

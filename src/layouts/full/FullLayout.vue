@@ -15,7 +15,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-app >
+  <v-app style="background: #f6f6f6">
     <!-- ---------------------------------------------- -->
     <!---Sidebar -->
     <!-- ---------------------------------------------- -->
@@ -45,7 +45,8 @@ onMounted(() => {
     <!-- ---------------------------------------------- -->
     <!---Page Wrapper -->
     <!-- ---------------------------------------------- -->
-    <v-main>
+
+    <v-main style="--v-layout-top: 44px">
       <v-container fluid class="page-wrapper">
         <RouterView />
       </v-container>

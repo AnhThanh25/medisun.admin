@@ -4,6 +4,8 @@ import router from "./router";
 import vuetify from "./plugins/vuetify";
 import "@/scss/style.scss";
 import VueApexCharts from "vue3-apexcharts";
+import 'vuetify/dist/vuetify.min.css'
+
 // // @ts-ignore:next-line
 // import "vuetify/styles";
 

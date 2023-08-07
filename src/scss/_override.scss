@@ -44,7 +44,9 @@ html {
   .v-navigation-drawer__scrim.fade-transition-leave-to {
     display: none;
   }
-
+  .v-navigation-drawer--left {
+    border-right-width: 0;
+  }
   .theme-carousel .v-carousel__progress {
     position: absolute;
   }
@@ -54,5 +56,6 @@ html {
   }
   .v-card.w-auto {
     width: auto !important;
+    
   }
 }
