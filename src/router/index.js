@@ -52,6 +52,20 @@ export const constantRoutes = [
     meta: { title: "Khám bệnh", icon: "mdi-hospital" },
     children: [
       {
+        name: "Khám tổng quát",
+        path: "/kham-benh/tong-quat",
+        component: () => import("@/views/general/index.vue"),
+        meta: { title: "Khám tổng quát", icon: "mdi-card-outline" },
+        role: 1,
+      },
+      {
+        name: "Phiếu khám",
+        path: "/kham-benh/phieu-kham",
+        component: () => import("@/views/general/index.vue"),
+        meta: { title: "Phiếu khám", icon: "mdi-card-outline" },
+        role: 1,
+      },
+      {
         name: "Cards",
         path: "/kham-benh/cards",
         component: () => import("@/views/ui-components/Cards.vue"),

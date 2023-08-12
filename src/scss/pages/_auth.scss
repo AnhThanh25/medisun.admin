@@ -1,4 +1,11 @@
 .authentication{
+    font-family: $font-family;
+    .text-h6{
+        font-size: 16px !important
+    }
+    .text-primary{
+        font-size: 14px !important;
+    }
     &::before{
         content: "";
         position: absolute;

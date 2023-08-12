@@ -1,19 +1,21 @@
 <template>
-  <v-row class="mb-3" style="padding: 32px">
+  <v-row class="mb-3" style="padding: 32px;">
     <v-col cols="12">
-      <v-label class="font-weight-bold mb-1">Tài khoản</v-label>
+      <v-label class="font-weight-bold mb-1" style="font-size:14px">Tài khoản</v-label>
       <v-text-field
         variant="outlined"
         hide-details
         color="secondary"
+        density="compact"
       ></v-text-field>
     </v-col>
     <v-col cols="12">
-      <v-label class="font-weight-bold mb-1">Mật khẩu</v-label>
+      <v-label class="font-weight-bold mb-1" style="font-size:14px">Mật khẩu</v-label>
       <v-text-field
         hide-details
         color="secondary"
         variant="outlined"
+        density="compact"
       ></v-text-field>
     </v-col>
     <v-col cols="12" class="pt-0">
@@ -25,7 +27,8 @@
           <RouterLink
             to="/"
             class="text-primary text-decoration-none text-body-1 opacity-1 font-weight-medium"
-            >Forgot Password ?</RouterLink
+            style="font-family: 'Open Sans', sans-serif;"
+            >Quên mật khẩu ?</RouterLink
           >
         </div>
       </div>
@@ -49,9 +52,8 @@ export default {
   },
 };
 </script>
-
 <style>
-.v-input__control {
-  border-radius: 8px;
-}
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap');
+
 </style>
+

@@ -30,9 +30,6 @@ export default createVuetify({
     VDataTable,
   },
   defaults: {
-  //   global: {
-  //     variant: "outlined",
-  // },
     VBtn: {
       color: "primary",
       rounded: "lg",
@@ -43,11 +40,24 @@ export default createVuetify({
     VCard: {
       flat: true,
       elevation: 0,
-      padding:20
+      padding: 20,
     },
     VTextField: {
       rounded: "lg",
-      color:"secondary"
+      color: "secondary",
+      density: "compact",
+      variant: "outlined",
+    },
+    VSelect: {
+      variant: "outlined",
+      density: "compact",
+    },
+    VAutocomplete: {
+      variant: "outlined",
+      density: "compact",
+    },
+    VCheckbox: {
+      color: "secondary",
     },
   },
 });

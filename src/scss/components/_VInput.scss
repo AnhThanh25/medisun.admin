@@ -1,18 +1,59 @@
 .v-input--density-default,
 .v-field--variant-solo,
 .v-field--variant-filled {
-    --v-input-control-height: 51px;
-    --v-input-padding-top: 14px;
+  --v-input-control-height: 51px;
+  --v-input-padding-top: 14px;
 }
 .v-input--density-comfortable {
-    --v-input-control-height: 56px;
-    --v-input-padding-top: 17px;
+  --v-input-control-height: 56px;
+  --v-input-padding-top: 17px;
 }
 .v-switch .v-label,
 .v-checkbox .v-label {
-    opacity: 1;
+  opacity: 1;
 }
-.v-label{
-    opacity: 1;
-    font-size: 0.875rem;
+.v-label {
+  opacity: 1;
+  font-size: 0.875rem;
+}
+.checkBox {
+  margin-top: 8px !important;
+  margin-bottom: 20px !important;
+  .v-input__control {
+    height: 44px !important;
+  }
+  .v-input__details {
+    display: none !important;
+  }
+}
+.v-radio-group {
+  .v-input__details {
+    display: none !important;
+  }
+}
+.checkTeeth {
+  padding: 0 !important;
+  .v-input__control {
+    height: 44px !important;
+  }
+  .v-input__details {
+    display: none !important;
+  }
+}
+.v-card {
+  max-height: 100vh !important;
+
+  &::-webkit-scrollbar-track-piece {
+    background: #ffffff;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 20px;
+    margin-right: 5px;
+  }
 }
