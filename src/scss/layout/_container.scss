@@ -1,5 +1,6 @@
 html {
-  overflow-y: auto;
+  // overflow-y: auto;
+  // height: 100vh;
 }
 // .v-navigation-drawer{
 //      left: 270px !important;
@@ -11,12 +12,12 @@ html {
 //     width: calc((100% - 270px) - 0px) !important;
 // }
 .v-main {
-  margin-right: 20px;
-  height: 44px !important;
+  // margin-right: 20px;
+  // height: 44px !important;
 }
 @media (max-width: 1279px) {
   .v-main {
-      margin: 0 10px;
+    margin: 0 10px;
   }
 }
 .spacer {
@@ -24,19 +25,20 @@ html {
 }
 @media (max-width: 800px) {
   .spacer {
-      padding: 40px 0;
+    padding: 40px 0;
   }
 }
 .cursor-pointer {
   cursor: pointer;
 }
 .page-wrapper {
-  min-height: calc(100vh - 100px);
-  padding: 24px;
-  padding-bottom: 30px;
-
-  @media screen and (max-width:600px){
-      padding: 10px;
+  min-height: calc(100vh );
+  // padding: 24px;
+  // padding-bottom: 30px;
+  // padding-right: 0px;
+  // overflow-y: scroll;
+  @media screen and (max-width: 600px) {
+    padding: 10px;
   }
 }
 .maxWidth {
@@ -44,29 +46,29 @@ html {
   margin: 0 auto;
 }
 $sizes: (
-  'display-1': 44px,
-  'display-2': 40px,
-  'display-3': 30px,
-  'h1': 36px,
-  'h2': 30px,
-  'h3': 21px,
-  'h4': 18px,
-  'h5': 16px,
-  'h6': 14px,
-  'text-8': 8px,
-  'text-10': 10px,
-  'text-13': 13px,
-  'text-15': 15px,
-  'text-18': 18px,
-  'text-20': 20px,
-  'text-24': 24px,
-  'body-text-1': 10px
+  "display-1": 44px,
+  "display-2": 40px,
+  "display-3": 30px,
+  "h1": 36px,
+  "h2": 30px,
+  "h3": 21px,
+  "h4": 18px,
+  "h5": 16px,
+  "h6": 14px,
+  "text-8": 8px,
+  "text-10": 10px,
+  "text-13": 13px,
+  "text-15": 15px,
+  "text-18": 18px,
+  "text-20": 20px,
+  "text-24": 24px,
+  "body-text-1": 10px,
 );
 
 @each $pixel, $size in $sizes {
   .#{$pixel} {
-      font-size: $size;
-      line-height: $size + 10;
+    font-size: $size;
+    line-height: $size + 10;
   }
 }
 
@@ -76,9 +78,9 @@ $sizes: (
   right: 30px;
   border-radius: 50%;
   .icon {
-      animation: progress-circular-rotate 1.4s linear infinite;
-      transform-origin: center center;
-      transition: all 0.2s ease-in-out;
+    animation: progress-circular-rotate 1.4s linear infinite;
+    transform-origin: center center;
+    transition: all 0.2s ease-in-out;
   }
 }
 .fixed-width {
@@ -123,7 +125,7 @@ $sizes: (
   color: rgb(var(--v-theme-lightText));
   text-decoration: none;
   &:hover {
-      color: rgb(var(--v-theme-primary));
+    color: rgb(var(--v-theme-primary));
   }
 }
 .z-auto.v-card {
@@ -144,6 +146,6 @@ $sizes: (
 .text-hover-primary {
   color: rgb(var(--v-theme-darkText));
   &:hover {
-      color: rgb(var(--v-theme-primary));
+    color: rgb(var(--v-theme-primary));
   }
 }

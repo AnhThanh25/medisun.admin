@@ -88,7 +88,7 @@ export default {
                 :to="child.path"
                 rounded="lg"
                 class="mb-1 "
-                v-for="(child, i) in item.children"
+                v-for="(child, i) in item.children.filter(p => !p.hidden )"
                 :key="i"
                 :active="isRouteActive(child)"
               >

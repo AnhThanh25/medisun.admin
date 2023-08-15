@@ -1,9 +1,8 @@
 <template>
   <v-card>
     <v-card-title class="text-h6 py-4"
-      >Danh sách phiếu khám tổng quát</v-card-title
+      >Danh sách phiếu khám</v-card-title
     >
-
     <v-data-table
       :headers="headers"
       :items="desserts"
@@ -31,7 +30,7 @@
           <v-btn
             color="secondary"
             size="large"
-            @click="isShowCreateCustomer = true"
+            @click="btCreateMedical"
             >Tạo phiếu</v-btn
           >
         </div>
@@ -41,7 +40,7 @@
   <v-dialog v-model="isShowCreateCustomer" persistent width="1024">
     <v-card>
       <v-card-title>
-        <span class="text-h5">Tạo phiếu khám tổng quát</span>
+        <span class="text-h5">Tạo phiếu khám</span>
       </v-card-title>
       <v-card-text>
         <v-row>
@@ -106,22 +105,9 @@
           </span>
         </v-row>
         <v-row>
-          <TeethAdults v-if="typeTeeth == 1" />
-          <TeethKids v-if="typeTeeth == 2" />
+          <!-- <TeethAdults v-if="typeTeeth == 1" />
+          <TeethKids v-if="typeTeeth == 2" /> -->
         </v-row>
-        <v-data-table
-          :headers="teethHeaders"
-          :items="teethDesserts"
-          :search="search"
-          sort-asc-icon="mdi-menu-up"
-          sort-desc-icon="mdi-menu-down"
-          :hide-default-footer="true"
-          :disable-pagination="true"
-          :items-per-page="-1"
-          class="table-pres"
-          style="margin-top: 12px"
-        >
-        </v-data-table>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -139,13 +125,13 @@
 </template>
 
 <script>
-import TeethAdults from "./components/teeth-adults.vue";
-import TeethKids from "./components/teeth-kids.vue";
+// import TeethAdults from "./components/teeth-adults.vue";
+// import TeethKids from "./components/teeth-kids.vue";
 
 export default {
   components: {
-    TeethAdults,
-    TeethKids,
+    // TeethAdults,
+    // TeethKids,
   },
   data() {
     return {
@@ -238,20 +224,13 @@ export default {
           iron: "2%",
         },
       ],
-      teethHeaders: [
-        {
-          title: "STT",
-          align: "start",
-          sortable: false,
-          key: "Key",
-        },
-        { title: "Loại", key: "calories" },
-        { title: "Răng", key: "name" },
-        { title: "Bệnh lý", key: "carbs" },
-      ],
     };
   },
-  methods: {},
+  methods: {
+    btCreateMedical(){
+        this.$router.push('/kham-benh/tao-phieu-kham')
+    }
+  },
 };
 </script>
 

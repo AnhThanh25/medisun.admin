@@ -61,9 +61,17 @@ export const constantRoutes = [
       {
         name: "Phiếu khám",
         path: "/kham-benh/phieu-kham",
-        component: () => import("@/views/general/index.vue"),
+        component: () => import("@/views/medical/index.vue"),
         meta: { title: "Phiếu khám", icon: "mdi-card-outline" },
         role: 1,
+      },
+      {
+        name: "Tạo phiếu khám",
+        path: "/kham-benh/tao-phieu-kham",
+        component: () => import("@/views/medical/components/create.vue"),
+        meta: { title: "Tạo phiếu khám", icon: "mdi-card-outline" },
+        role: 1,
+        hidden: true,
       },
       {
         name: "Cards",
