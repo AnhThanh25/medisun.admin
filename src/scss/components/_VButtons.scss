@@ -15,7 +15,7 @@
     &:hover,
     &:active,
     &:focus {
-      background-color: rgb(var(--v-theme-secondary)) !important;
+      background-color: rgb(var(--v--secondary)) !important;
       color: $white !important;
     }
   }

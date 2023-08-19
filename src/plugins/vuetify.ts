@@ -5,6 +5,7 @@ import "@mdi/font/css/materialdesignicons.css";
 // import * as component from "vuetify/components";
 import * as directives from "vuetify/directives";
 import { VDataTable } from "vuetify/labs/VDataTable";
+import "v-calendar/style.css";
 const Lighttheme: ThemeDefinition = {
   variables: {},
   colors: {
@@ -15,6 +16,7 @@ const Lighttheme: ThemeDefinition = {
     warning: "#fec90f",
     error: "#fc4b6c",
     secondary: "#03c9d7",
+    more: "#999",
   },
 };
 
@@ -57,6 +59,11 @@ export default createVuetify({
       density: "compact",
     },
     VCheckbox: {
+      color: "secondary",
+    },
+    VFileInput: {
+      variant: "outlined",
+      density: "compact",
       color: "secondary",
     },
   },

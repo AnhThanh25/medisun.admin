@@ -96,7 +96,7 @@ export default {
                   <v-icon
                     class="feather-sm v-icon v-icon--size-default"
                     style="font-size: 14px; margin-left: 10px"
-                    >mdi-crosshairs-gps</v-icon
+                    >mdi-radiobox-blank</v-icon
                   >
                 </template>
                 <v-list-item-title

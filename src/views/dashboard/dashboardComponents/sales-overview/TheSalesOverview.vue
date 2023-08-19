@@ -5,7 +5,7 @@ import { SalesOverviewData } from "./SalesOverviewData";
 const elementVisible = ref(false);
 
 onMounted(() => {
-  setTimeout(() => (elementVisible.value = true), 10);
+  setTimeout(() => (elementVisible.value = true), 1000);
 });
 </script>
 
