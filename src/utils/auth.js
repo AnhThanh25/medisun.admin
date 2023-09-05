@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 // import { getDateCurrent, getTimeYesterday } from '@/helpers/getTime'
 
-const TokenKey = "Token";
+const TokenKey = "TokenPK";
 const UserID = "uPharmaID";
 const UserType = "UTypeTxt";
 const UserName = "FullName";

@@ -7,6 +7,11 @@ export const constantRoutes = [
     hidden: true,
   },
   {
+    path: "/dang-ky",
+    component: () => import("@/views/auth/register.vue"),
+    hidden: true,
+  },
+  {
     path: "/",
     redirect: "/trang-chu",
     component: () => import("@/layouts/full/FullLayout.vue"),

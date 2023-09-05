@@ -26,7 +26,7 @@ import LoginForm from "@/components/auth/LoginForm.vue";
               >
                 Chưa có tài khoản?
                 <RouterLink
-                  to="/auth/register"
+                  to="/dang-ky"
                   class="text-primary text-decoration-none text-body-1 opacity-1 font-weight-medium pl-2"
                 >
                   Tạo tài khoản</RouterLink
