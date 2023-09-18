@@ -12,8 +12,7 @@ html {
 //     width: calc((100% - 270px) - 0px) !important;
 // }
 .v-main {
-  // margin-right: 20px;
-  // height: 44px !important;
+
 }
 @media (max-width: 1279px) {
   .v-main {
@@ -32,7 +31,8 @@ html {
   cursor: pointer;
 }
 .page-wrapper {
-  min-height: calc(100vh );
+  max-width: 1400px !important;
+  min-height: calc(100vh - 60px);
   // padding: 24px;
   // padding-bottom: 30px;
   // padding-right: 0px;
@@ -63,6 +63,8 @@ $sizes: (
   "text-20": 20px,
   "text-24": 24px,
   "body-text-1": 10px,
+  "text-h6": 16px 
+
 );
 
 @each $pixel, $size in $sizes {

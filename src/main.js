@@ -12,10 +12,11 @@ import "@/permission"; // permission control
 
 import VCalendar from "v-calendar";
 import "v-calendar/style.css";
-
+import { DatePicker } from 'v-calendar';
 // Use plugin with optional defaults
 const app = createApp(App);
 app.use(VCalendar, {});
+app.component('VDatePicker2', DatePicker)
 
 app.use(VueApexCharts);
 app.use(router);

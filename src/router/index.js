@@ -2,13 +2,18 @@ import { createRouter, createWebHistory } from "vue-router";
 
 export const constantRoutes = [
   {
-    path: "/login",
+    path: "/dang-nhap",
     component: () => import("@/views/auth/login.vue"),
     hidden: true,
   },
   {
     path: "/dang-ky",
     component: () => import("@/views/auth/register.vue"),
+    hidden: true,
+  },
+  {
+    path: "/quen-mat-khau",
+    component: () => import("@/views/auth/forget-pass.vue"),
     hidden: true,
   },
   {
@@ -19,7 +24,6 @@ export const constantRoutes = [
     meta: { title: "Trang chủ", icon: "mdi-home" },
     hidden: true,
   },
-
   {
     path: "/trang-chu",
     redirect: "/trang-chu",
@@ -69,6 +73,14 @@ export const constantRoutes = [
         component: () => import("@/views/general/index.vue"),
         meta: { title: "Khám tổng quát", icon: "mdi-card-outline" },
         role: 1,
+      },
+      {
+        name: "Tạo phiếu tổng quát",
+        path: "/kham-benh/tao-phieu-tong-quat",
+        component: () => import("@/views/general/create.vue"),
+        meta: { title: "Tạo phiếu tổng quát", icon: "mdi-card-outline" },
+        role: 1,
+        hidden: true,
       },
       {
         name: "Phiếu khám",
@@ -144,6 +156,36 @@ export const constantRoutes = [
         meta: { title: "Mua vật liệu", icon: "mdi-card-outline" },
         role: 1,
         hidden: true,
+      },
+    ],
+  },
+  {
+    path: "/cai-dat",
+    component: () => import("@/layouts/full/FullLayout.vue"),
+    role: 10,
+    meta: { title: "Cài đặt", icon: "mdi-cog" },
+    children: [
+      {
+        name: "Nhân sự",
+        path: "/cai-dat/nhan-su",
+        component: () => import("@/views/setting/employ/index.vue"),
+        meta: { title: "Nhân sự", icon: "mdi-card-outline" },
+        role: 1,
+      },
+      {
+        name: "Thuốc",
+        path: "/cai-dat/thuoc",
+        component: () => import("@/views/setting/product/index.vue"),
+        meta: { title: "Thuốc", icon: "mdi-card-outline" },
+        role: 1,
+      },
+      {
+        name: "Thủ thuật",
+        path: "/cai-dat/thu-thuat",
+        component: () => import("@/views/setting/service/create.vue"),
+        meta: { title: "Thủ thuật", icon: "mdi-card-outline" },
+        role: 1,
+       
       },
     ],
   },

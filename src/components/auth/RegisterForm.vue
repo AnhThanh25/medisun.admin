@@ -6,6 +6,7 @@ import {
   GetCommuneByCityAndDistrict,
 } from "@/api/default";
 import { UserRegister, GetOTPCheck } from "@/api/user";
+import router from "@/router";
 const checkbox = ref(true);
 const cityLst = ref([]);
 const districtLst = ref([]);
@@ -14,9 +15,8 @@ const isShowNotify = ref(false);
 const reqUser = ref({});
 const reqClinic = ref({});
 const isShowOTP = ref(false);
-var citySelect = ref(null);
-var districtSelect = ref(null);
-var communeSelect = ref(null);
+const show1 = ref(false);
+const show2 = ref(false);
 const otp = ref("");
 
 onMounted(() => {
@@ -94,7 +94,7 @@ function getOTP() {
     });
     return;
   }
-  if (!reqUser.value.Phone) {
+  if (!reqUser.value.PhoneNumber) {
     notify({
       type: "error",
       title: "Lỗi",
@@ -102,7 +102,7 @@ function getOTP() {
     });
     return;
   } else {
-    if (isPhoneNumber(reqUser.value.Phone)) {
+    if (isPhoneNumber(reqUser.value.PhoneNumber)) {
     } else {
       notify({
         type: "error",
@@ -130,7 +130,7 @@ function getOTP() {
       return;
     }
   }
-  if (!reqUser.value.Birthday) {
+  if (!reqUser.value.DateOfBirth) {
     notify({
       type: "error",
       title: "Lỗi",
@@ -157,11 +157,9 @@ function getOTP() {
     }
   }
 
-  // isShowOTP.value = true;
-  // return;
   GetOTPCheck({
     Email: reqUser.value.Email,
-    PhoneNumber: reqUser.value.Phone,
+    PhoneNumber: reqUser.value.PhoneNumber,
   }).then((res) => {
     if (res) {
       isShowOTP.value = true;
@@ -184,26 +182,27 @@ function isEmail(input: string) {
 }
 function registerAccount() {
   UserRegister({
-    UserInfo: reqUser.value,
+    UserInfo: { ...reqUser.value, DateOfBirth: reqUser.value.DateOfBirth + ' 00:00:00'},
     ClinicInfo: reqClinic.value,
     OTP: otp.value,
     Password: reqUser.value.Password,
   }).then((res) => {
     if (res) {
+      router.push("/");
       isShowOTP.value = false;
       notify({
         type: "success",
         title: "Thành công",
         text: "Đăng ký phòng khám thành công",
       });
-      $router.push('/login')
+      
     }
   });
 }
 </script>
 
 <template>
-  <notifications position="top right" />
+  <notifications />
   <v-dialog v-model="isShowOTP" persistent width="400">
     <v-card>
       <v-card-title class="text-h5"> Mã OTP </v-card-title>
@@ -303,7 +302,7 @@ function registerAccount() {
     </v-col>
     <v-col cols="12" lg="4">
       <v-text-field
-        v-model="reqUser.Phone"
+        v-model="reqUser.PhoneNumber"
         hide-details
         color="primary"
         label="Số điện thoại"
@@ -323,26 +322,30 @@ function registerAccount() {
     <v-col cols="12" lg="4">
       <v-text-field
         v-model="reqUser.Password"
-        type="password"
+        :type="show2 ? 'text' : 'password'"
         hide-details
         color="primary"
         label="Mật khẩu"
         placeholder="Nhập mật khẩu"
+        :append-inner-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+        @click:append-inner="show2 = !show2"
       ></v-text-field>
     </v-col>
     <v-col cols="12" lg="4">
       <v-text-field
         v-model="reqUser.PasswordConfirm"
-        type="password"
+        :type="show1 ? 'text' : 'password'"
         hide-details
         color="primary"
         label="Nhập lại mật khẩu"
         placeholder="Nhập lại mật khẩu"
+        :append-inner-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+        @click:append-inner="show1 = !show1"
       ></v-text-field>
     </v-col>
     <v-col cols="12" lg="4">
       <v-text-field
-        v-model="reqUser.Birthday"
+        v-model="reqUser.DateOfBirth"
         type="date"
         hide-details
         color="primary"

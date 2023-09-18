@@ -5,7 +5,7 @@
     <v-data-table
       :headers="headers"
       :items="desserts"
-      class="elevation-1"
+       
       :search="search"
       items-per-page-text="Số dòng 1 trang"
       sort-asc-icon="mdi-menu-up"
@@ -57,7 +57,7 @@
             <v-row>
               <v-col cols="6">
                 Từ
-                <VDatePicker
+                <VDatePicker2
                   v-model="date"
                   mode="time"
                   rules="auto"
@@ -67,7 +67,7 @@
               </v-col>
               <v-col cols="6">
                 Đến
-                <VDatePicker
+                <VDatePicker2
                   v-model="date"
                   mode="time"
                   rules="auto"
@@ -235,7 +235,6 @@ export default {
 .vc-time-select-group {
   padding: 5px 8px;
   border-color: rgba(0, 0, 0, 0.3);
-
   background: #fff;
 }
 .vc-bordered {

@@ -1,8 +1,41 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { profile } from "./data";
-
+import {
+  removeToken,
+  removeUserName,
+  removeFullName,
+  removePhoneNumber,
+  removeHotline,
+  removeEmail,
+  removeRole,
+  removeClinicID,
+  removeClinicName,
+  removeAddress,
+  removeCity,
+  removeDistrict,
+  removeCommune,
+} from "@/utils/auth";
+import router from "@/router";
 const userprofile = ref(profile);
+
+function btLogout() {
+  removeToken();
+  removeUserName();
+  removeFullName();
+  removePhoneNumber();
+  removeHotline();
+  removeEmail();
+  removeRole();
+  removeClinicID();
+  removeClinicName();
+  removeAddress();
+  removeCity();
+  removeDistrict();
+  removeCommune();
+  router.push("/");
+  location.reload();
+}
 </script>
 
 <template>
@@ -26,7 +59,7 @@ const userprofile = ref(profile);
         </v-btn>
       </template>
 
-      <v-list class="pa-6" elevation="10" rounded="lg">
+      <v-list class="pa-3" elevation="10" rounded="lg">
         <v-list-item
           class="pa-3 mb-2"
           v-for="(item, i) in userprofile"
@@ -36,10 +69,22 @@ const userprofile = ref(profile);
           :subtitle="item.desc"
           rounded="lg"
         >
-         
+          <template v-slot:prepend>
+            <v-icon
+              class="feather-lg v-icon "
+              v-if="item.icon"
+              style="font-size:32px; margin-right:12px"
+              >{{ item.icon }}</v-icon
+            >
+          </template>
         </v-list-item>
-        <v-btn block color="secondary" variant="contained" class="mt-4 py-4"
-          >Logout</v-btn
+        <v-btn
+          block
+          color="secondary"
+          variant="text"
+          class="mt-4 py-4"
+          @click="btLogout"
+          >Đăng xuất</v-btn
         >
       </v-list>
     </v-menu>

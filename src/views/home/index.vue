@@ -62,8 +62,9 @@ export default {
     background: #fff;
     padding: 16px;
     margin-bottom: 12px;
-    border-radius: 16px;
+    border-radius: 7px;
     margin-top: -16px;
+    box-shadow: #919eab4d 0 0 2px,#919eab1f 0 12px 24px -4px!important;
   }
 }
 </style>

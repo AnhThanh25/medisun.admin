@@ -1,18 +1,28 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap");
+
 html {
   font-family: $font-family;
+ &::-webkit-scrollbar-track-piece {
+    background: #d3dce6;
+  }
 
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgb(var(--v-theme-primary));
+    border-radius: 20px;
+  }
   .v-application {
     [class*="text-"] {
       font-family: $font-family, sans-serif !important;
     }
     font-family: $font-family, sans-serif !important;
   }
-
   .bg-light-primary {
     background-color: #fcf1ed !important;
   }
-
   .elevation-10 {
     box-shadow: $box-shadow !important;
   }
@@ -28,6 +38,7 @@ html {
   .v-card {
     border-radius: $border-radius;
     width: 100%;
+    box-shadow: #919eab4d 0 0 2px,#919eab1f 0 12px 24px -4px!important;
   }
   .v-btn {
     text-transform: capitalize;
@@ -86,5 +97,8 @@ html {
       background: rgb(var(--v-theme-error));
       border-left-color: rgb(var(--v-theme-error));
     }
+  }
+  .text-h6 {
+    font-size: 16px !important;
   }
 }

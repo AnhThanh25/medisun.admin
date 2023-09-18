@@ -5,7 +5,8 @@ import "@mdi/font/css/materialdesignicons.css";
 // import * as component from "vuetify/components";
 import * as directives from "vuetify/directives";
 import { VDataTable } from "vuetify/labs/VDataTable";
-import "v-calendar/style.css";
+import { VDatePicker } from 'vuetify/labs/VDatePicker'
+// import "v-calendar/style.css";
 const Lighttheme: ThemeDefinition = {
   variables: {},
   colors: {
@@ -30,6 +31,7 @@ export default createVuetify({
   },
   components: {
     VDataTable,
+    VDatePicker
   },
   defaults: {
     VBtn: {
@@ -66,5 +68,10 @@ export default createVuetify({
       density: "compact",
       color: "secondary",
     },
+    VDatePicker:{
+      variant: "outlined",
+      density: "compact",
+      color: "secondary",
+    }
   },
 });

@@ -1,14 +1,14 @@
 import axios from "axios";
 
 // import { useGlobalStore } from '@/stores/global-store'
-import { getToken, getUserName, removeToken } from "@/utils/auth";
+import { getToken, getUserName, getClinicID } from "@/utils/auth";
 // create an axios instance
 import { useNotification } from "@kyvg/vue3-notification";
 
 const notification = useNotification();
 const service = axios.create({
   baseURL: "http://202.191.56.172/PKPosAPI/",
-  baseURL: " https://localhost:44367/",
+  // baseURL: " https://localhost:44367/",
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 20000, // request timeout
   headers: {
@@ -25,6 +25,7 @@ service.interceptors.request.use(
     if (token != "" && token) {
       config.data.Token = getToken();
       config.data.UserName = getUserName();
+      config.data.ClinicID = getClinicID();
     }
 
     return config;

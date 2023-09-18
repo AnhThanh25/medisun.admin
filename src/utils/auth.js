@@ -1,95 +1,19 @@
 import Cookies from "js-cookie";
-// import { getDateCurrent, getTimeYesterday } from '@/helpers/getTime'
 
 const TokenKey = "TokenPK";
-const UserID = "uPharmaID";
-const UserType = "UTypeTxt";
-const UserName = "FullName";
-const PhoneNumber = "PhoneNumber";
-const GroupMail = "GroupMail";
-const Hotline = "Hotline";
-const Type = "UType";
-const Email = "Email";
-const ShopLst = "LstShop";
-const ShopName = "ShopName";
-const ShopCode = "ShopCode";
-const RuleUser = "user";
-const long = "Long";
-const lat = "Lat";
-const schelvesInfo = "schelvesInfo";
-const accessToken = "accessToken";
-const pharmaCode = "pharmaCode";
-const pharmaAdress = "pharmaAddress";
-const timeStart = "timeStart";
-const timeEnd = "timeEnd";
-const CheckStorage = "CheckStorage";
-export function setShops(vals) {
-  return localStorage.setItem(JSON.stringify(ShopLst), vals);
-}
-export function getShops() {
-  return localStorage.getItem(ShopLst);
-}
-export function removeShops() {
-  return localStorage.removeItem(ShopLst);
-}
+const UserName = "UserNamePK";
+const FullName = "FullNamePK";
+const PhoneNumber = "PhoneNumberPK";
+const Hotline = "HotlinePK";
+const Email = "EmailPK";
+const Role = "RolePK";
+const ClinicID = "ClinicIDPK";
+const ClinicName = "ClinicNamePK";
+const Address = "AddressPK";
+const City = "CityPK";
+const District = "DistrictPK";
+const Commune = "CommunePK";
 
-export function setCheckStorage(time) {
-  return Cookies.set(CheckStorage, time);
-}
-export function getCheckStorage() {
-  return Cookies.get(CheckStorage);
-}
-export function removeCheckStorage() {
-  return Cookies.remove(CheckStorage);
-}
-
-export function setTimeStart(time) {
-  return Cookies.set(timeStart, time);
-}
-export function getTimeStart() {
-  return Cookies.get(timeStart);
-}
-export function removeTimeStart() {
-  return Cookies.remove(timeStart);
-}
-
-export function setTimeEnd(time) {
-  return Cookies.set(timeEnd, time);
-}
-export function getTimeEnd() {
-  return Cookies.get(timeEnd);
-}
-export function removeTimeEnd() {
-  return Cookies.remove(timeEnd);
-}
-
-export function setShopLst(shopLst) {
-  return Cookies.set(ShopLst, shopLst);
-}
-export function getShopLst() {
-  return Cookies.get(ShopLst);
-}
-export function removeShopLst() {
-  return Cookies.remove(ShopLst);
-}
-export function setEmail(email) {
-  return Cookies.set(Email, email);
-}
-export function getEmail() {
-  return Cookies.get(Email);
-}
-export function removeEmail() {
-  return Cookies.remove(Email);
-}
-export function setPhoneNumber(phoneNumber) {
-  return Cookies.set(PhoneNumber, phoneNumber);
-}
-export function getPhoneNumber() {
-  return Cookies.get(PhoneNumber);
-}
-export function removePhoneNumber() {
-  return Cookies.remove(PhoneNumber);
-}
 export function setToken(token) {
   return Cookies.set(TokenKey, token, { expires: 356 });
 }
@@ -99,55 +23,35 @@ export function getToken() {
 export function removeToken() {
   return Cookies.remove(TokenKey);
 }
-export function getUserID() {
-  return Cookies.get(UserID);
-}
-export function setUserID(token) {
-  return Cookies.set(UserID, token);
-}
-export function removeUserID() {
-  return Cookies.remove(UserID);
-}
-export function getUserType() {
-  return Cookies.get(UserType);
-}
-export function setUserType(type) {
-  return Cookies.set(UserType, type);
-}
-export function removeUserType() {
-  return Cookies.remove(UserType);
-}
-export function getType() {
-  return Cookies.get(Type);
-}
-export function setType(type) {
-  return Cookies.set(Type, type);
-}
-export function removeType() {
-  return Cookies.remove(Type);
-}
+
 export function setUserName(name) {
   return Cookies.set(UserName, name);
 }
-
 export function removeUserName() {
   return Cookies.remove(UserName);
 }
 export function getUserName() {
   return Cookies.get(UserName);
 }
-export function setShopName(name) {
-  return Cookies.set(ShopName, name);
+
+export function setFullName(time) {
+  return Cookies.set(FullName, time);
+}
+export function getFullName() {
+  return Cookies.get(FullName);
+}
+export function removeFullName() {
+  return Cookies.remove(FullName);
 }
 
-export function removeGroupMail() {
-  return Cookies.remove(GroupMail);
+export function setPhoneNumber(phoneNumber) {
+  return Cookies.set(PhoneNumber, phoneNumber);
 }
-export function getGroupMail() {
-  return Cookies.get(GroupMail);
+export function getPhoneNumber() {
+  return Cookies.get(PhoneNumber);
 }
-export function setGroupMail(name) {
-  return Cookies.set(GroupMail, name);
+export function removePhoneNumber() {
+  return Cookies.remove(PhoneNumber);
 }
 
 export function removeHotline() {
@@ -160,112 +64,82 @@ export function setHotline(name) {
   return Cookies.set(Hotline, name);
 }
 
-export function getShopName() {
-  return Cookies.get(ShopName);
+export function setEmail(email) {
+  return Cookies.set(Email, email);
 }
-export function removeShopName() {
-  return Cookies.remove(ShopName);
+export function getEmail() {
+  return Cookies.get(Email);
 }
-export function setShopCode(name) {
-  return Cookies.set(ShopCode, name);
-}
-export function getShopCode() {
-  return Cookies.get(ShopCode);
-}
-export function removeShopCode() {
-  return Cookies.remove(ShopCode);
-}
-export function setInventoryCode(code) {
-  return Cookies.set("inventoryCode", code);
-}
-export function getInventoryCode() {
-  return Cookies.get("inventoryCode");
-}
-export function removeInventoryCode() {
-  return Cookies.remove("inventoryCode");
-}
-export function setProductID(product) {
-  return Cookies.set("productId", product);
-}
-export function getProductID() {
-  return Cookies.get("productId");
-}
-export function removeProductID() {
-  return Cookies.remove("productId");
+export function removeEmail() {
+  return Cookies.remove(Email);
 }
 
-export function setRoom(room) {
-  return Cookies.set("roomId", room);
+export function setRole(time) {
+  return Cookies.set(Role, time);
 }
-export function getRoom() {
-  return Cookies.get("roomId");
+export function getRole() {
+  return Cookies.get(Role);
 }
-export function removeRoom() {
-  return Cookies.remove("roomId");
-}
-
-export function setRuleUser(rule) {
-  return Cookies.set(RuleUser, rule);
-}
-export function getRuleUser() {
-  return Cookies.get(RuleUser);
-}
-export function removeRuleUser() {
-  return Cookies.remove(RuleUser);
+export function removeRole() {
+  return Cookies.remove(Role);
 }
 
-export function setLong(val) {
-  return Cookies.set(long, val);
+export function setClinicID(time) {
+  return Cookies.set(ClinicID, time);
 }
-export function getLong() {
-  return Cookies.get(long);
+export function getClinicID() {
+  return Cookies.get(ClinicID);
 }
-export function removeLong() {
-  return Cookies.remove(long);
+export function removeClinicID() {
+  return Cookies.remove(ClinicID);
 }
 
-export function setLat(value) {
-  return Cookies.set(lat, value);
+export function setClinicName(shopLst) {
+  return Cookies.set(ClinicName, shopLst);
 }
-export function getLat() {
-  return Cookies.get(lat);
+export function getClinicName() {
+  return Cookies.get(ClinicName);
 }
-export function removeLat() {
-  return Cookies.remove(lat);
+export function removeClinicName() {
+  return Cookies.remove(ClinicName);
 }
-export function setSchelvesInfo(val) {
-  return Cookies.set(schelvesInfo, val);
+
+export function getAddress() {
+  return Cookies.get(Address);
 }
-export function getSchelvesInfo() {
-  return Cookies.get(schelvesInfo);
+export function setAddress(token) {
+  return Cookies.set(Address, token);
 }
-export function removeSchelvesInfo() {
-  return Cookies.remove(schelvesInfo);
+export function removeAddress() {
+  return Cookies.remove(Address);
 }
-export function setAccessToken(val) {
-  return Cookies.set(accessToken, val);
+
+export function getCity() {
+  return Cookies.get(City);
 }
-export function getAccessToken() {
-  return Cookies.get(accessToken);
+export function setCity(type) {
+  return Cookies.set(City, type);
 }
-export function removeAccessToken() {
-  return Cookies.remove(accessToken);
+export function removeCity() {
+  return Cookies.remove(City);
 }
-export function setPharmaCode(val) {
-  return Cookies.set(pharmaCode, val);
+
+export function getDistrict() {
+  return Cookies.get(District);
 }
-export function getPharmaCode() {
-  return Cookies.get(pharmaCode);
+export function setDistrict(type) {
+  return Cookies.set(District, type);
 }
-export function removePharmaCode() {
-  return Cookies.remove(pharmaCode);
+export function removeDistrict() {
+  return Cookies.remove(District);
 }
-export function setShopAddress(val) {
-  return Cookies.set(pharmaAdress, val);
+
+export function setCommune(name) {
+  return Cookies.set(Commune, name);
 }
-export function getShopAddress() {
-  return Cookies.get(pharmaAdress);
+export function getCommune() {
+  return Cookies.get(Commune);
 }
-export function removeShopAddress() {
-  return Cookies.remove(pharmaAdress);
+export function removeCommune() {
+  return Cookies.remove(Commune);
 }

@@ -1,6 +1,6 @@
 // Outline Card
 .v-card--variant-outlined {
-    border-color: rgba(var(--v-theme-borderLight));
+    // border-color: rgba(var(--v-theme-borderLight));
     .v-divider {
         border-color: rgba(var(--v-theme-borderLight));
     }
@@ -15,11 +15,13 @@
 }
 
 .v-card {
+    border-radius: 7px !important;
+    box-shadow: #919eab4d 0 0 2px,#919eab1f 0 12px 24px -4px!important;
     width: 100%;
     overflow: visible;
-    &.withbg {
-        background-color: rgb(var(--v-theme-background));
-    }
+    // &.withbg {
+    //     background-color: rgb(var(--v-theme-background));
+    // }
     &.w-auto {
         width: auto !important;
     }

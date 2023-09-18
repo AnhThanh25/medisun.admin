@@ -4,7 +4,6 @@
     <v-data-table
       :headers="headers"
       :items="desserts"
-      class="elevation-1"
       :search="search"
       items-per-page-text="Số dòng 1 trang"
       sort-asc-icon="mdi-menu-up"
