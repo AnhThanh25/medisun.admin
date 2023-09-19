@@ -44,7 +44,7 @@ export default {
     <!-- ---------------------------------------------- -->
     <!---Logo part -->
     <!-- ---------------------------------------------- -->
-    <div class="pa-4">
+    <div class="px-4 py-2">
       <LogoDark />
     </div>
     <!-- ---------------------------------------------- -->
@@ -52,7 +52,7 @@ export default {
     <!-- ---------------------------------------------- -->
     <div class="scrollnavbar" style="font-size: 16px">
       <!-- <div>{{ item.meta.title }}</div> -->
-      <v-list class="pa-4" color="transparent">
+      <v-list class="px-4 py-2" color="transparent">
         <!-- ---------------------------------------------- -->
         <!---Menu Loop -->
         <!-- ---------------------------------------------- -->
@@ -66,7 +66,7 @@ export default {
               v-if="item.children && item.children.length > 1"
             >
               <template v-slot:activator="{ props }">
-                <v-list-item v-bind="props" style="margin-bottom:4px">
+                <v-list-item v-bind="props" style="margin-bottom: 4px">
                   <template v-slot:prepend>
                     <v-icon
                       class="feather-sm v-icon v-icon--size-default"
@@ -87,8 +87,8 @@ export default {
               <v-list-item
                 :to="child.path"
                 rounded="lg"
-                class="mb-1 "
-                v-for="(child, i) in item.children.filter(p => !p.hidden )"
+                class="mb-1"
+                v-for="(child, i) in item.children.filter((p) => !p.hidden)"
                 :key="i"
                 :active="isRouteActive(child)"
               >

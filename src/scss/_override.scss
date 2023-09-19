@@ -2,6 +2,7 @@
 
 html {
   font-family: $font-family;
+  font-size: 14px !important;
  &::-webkit-scrollbar-track-piece {
     background: #d3dce6;
   }
@@ -100,5 +101,8 @@ html {
   }
   .text-h6 {
     font-size: 16px !important;
+    font-weight: 600 !important;
   }
+
+
 }

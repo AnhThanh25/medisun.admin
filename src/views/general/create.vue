@@ -65,7 +65,7 @@
         <TeethAdults v-if="typeTeeth == 1" />
         <TeethKids v-if="typeTeeth == 2" />
       </v-row>
-      <v-data-table
+      <v-data-table  no-data-text="Không có dữ liệu"
         :headers="teethHeaders"
         :items="teethDesserts"
         :search="search"

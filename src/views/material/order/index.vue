@@ -3,7 +3,7 @@
     <v-card-title class="text-h6 py-4"
       >Danh sách phiếu đặt mua vật liệu</v-card-title
     >
-    <v-data-table
+    <v-data-table  no-data-text="Không có dữ liệu"
       :headers="headers"
       :items="desserts"
        

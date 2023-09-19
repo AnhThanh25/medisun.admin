@@ -21,7 +21,7 @@ export const constantRoutes = [
     redirect: "/trang-chu",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Trang chủ", icon: "mdi-home" },
+    meta: { title: "Trang chủ", icon: "mdi-home-cirle-outline" },
     hidden: true,
   },
   {
@@ -65,7 +65,7 @@ export const constantRoutes = [
     path: "/kham-benh",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Khám bệnh", icon: "mdi-hospital" },
+    meta: { title: "Khám bệnh", icon: "mdi-hospital-box-outline" },
     children: [
       {
         name: "Khám tổng quát",
@@ -123,7 +123,7 @@ export const constantRoutes = [
       {
         name: "Lịch hẹn",
         path: "/lich-hen",
-        component: () => import("@/views/calendar/index.vue"),
+        component: () => import("@/views/appointment/index.vue"),
         meta: { title: "Lịch hẹn", icon: "mdi-card-outline" },
         role: 1,
       },
@@ -180,12 +180,11 @@ export const constantRoutes = [
         role: 1,
       },
       {
-        name: "Thủ thuật",
-        path: "/cai-dat/thu-thuat",
-        component: () => import("@/views/setting/service/create.vue"),
-        meta: { title: "Thủ thuật", icon: "mdi-card-outline" },
+        name: "Dịch vụ",
+        path: "/cai-dat/dich-vu",
+        component: () => import("@/views/setting/service/index.vue"),
+        meta: { title: "Dịch vụ", icon: "mdi-card-outline" },
         role: 1,
-       
       },
     ],
   },

@@ -3,7 +3,7 @@
     <v-card-title>
       <h6 class="text-h6 py-4">Danh sách phiếu khám tổng quát</h6>
     </v-card-title>
-    <v-data-table
+    <v-data-table  no-data-text="Không có dữ liệu"
       :headers="headers"
       :items="desserts"
        

@@ -1,6 +1,4 @@
-.v-text-field input {
-  font-size: 0.875rem;
-}
+
 .v-field__outline {
   color: rgb(var(--v-theme-inputBorder),0.5);
 }
@@ -11,4 +9,10 @@
 }
 .v-field{
   border-radius: 8px;
+}
+.v-field__input{
+  font-size: 14px !important;
+}
+.v-text-field input{
+  font-size: 14px;
 }

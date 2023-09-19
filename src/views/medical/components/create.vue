@@ -101,7 +101,7 @@
             </v-col>
           </v-row>
 
-          <v-data-table
+          <v-data-table  no-data-text="Không có dữ liệu"
             :headers="headers"
             :items="desserts"
             :search="search"
@@ -113,7 +113,7 @@
             class="table-pres"
           >
           </v-data-table>
-          <v-data-table
+          <v-data-table  no-data-text="Không có dữ liệu"
             :headers="headers"
             :items="desserts"
             :search="search"

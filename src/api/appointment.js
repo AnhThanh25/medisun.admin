@@ -1,8 +1,8 @@
 import request from "@/utils/request";
 
-export function GetGeneraltyLst(data) {
+export function GetAppointmentLst(data) {
   return request({
-    url: "PKAppointment/GetGeneraltyLst",
+    url: "PKAppointment/GetAppointmentLst",
     method: "post",
     data: data,
   });

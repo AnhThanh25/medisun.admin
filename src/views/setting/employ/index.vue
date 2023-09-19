@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title class="text-h6 py-4"> Danh sách nhân sự </v-card-title>
 
-    <v-data-table
+    <v-data-table  no-data-text="Không có dữ liệu"
       :headers="headers"
       :items="desserts"
       :search="search"
@@ -16,7 +16,7 @@
             <v-text-field
               v-model="search"
               label="Tìm kiếm"
-              class="mx-4"
+              class="ml-4"
               variant="outlined"
               hide-details
               density="compact"
@@ -26,17 +26,18 @@
           </span>
 
           <v-btn
-            color="secondary"
-            size="large"
+            color="blue"
+            icon="mdi-account-plus"
+            variant="tonal"
             @click="isShowCreateEmploy = true"
-            >Thêm nhân sự</v-btn
-          >
+            style="height: 42px"
+          ></v-btn>
         </div>
       </template>
       <template v-slot:item.Action="{ item }">
         <v-btn
           variant="text"
-          @click="btShowUpdate(item)"
+          @click="btShowUpdate(item.raw)"
           icon="mdi-pencil-circle-outline"
         ></v-btn>
       </template>
@@ -45,7 +46,7 @@
   <v-dialog v-model="isShowCreateEmploy" persistent width="600">
     <v-card>
       <v-card-title>
-        <h6 class="text-h6">Thêm nhân sự</h6>
+        <h6 class="text-h6 px-3 py-2">Thêm nhân sự</h6>
       </v-card-title>
       <v-card-text>
         <v-row>
@@ -78,33 +79,23 @@
                 ></v-select>
               </v-col>
               <v-col cols="12" sm="6" md="6">
-                <div style="position: relative; z-index: 1000000">
-                  <v-menu
-                    v-model="menu2"
-                    :close-on-content-click="false"
-                    transition="scale-transition"
-                    offset-y
-                    class="custom-picker"
-                  >
-                    <template v-slot:activator="{ isActive }">
-                      <v-text-field
-                        v-model="computedDateFormatted"
-                        label="Ngày sinh"
-                        append-inner-icon="mdi-calendar"
-                        persistent-hint
-                        readonly
-                        hide-details
-                        @click="menu2 = true"
-                        @click:appendInner="menu2 = true"
-                      ></v-text-field>
-                    </template>
-                    <VDatePicker2
-                      v-model="employInfo.DateOfBirth"
-                      no-title
-                      @input="menu2 = false"
-                    ></VDatePicker2>
-                  </v-menu>
-                </div>
+                <VDatePicker2
+                  locale="vi"
+                  v-model="employUpdate.DateOfBirth"
+                  mode="date"
+                  :masks="masks"
+                >
+                  <template #default="{ inputValue, inputEvents }">
+                    <v-text-field
+                      v-model="employUpdate.DateOfBirth"
+                      :value="inputValue"
+                      v-on="inputEvents"
+                      label="Ngày sinh"
+                      append-inner-icon="mdi-calendar"
+                      hide-details
+                    />
+                  </template>
+                </VDatePicker2>
               </v-col>
             </v-row>
 
@@ -192,7 +183,7 @@
   <v-dialog v-model="isShowUpdateEmploy" persistent width="600">
     <v-card>
       <v-card-title>
-        <h6 class="text-h6">Cập nhật thông tin nhân sự</h6>
+        <h6 class="text-h6 px-3 py-2">Cập nhật thông tin nhân sự</h6>
       </v-card-title>
       <v-card-text>
         <v-row>
@@ -225,33 +216,23 @@
                 ></v-select>
               </v-col>
               <v-col cols="12" sm="6" md="6">
-                <div style="position: relative; z-index: 1000000">
-                  <v-menu
-                    v-model="menu2"
-                    :close-on-content-click="false"
-                    transition="scale-transition"
-                    offset-y
-                    class="custom-picker"
-                  >
-                    <template v-slot:activator="{ isActive }">
-                      <v-text-field
-                        v-model="computedDateFormattedUpdate"
-                        label="Ngày sinh"
-                        append-inner-icon="mdi-calendar"
-                        persistent-hint
-                        readonly
-                        hide-details
-                        @click="menu2 = true"
-                        @click:appendInner="menu2 = true"
-                      ></v-text-field>
-                    </template>
-                    <VDatePicker2
+                <VDatePicker2
+                  locale="vi"
+                  v-model="employUpdate.DateOfBirth"
+                  mode="date"
+                  :masks="masks"
+                >
+                  <template #default="{ inputValue, inputEvents }">
+                    <v-text-field
                       v-model="employUpdate.DateOfBirth"
-                      no-title
-                      @input="menu2 = false"
-                    ></VDatePicker2>
-                  </v-menu>
-                </div>
+                      :value="inputValue"
+                      v-on="inputEvents"
+                      label="Ngày sinh"
+                      append-inner-icon="mdi-calendar"
+                      hide-details
+                    />
+                  </template>
+                </VDatePicker2>
               </v-col>
             </v-row>
 
@@ -308,7 +289,7 @@
         >
           Đóng
         </v-btn>
-        <v-btn @click="isShowUpdateEmploy = false"> Lưu thông tin </v-btn>
+        <v-btn @click="updateAccount"> Lưu thông tin </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -346,7 +327,6 @@ export default {
         { title: "Action", key: "Action" },
       ],
       desserts: [],
-
       pageNumber: 1,
       rowspPage: 10,
       search: "",
@@ -354,21 +334,15 @@ export default {
       menu2: false,
       roleLst: roleLst,
       employUpdate: {},
+      masks: {
+        input: "DD-MM-YYYY",
+      },
     };
-  },
-  computed: {
-    computedDateFormatted() {
-      return this.formatDateShow(this.employInfo.DateOfBirth);
-    },
-    computedDateFormattedUpdate() {
-      return this.formatDateShow(this.employUpdate.DateOfBirth);
-    },
   },
 
   methods: {
     btShowUpdate(data) {
-      this.employUpdate = data.selectable;
-      console.log(data);
+      this.employUpdate = data;
       this.isShowUpdateEmploy = true;
     },
     formatDateShow(date) {
@@ -447,7 +421,7 @@ export default {
           return;
         }
       }
-      if (!employInfo.Birthday) {
+      if (!employInfo.DateOfBirth) {
         notify({
           type: "error",
           title: "Lỗi",
@@ -474,7 +448,10 @@ export default {
         }
       }
       AddAccountClinic({
-        UserInfo: this.employInfo,
+        UserInfo: {
+          ...this.employInfo,
+          DateOfBirth: formatDate(this.employInfo.DateOfBirth),
+        },
       }).then((res) => {
         if (res) {
           this.isShowCreateEmploy = false;
@@ -488,7 +465,7 @@ export default {
       });
     },
     updateAccount() {
-      if (!employUpdate.Address) {
+      if (!this.employUpdate.Address) {
         notify({
           type: "error",
           title: "Lỗi",
@@ -496,7 +473,7 @@ export default {
         });
         return;
       }
-      if (!employUpdate.FullName) {
+      if (!this.employUpdate.FullName) {
         notify({
           type: "error",
           title: "Lỗi",
@@ -504,7 +481,7 @@ export default {
         });
         return;
       }
-      if (!employUpdate.PhoneNumber) {
+      if (!this.employUpdate.PhoneNumber) {
         notify({
           type: "error",
           title: "Lỗi",
@@ -512,7 +489,7 @@ export default {
         });
         return;
       } else {
-        if (isPhoneNumber(employUpdate.PhoneNumber)) {
+        if (this.isPhoneNumber(this.employUpdate.PhoneNumber)) {
         } else {
           notify({
             type: "error",
@@ -522,7 +499,7 @@ export default {
           return;
         }
       }
-      if (!employUpdate.Email) {
+      if (!this.employUpdate.Email) {
         notify({
           type: "error",
           title: "Lỗi",
@@ -530,7 +507,7 @@ export default {
         });
         return;
       } else {
-        if (isEmail(employUpdate.Email)) {
+        if (this.isEmail(this.employUpdate.Email)) {
         } else {
           notify({
             type: "error",
@@ -540,7 +517,7 @@ export default {
           return;
         }
       }
-      if (!employUpdate.Birthday) {
+      if (!this.employUpdate.DateOfBirth) {
         notify({
           type: "error",
           title: "Lỗi",
@@ -548,9 +525,11 @@ export default {
         });
         return;
       }
-
       UpdateAccount({
-        Data: this.employUpdate,
+        Data: {
+          ...this.employUpdate,
+          DateOfBirth: formatDate(this.employUpdate.DateOfBirth),
+        },
       }).then((res) => {
         if (res) {
           this.isShowUpdateEmploy = false;
