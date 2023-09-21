@@ -14,3 +14,10 @@ export function AddAppointment(data) {
     data: data,
   });
 }
+export function UpdateAppointment(data) {
+  return request({
+    url: "PKAppointment/UpdateAppointment",
+    method: "post",
+    data: data,
+  });
+}

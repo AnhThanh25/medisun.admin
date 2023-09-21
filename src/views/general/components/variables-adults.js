@@ -1,21 +1,68 @@
 export const teethMefical = [
-  "Sau mem",
-  "Viêm tủy có hồi phục",
-  "Viêm quanh cuống bán cấp",
-  "Áp xe lợi",
-  "Lợi trùm",
-  "Phục hình Talabetala răng",
-  "Sâu ngà",
-  "Viêm tủy không phục hồi",
-  "Viêm quanh cuống mãn tính",
-  "Viêm kẽ",
-  "Răng khôn mọc lệch",
-  "Sâu ngà sâu",
-  "Tủy hoại tử",
-  "Viêm lợi",
-  "Viêm quanh thành răng khôn",
-  "Viêm quanh cuống cấp",
-  "Khác",
+  {
+    Text: "Viêm tủy có hồi phục",
+    CheckBox: false,
+  },
+  {
+    Text: "Viêm quanh cuống bán cấp",
+    CheckBox: false,
+  },
+  {
+    Text: "Áp xe lợi",
+    CheckBox: false,
+  },
+  {
+    Text: "Lợi trùm",
+    CheckBox: false,
+  },
+  {
+    Text: "Phục hình Talabetala răng",
+    CheckBox: false,
+  },
+  {
+    Text: "Sâu ngà",
+    CheckBox: false,
+  },
+  {
+    Text: "Viêm tủy không phục hồi",
+    CheckBox: false,
+  },
+  {
+    Text: "Viêm quanh cuống mãn tính",
+    CheckBox: false,
+  },
+  {
+    Text: "Viêm kẽ",
+    CheckBox: false,
+  },
+  {
+    Text: "Răng khôn mọc lệch",
+    CheckBox: false,
+  },
+  {
+    Text: "Sâu ngà sâu",
+    CheckBox: false,
+  },
+  {
+    Text: "Tủy hoại tử",
+    CheckBox: false,
+  },
+  {
+    Text: "Viêm lợi",
+    CheckBox: false,
+  },
+  {
+    Text: "Viêm quanh thành răng khôn",
+    CheckBox: false,
+  },
+  {
+    Text: "Viêm quanh cuống cấp",
+    CheckBox: false,
+  },
+  {
+    Text: "Khác",
+    CheckBox: false,
+  },
 ];
 
 export const teethTopRightLst = [

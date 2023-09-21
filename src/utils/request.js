@@ -1,7 +1,24 @@
 import axios from "axios";
 
 // import { useGlobalStore } from '@/stores/global-store'
-import { getToken, getUserName, getClinicID } from "@/utils/auth";
+import {
+  getToken,
+  getUserName,
+  getClinicID,
+  removeToken,
+  removeUserName,
+  removeFullName,
+  removePhoneNumber,
+  removeHotline,
+  removeEmail,
+  removeRole,
+  removeClinicID,
+  removeClinicName,
+  removeAddress,
+  removeCity,
+  removeDistrict,
+  removeCommune,
+} from "@/utils/auth";
 // create an axios instance
 import { useNotification } from "@kyvg/vue3-notification";
 
@@ -46,14 +63,27 @@ service.interceptors.response.use(
     // if the custom code is not 20000, it is judged as an error.
     if (res.RespCode !== 0) {
       if (res.RespCode === -1) {
+        console.log("đã vào đây");
         notification.notify({
           type: "error",
           title: "Hết hạn",
           text: "Phiên đăng nhập hết hạn",
         });
-        store.dispatch("user/resetToken").then(() => {
-          location.reload();
-        });
+        location.reload();
+        removeToken();
+        removeUserName();
+        removeFullName();
+        removePhoneNumber();
+        removeHotline();
+        removeEmail();
+        removeRole();
+        removeClinicID();
+        removeClinicName();
+        removeAddress();
+        removeCity();
+        removeDistrict();
+        removeCommune();
+        store.dispatch("user/resetToken").then(() => {});
       } else {
         notification.notify({
           type: "error",

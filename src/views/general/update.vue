@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      <h6 class="text-h6 px-3 py-2">Tạo phiếu khám tổng quát</h6>
+      <h6 class="text-h6 px-3 py-2">Chi tiết phiếu khám tổng quát</h6>
     </v-card-title>
     <v-card-text>
       <v-row>
@@ -93,7 +93,6 @@
         />
       </v-row>
       <v-data-table
-        v-if="generalInfo.TeethLst.length > 0"
         no-data-text="Không có dữ liệu"
         :headers="teethHeaders"
         :items="generalInfo.TeethLst"
@@ -112,13 +111,14 @@
       <v-btn @click="addGeneralty"> Lưu thông tin </v-btn>
     </v-card-actions>
   </v-card>
+  <notifications />
 </template>
 
 <script>
 import TeethAdults from "./components/teeth-adults.vue";
 import TeethKids from "./components/teeth-kids.vue";
 import { pathAll, pathTeeth } from "../customer/variable";
-import { AddGeneralty } from "@/api/generalty";
+import { GetGeneraltyByID, AddGeneralty } from "@/api/generalty";
 import { GetEmployLst } from "@/api/user";
 import { getRoleText } from "@/utils/role";
 export default {
@@ -131,10 +131,7 @@ export default {
       pathAll: pathAll,
       pathTeeth: pathTeeth,
       typeTeeth: 1,
-      generalInfo: {
-        TypeTeeth: "Hàm người lớn",
-        TeethLst: [],
-      },
+      generalInfo: {},
       teethHeaders: [
         { title: "STT", sortable: false, key: "Key" },
         { title: "Loại", key: "TypeTeeth" },
@@ -157,7 +154,7 @@ export default {
           notify({
             type: "success",
             title: "Thành công",
-            text: "Thêm phiếu khám tổng quát thành công",
+            text: "Cập nhật phiếu khám tổng quát thành công",
           });
           setTimeout(() => {
             this.$router.push("/kham-benh/tong-quat");
@@ -167,6 +164,7 @@ export default {
     },
 
     saveReasonTeeth(number, data) {
+      console.log(number, data);
       if (data.length > 0) {
         for (var i = 0; i < data.length; i++) {
           var check = this.generalInfo.TeethLst.find(
@@ -213,8 +211,55 @@ export default {
         }
       });
     },
+    getGeneraltyByID() {
+      GetGeneraltyByID({
+        GeneraltyID: this.generalID,
+      }).then((res) => {
+        if (res) {
+          this.generalInfo = {
+            ...res.Data,
+            Title: res.Data.PatientName + " - " + res.Data.Phone,
+          };
+          this.generalInfo.TeethLst = this.generalInfo.TeethLst.map(
+            (item, index) => {
+              return {
+                ...item,
+                Key: index + 1,
+                TeethShow: "Răng số " + item.Teeth,
+                TypeTeeth: res.Data.TypeTeeth,
+              };
+            }
+          );
+          if (this.generalInfo.PathlogicalLst) {
+            var dataPathAll = this.generalInfo.PathlogicalLst.filter(
+              (p) => p.Type == "Tiền sử bệnh toàn thân"
+            );
+            this.pathAll = [...pathAll];
+            console.log(pathAll);
+            for (var i = 0; i < dataPathAll.length; i++) {
+              var item = dataPathAll[i];
+              this.pathAll.find(
+                (p) => p.Text == item.Pathological
+              ).CheckBox = true;
+            }
+            var dataPathTeeth = this.generalInfo.PathlogicalLst.filter(
+              (p) => p.Type == "Tiền sử bệnh răng miệng"
+            );
+            this.pathTeeth = [...pathTeeth];
+            for (var i = 0; i < dataPathTeeth.length; i++) {
+              var item = dataPathTeeth[i];
+              this.pathTeeth.find(
+                (p) => p.Text == item.Pathological
+              ).CheckBox = true;
+            }
+          }
+        }
+      });
+    },
   },
   created() {
+    this.generalID = this.$route.params.id;
+    this.getGeneraltyByID();
     this.getEmployLst();
   },
 };

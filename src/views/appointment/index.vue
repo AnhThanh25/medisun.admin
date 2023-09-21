@@ -10,7 +10,7 @@
       items-per-page-text="Số dòng 1 trang"
       sort-asc-icon="mdi-menu-up"
       sort-desc-icon="mdi-menu-down"
-      min-height="250"
+      :height="desserts.length < 4 ? 250 : ''"
     >
       <template v-slot:top>
         <div class="d-flex flex-wrap gap-2">
@@ -20,6 +20,7 @@
               v-model="timeStart"
               mode="date"
               :masks="masks"
+              style="z-index: 100000"
             >
               <template #default="{ inputValue, inputEvents }">
                 <v-text-field
@@ -190,11 +191,131 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <v-dialog v-model="isShowUpdateAppointment" persistent width="500">
+    <v-card>
+      <v-card-title>
+        <h6 class="text-h6 px-3 py-2">Cập nhật lịch hẹn</h6>
+      </v-card-title>
+      <v-card-text>
+        <v-row>
+          <v-col cols="12">
+            <v-autocomplete
+              v-model="appointmentUpdate.PatientID"
+              label="Khách hàng"
+              :items="patientLst"
+              item-title="Title"
+              item-value="PatientID"
+            ></v-autocomplete>
+            <v-row>
+              <v-col cols="6">
+                <VDatePicker2
+                  locale="vi"
+                  v-model="appointmentUpdate.AppointmentDate"
+                  mode="date"
+                  :masks="masks"
+                >
+                  <template #default="{ inputValue, inputEvents }">
+                    <v-text-field
+                      v-model="appointmentUpdate.AppointmentDate"
+                      :value="inputValue"
+                      v-on="inputEvents"
+                      label="Ngày hẹn/ tái khám"
+                      append-inner-icon="mdi-calendar"
+                    />
+                  </template>
+                </VDatePicker2>
+              </v-col>
+              <v-col cols="6">
+                <VDatePicker2
+                  locale="vi"
+                  v-model="appointmentUpdate.AppointmentDate"
+                  mode="time"
+                  is24hr
+                  hide-time-header
+                >
+                  <template #default="{ inputValue, inputEvents }">
+                    <v-text-field
+                      v-model="appointmentUpdate.AppointmentDate"
+                      :value="inputValue"
+                      v-on="inputEvents"
+                      label="Giờ hẹn/ tái khám"
+                      append-inner-icon="mdi-clock"
+                    />
+                  </template>
+                </VDatePicker2>
+              </v-col>
+            </v-row>
+
+            <v-select
+              v-model="appointmentUpdate.DentistID"
+              :items="employLst"
+              label="Người thực hiện"
+              item-title="Title"
+              item-value="UserName"
+            ></v-select>
+            <v-select
+              v-model="appointmentUpdate.AppointmentType"
+              :items="['Lịch hẹn', 'Tái khám']"
+              label="Loại lịch"
+            ></v-select>
+            <v-select
+              v-model="appointmentUpdate.ServiceID"
+              :items="serviceLst"
+              label="Thủ thuật"
+              item-title="ServiceName"
+              item-value="ServiceID"
+            ></v-select>
+
+            <v-text-field
+              label="Ghi chú"
+              v-model="appointmentUpdate.Note"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="blue-darken-1"
+          variant="text"
+          @click="isShowUpdateAppointment = false"
+        >
+          Đóng
+        </v-btn>
+        <v-btn @click="updateAppointment(appointmentUpdate, 2)">
+          Lưu thông tin
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <v-dialog v-model="isShowDelAppointment" width="400">
+    <v-card>
+      <v-toolbar
+        class="pl-2"
+        color="error"
+        title="Xóa lịch hẹn"
+        center
+      ></v-toolbar>
+      <v-card-text>
+        <div class="text-h5 pt-4">Có chắc bạn muốn xóa lịch hẹn này không?</div>
+      </v-card-text>
+      <v-card-actions class="justify-end">
+        <v-btn color="blue" variant="text" @click="isShowDelAppointment = false"
+          >Đóng</v-btn
+        >
+        <v-btn variant="text" @click="updateAppointment(itemDel, 0)">Xóa</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
   <notifications />
 </template>
 
 <script>
-import { GetAppointmentLst, AddAppointment } from "@/api/appointment";
+import {
+  GetAppointmentLst,
+  AddAppointment,
+  UpdateAppointment,
+} from "@/api/appointment";
 import { formatDateUpload, formatDateDisplay } from "@/helpers/getTime";
 import { getStatusAppointment, appointmentStatusLst } from "./variable";
 import { GetPatientLst } from "@/api/patient";
@@ -210,7 +331,10 @@ export default {
       date: null,
       typeTeeth: 1,
       appointmentInfo: {},
+      appointmentUpdate: {},
+      isShowDelAppointment: false,
       isShowCreateAppointment: false,
+      isShowUpdateAppointment: false,
       search: "",
       sortBy: [{ key: "calories", order: "asc" }],
       headers: [
@@ -238,7 +362,16 @@ export default {
       searchPatient: "",
       employLst: [],
       serviceLst: [],
+      itemDel: {},
     };
+  },
+  watch: {
+    timeStart() {
+      this.getAppointmentLst();
+    },
+    timeEnd() {
+      this.getAppointmentLst();
+    },
   },
   methods: {
     getServiceLst() {
@@ -284,8 +417,41 @@ export default {
         }
       });
     },
+    btShowDel(data) {
+      this.isShowDelAppointment = true;
+      this.itemDel = data;
+    },
+    btShowUpdate(data) {
+      this.isShowUpdateAppointment = true;
+      this.appointmentUpdate = data;
+    },
+    updateAppointment(data, status) {
+      UpdateAppointment({
+        Data: {
+          ...data,
+          PatientName: this.patientLst.find(
+            (p) => p.PatientID == data.PatientID
+          ).PatientName,
+          AppointmentDate: formatDate(data.AppointmentDate),
+          Status: status,
+        },
+      }).then((res) => {
+        if (res) {
+          this.isShowUpdateAppointment = false;
+          this.isShowDelAppointment = false;
+          this.getAppointmentLst();
+          notify({
+            type: "success",
+            title: "Thành công",
+            text:
+              status == 0
+                ? "Xóa lịch hẹn thành công"
+                : "Cập nhật lịch hẹn mới thành công",
+          });
+        }
+      });
+    },
     addAppointment() {
-      console.log(this.appointmentInfo);
       AddAppointment({
         Data: {
           ...this.appointmentInfo,

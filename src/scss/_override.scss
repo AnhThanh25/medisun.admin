@@ -3,7 +3,7 @@
 html {
   font-family: $font-family;
   font-size: 14px !important;
- &::-webkit-scrollbar-track-piece {
+  &::-webkit-scrollbar-track-piece {
     background: #d3dce6;
   }
 
@@ -39,7 +39,7 @@ html {
   .v-card {
     border-radius: $border-radius;
     width: 100%;
-    box-shadow: #919eab4d 0 0 2px,#919eab1f 0 12px 24px -4px!important;
+    box-shadow: #919eab4d 0 0 2px, #919eab1f 0 12px 24px -4px !important;
   }
   .v-btn {
     text-transform: capitalize;
@@ -104,5 +104,13 @@ html {
     font-weight: 600 !important;
   }
 
-
+  .text-left {
+    font-size: 14px !important;
+  }
+  .text-right {
+    font-size: 14px !important;
+  }
+}
+strong {
+  font-size: 14px;
 }

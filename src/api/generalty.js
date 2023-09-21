@@ -21,3 +21,10 @@ export function AddGeneralty(data) {
     data: data,
   });
 }
+export function DelGeneralty(data) {
+  return request({
+    url: "PKGeneralty/DelGeneralty",
+    method: "post",
+    data: data,
+  });
+}
