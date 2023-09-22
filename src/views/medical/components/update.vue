@@ -81,18 +81,7 @@
             </v-col>
           </v-row>
           <v-row style="padding: 0 12px">
-            <v-btn-toggle
-              v-model="tab"
-              rounded="0"
-              color="secondary"
-              group
-              style="margin-right: 8px"
-              density="compact"
-            >
-              <v-btn value="1"> Dịch vụ </v-btn>
-              <v-btn value="2"> Thuốc </v-btn>
-            </v-btn-toggle>
-            <span>
+            <span style="width: calc(50% - 12px)">
               <v-text-field
                 v-model="search"
                 label="Tìm kiếm dịch vụ/thuốc"
@@ -100,31 +89,69 @@
                 variant="outlined"
                 hide-details
                 density="compact"
-                style="width: 312px !important"
                 prepend-inner-icon="mdi-magnify"
               ></v-text-field>
             </span>
-          </v-row>
-
-          <v-row style="padding: 16px 8px">
-            <v-col
-              cols="6"
-              lg="3"
-              md="4"
-              sm="6"
-              v-for="item in serviceLst"
-              :key="item"
-              style="padding: 4px !important"
+            <v-btn-toggle
+              v-model="typeTab"
+              color="primary"
+              group
+              style="padding-left: 24px"
+              density="compact"
             >
-              <v-card class="item" prepend-icon="mdi-tooth">
-                <template v-slot:title>
-                  <span style="font-size: 14px">{{ item.ServiceName }}</span>
-                </template>
-                <template v-slot:subtitle>
-                  {{ new Intl.NumberFormat().format(item.Price) }}đ
-                </template>
-              </v-card>
-            </v-col>
+              <v-btn :value="true"> Dịch vụ </v-btn>
+              <v-btn :value="false"> Thuốc </v-btn>
+            </v-btn-toggle>
+          </v-row>
+          <v-row v-if="serviceLst.Odd">
+            <swiper
+              v-if="serviceLst.Odd.length > 0"
+              class="mySwiper swiper-pk"
+              :modules="modules"
+              :slides-per-view="4"
+              :space-between="8"
+              @swiper="onSwiper"
+              @slideChange="onSlideChange"
+              :pagination="{ clickable: true }"
+            >
+              <swiper-slide v-for="(item, index) in serviceLst.Odd" :key="index"
+                ><v-card
+                  class="item-service"
+                  @click="btShowService(serviceLst.Odd[index])"
+                >
+                  <template v-slot:title>
+                    <span style="font-size: 14px">{{
+                      serviceLst.Odd[index].ServiceName
+                    }}</span>
+                  </template>
+                  <template v-slot:subtitle>
+                    {{
+                      new Intl.NumberFormat().format(
+                        serviceLst.Odd[index].Price
+                      )
+                    }}đ
+                  </template>
+                </v-card>
+                <v-card
+                  class="item-service"
+                  v-if="serviceLst.Even[index]"
+                  @click="btShowService(serviceLst.Even[index])"
+                >
+                  <template v-slot:title>
+                    <span style="font-size: 14px">{{
+                      serviceLst.Even[index].ServiceName
+                    }}</span>
+                  </template>
+                  <template v-slot:subtitle>
+                    {{
+                      new Intl.NumberFormat().format(
+                        serviceLst.Even[index].Price
+                      )
+                    }}đ
+                  </template>
+                </v-card>
+              </swiper-slide>
+            </swiper>
           </v-row>
 
           <v-data-table
@@ -138,20 +165,6 @@
             :disable-pagination="true"
             :items-per-page="-1"
             class="table-pres"
-          >
-          </v-data-table>
-          <v-data-table
-            no-data-text="Không có dữ liệu"
-            :headers="headers"
-            :items="desserts"
-            :search="search"
-            sort-asc-icon="mdi-menu-up"
-            sort-desc-icon="mdi-menu-down"
-            :hide-default-footer="true"
-            :disable-pagination="true"
-            :items-per-page="-1"
-            class="table-pres"
-            style="margin-top: 16px"
           >
           </v-data-table>
         </v-card-text>
@@ -234,6 +247,75 @@
       </v-row>
     </v-col>
   </v-row>
+  <v-dialog v-model="isShowAddService" persistent width="500">
+    <v-card>
+      <v-card-title>
+        <h6 class="text-h6 px-3 py-2">Thêm sản phẩm</h6>
+      </v-card-title>
+      <v-card-text>
+        <v-row>
+          <v-col cols="12">
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="serviceInfo.ServiceName"
+                  label="Tên sản phẩm"
+                  hide-details
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  label="Giá"
+                  hide-details
+                  v-model="priceFormatted"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  label="Đơn vị bán"
+                  v-model="serviceInfo.Unit"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  label="Số lượng"
+                  v-model="serviceInfo.Quantity"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  label="Giảm giá"
+                  v-model="serviceInfo.Discount"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-textarea
+                  label="Mô tả"
+                  v-model="serviceInfo.Description"
+                  hide-details
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="blue-darken-1"
+          variant="text"
+          @click="isShowAddService = false"
+        >
+          Đóng
+        </v-btn>
+        <v-btn> Lưu thông tin </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -243,12 +325,22 @@ import { items } from "../variables";
 import { GetEmployLst } from "@/api/user";
 import { getRoleText } from "@/utils/role";
 import { GetServiceLst } from "@/api/service";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { Pagination } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/pagination";
+
 export default {
+  components: {
+    Swiper,
+    SwiperSlide,
+  },
   data() {
     return {
       pathAll: pathAll,
       pathTeeth: pathTeeth,
-      tab: "1",
+      typeTab: true,
       items: items,
       headers: [
         {
@@ -293,10 +385,18 @@ export default {
         input: "DD-MM-YYYY",
       },
       employLst: [],
-      serviceLst: [],
+      serviceLst: {},
+      modules: [Pagination],
+      isShowAddService: false,
+      serviceInfo: {},
     };
   },
   methods: {
+    btShowService(data) {
+      console.log(data);
+      this.isShowAddService = true;
+      this.serviceInfo = data;
+    },
     getServiceLst() {
       GetServiceLst({
         PageNumber: 1,
@@ -304,7 +404,16 @@ export default {
         Search: "",
       }).then((res) => {
         if (res) {
-          this.serviceLst = res.Data;
+          var data = res.Data.map((item, index) => {
+            return {
+              ...item,
+              Key: index + 1,
+            };
+          });
+          console.log("124");
+          this.serviceLst.Even = data.filter((p) => p.Key % 2 == 0);
+          this.serviceLst.Odd = data.filter((p) => p.Key % 2 != 0);
+          console.log(this.serviceLst);
         }
       });
     },
@@ -370,21 +479,37 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.item {
-  margin-bottom: 0 !important;
-  border-radius: 4px;
-  background: #f7f7f7;
-  &:hover {
-    background: #03c9d718;
-    color: #00b7c4;
-    cursor: pointer;
-  }
+<style lang="scss">
+.table-pres {
+  margin-top: 20px;
 }
-</style>
-<style>
-.item .v-card-item__prepend {
-  width: 40px;
-  margin-left: -8px;
+.swiper-pk {
+  margin-top: 10px;
+  width: calc(100% - 20px);
+  .swiper-pagination {
+    margin-bottom: -10px;
+  }
+  .item-service {
+    margin-bottom: 0 !important;
+    border-radius: 4px;
+    background: #f7f7f7;
+    height: calc(50% - 10px);
+    margin-top: 8px;
+    .v-card-item {
+      .v-card-title {
+        line-height: 16px;
+        white-space: normal;
+      }
+    }
+    .v-card-subtitle {
+      color: rgb(var(--v-theme-primary));
+      opacity: 1;
+    }
+    &:hover {
+      background: #03c9d718;
+      color: #00b7c4;
+      cursor: pointer;
+    }
+  }
 }
 </style>

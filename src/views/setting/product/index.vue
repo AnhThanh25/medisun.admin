@@ -1,7 +1,8 @@
 <template>
   <v-card>
     <v-card-title class="text-h6 py-4"> Danh sách thuốc kê đơn </v-card-title>
-    <v-data-table  no-data-text="Không có dữ liệu"
+    <v-data-table
+      no-data-text="Không có dữ liệu"
       :headers="headers"
       :items="desserts"
       :search="search"
@@ -27,11 +28,14 @@
           <v-btn
             color="blue"
             variant="tonal"
-            @click="isShowCreateService = true"
-            icon="mdi-note-plus"
+            @click="isShowCreateProduct = true"
+            icon="mdi-pill"
             style="height: 42px"
           ></v-btn>
         </div>
+      </template>
+      <template v-slot:item.Exprice="{ item }">
+        {{ new Intl.NumberFormat().format(item.raw.Exprice) }}
       </template>
       <template v-slot:item.Action="{ item }">
         <v-icon
@@ -49,10 +53,10 @@
       </template>
     </v-data-table>
   </v-card>
-  <v-dialog v-model="isShowCreateService" persistent width="500">
+  <v-dialog v-model="isShowCreateProduct" persistent width="500">
     <v-card>
       <v-card-title>
-        <h6 class="text-h6 px-3 py-2">Thêm dịch vụ</h6>
+        <h6 class="text-h6 px-3 py-2">Thêm sản phẩm</h6>
       </v-card-title>
       <v-card-text>
         <v-row>
@@ -60,8 +64,8 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
-                  v-model="serviceInfo.ServiceName"
-                  label="Tên dịch vụ"
+                  v-model="productInfo.ProductName"
+                  label="Tên sản phẩm"
                   hide-details
                   required
                 ></v-text-field>
@@ -74,9 +78,16 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
+                <v-text-field
+                  label="Đơn vị bán"
+                  v-model="productInfo.Unit"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
                 <v-textarea
                   label="Mô tả"
-                  v-model="serviceInfo.Description"
+                  v-model="productInfo.Description"
                   hide-details
                 ></v-textarea>
               </v-col>
@@ -89,18 +100,18 @@
         <v-btn
           color="blue-darken-1"
           variant="text"
-          @click="isShowCreateService = false"
+          @click="isShowCreateProduct = false"
         >
           Đóng
         </v-btn>
-        <v-btn @click="addService"> Lưu thông tin </v-btn>
+        <v-btn @click="addProduct"> Lưu thông tin </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
-  <v-dialog v-model="isShowUpdateService" persistent width="500">
+  <v-dialog v-model="isShowUpdateProduct" persistent width="500">
     <v-card>
       <v-card-title>
-        <h6 class="text-h6 px-3 py-2">Cập nhật thông tin dịch vụ</h6>
+        <h6 class="text-h6 px-3 py-2">Cập nhật thông tin sản phẩm</h6>
       </v-card-title>
       <v-card-text>
         <v-row>
@@ -108,8 +119,8 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
-                  v-model="serviceUpdate.ServiceName"
-                  label="Tên dịch vụ"
+                  v-model="productUpdate.ProductName"
+                  label="Tên sản phẩm"
                   hide-details
                   required
                 ></v-text-field>
@@ -122,9 +133,16 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
+                <v-text-field
+                  label="Đơn vị bán"
+                  v-model="productUpdate.Unit"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
                 <v-textarea
                   label="Mô tả"
-                  v-model="serviceUpdate.Description"
+                  v-model="productUpdate.Description"
                   hide-details
                 ></v-textarea>
               </v-col>
@@ -137,30 +155,34 @@
         <v-btn
           color="blue-darken-1"
           variant="text"
-          @click="isShowUpdateService = false"
+          @click="isShowUpdateProduct = false"
         >
           Đóng
         </v-btn>
-        <v-btn @click="updateService"> Lưu thông tin </v-btn>
+        <v-btn @click="updateProduct"> Lưu thông tin </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
-  <v-dialog v-model="isShowDelService" width="400">
+  <v-dialog v-model="isShowDelProduct" width="400">
     <v-card>
       <v-toolbar
         class="pl-2"
         color="error"
-        title="Xóa dịch vụ"
+        title="Xóa sản phẩm"
         center
       ></v-toolbar>
       <v-card-text>
-        <div class="text-h5 pt-4">Có chắc bạn muốn xóa dịch vụ này không?</div>
+        <div class="text-h5 pt-4">
+          Có chắc bạn muốn xóa sản phẩm
+          <span style="color: #1e88e5">{{ itemDel.ProductName }}</span> này
+          không?
+        </div>
       </v-card-text>
       <v-card-actions class="justify-end">
-        <v-btn color="blue" variant="text" @click="isShowDelService = false"
+        <v-btn color="blue" variant="text" @click="isShowDelProduct = false"
           >Đóng</v-btn
         >
-        <v-btn variant="text" @click="delService">Xóa</v-btn>
+        <v-btn variant="text" @click="delProduct">Xóa</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -169,36 +191,34 @@
 
 <script>
 import {
-  GetServiceLst,
-  AddService,
-  UpdateService,
-  DelService,
-} from "@/api/service";
+  PKGetProductLst,
+  PKUpdateProductInfo,
+  PKDelProductInfo,
+} from "@/api/product";
 export default {
   data() {
     return {
       show1: false,
       show2: false,
-      serviceInfo: {},
+      productInfo: {},
       fromDateVal: "",
-      isShowDelService: false,
-      isShowUpdateService: false,
-      isShowCreateService: false,
+      isShowDelProduct: false,
+      isShowUpdateProduct: false,
+      isShowCreateProduct: false,
       search: "",
-      sortBy: [{ key: "calories", order: "asc" }],
       headers: [
         {
           title: "STT",
-          align: "start",
           sortable: false,
           key: "Key",
+          width: "60px",
         },
-        { title: "Mã DV", key: "ServiceID", sortable: false },
-        { title: "Tên DV", key: "ServiceName", width: "25%" },
-        { title: "Giá", key: "PriceShow" },
+        { title: "Mã DV", key: "ProductID", width: "120px" },
+        { title: "Tên DV", key: "ProductName" },
+        { title: "Giá", key: "Exprice" },
+        { title: "Đơn vị bán", key: "Unit" },
         { title: "Mô tả", key: "Description" },
-
-        { title: "Action", key: "Action" },
+        { title: "Action", key: "Action", width: "80px" },
       ],
       desserts: [],
 
@@ -207,7 +227,7 @@ export default {
       search: "",
       date: null,
       menu2: false,
-      serviceUpdate: {},
+      productUpdate: {},
       price: null,
       itemDel: {},
     };
@@ -226,32 +246,32 @@ export default {
   methods: {
     btShowDel(data) {
       this.itemDel = { ...data };
-      this.isShowDelService = true;
+      this.isShowDelProduct = true;
     },
-    delService() {
-      DelService({ ServiceID: this.itemDel.ServiceID }).then((res) => {
+    delProduct() {
+      PKDelProductInfo({ ProductID: this.itemDel.ProductID }).then((res) => {
         if (res) {
-          this.isShowDelService = false;
-          this.getServiceLst();
+          this.isShowDelProduct = false;
+          this.getProductLst();
           notify({
             type: "success",
             title: "Thành công",
-            text: "Xóa dịch vụ thành công",
+            text: "Xóa sản phẩm thành công",
           });
         }
       });
     },
-    addService() {
-      AddService({
-        Data: { ...this.serviceInfo, Price: this.price },
+    addProduct() {
+      PKUpdateProductInfo({
+        Data: { ...this.productInfo, Price: this.price },
       }).then((res) => {
         if (res) {
-          this.isShowCreateService = false;
-          this.getServiceLst();
+          this.isShowCreateProduct = false;
+          this.getProductLst();
           notify({
             type: "success",
             title: "Thành công",
-            text: "Thêm mới dịch vụ thành công",
+            text: "Thêm mới sản phẩm thành công",
           });
         }
       });
@@ -266,27 +286,27 @@ export default {
       );
     },
     btShowUpdate(data) {
-      this.serviceUpdate = { ...data };
-      this.isShowUpdateService = true;
-      this.priceFormatted = this.serviceUpdate.PriceShow;
+      this.productUpdate = { ...data };
+      this.isShowUpdateProduct = true;
+      this.priceFormatted = this.productUpdate.Exprice.toString();
     },
-    updateService() {
-      UpdateService({
-        Data: { ...this.serviceUpdate, Price: this.price },
+    updateProduct() {
+      PKUpdateProductInfo({
+        Data: { ...this.productUpdate, Price: this.price },
       }).then((res) => {
         if (res) {
-          this.isShowUpdateService = false;
-          this.getServiceLst();
+          this.isShowUpdateProduct = false;
+          this.getProductLst();
           notify({
             type: "success",
             title: "Thành công",
-            text: "Cập nhật dịch vụ thành công",
+            text: "Cập nhật sản phẩm thành công",
           });
         }
       });
     },
-    getServiceLst() {
-      GetServiceLst({
+    getProductLst() {
+      PKGetProductLst({
         PageNumber: this.pageNumber,
         RowspPage: this.rowspPage,
         Search: this.search,
@@ -304,7 +324,7 @@ export default {
     },
   },
   created() {
-    this.getServiceLst();
+    this.getProductLst();
   },
 };
 </script>
