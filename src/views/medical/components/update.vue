@@ -5,7 +5,12 @@
         <v-card-title>
           <div style="display: flex; justify-content: space-between">
             <h6 class="text-h6 px-3 py-2">Cập nhật phiếu khám</h6>
-            <v-btn>Chọn PKTQ</v-btn>
+            <div>
+              <v-btn>Chọn PKTQ</v-btn>
+              <v-btn color="secondary" class="ml-2" @click="btSavePK"
+                >Lưu phiếu</v-btn
+              >
+            </div>
           </div>
         </v-card-title>
         <v-card-text>
@@ -100,80 +105,200 @@
               density="compact"
             >
               <v-btn :value="true"> Dịch vụ </v-btn>
-              <v-btn :value="false"> Thuốc </v-btn>
+              <v-btn :value="false"> Đơn thuốc </v-btn>
             </v-btn-toggle>
           </v-row>
-          <v-row v-if="serviceLst.Odd">
-            <swiper
-              v-if="serviceLst.Odd.length > 0"
-              class="mySwiper swiper-pk"
-              :modules="modules"
-              :slides-per-view="4"
-              :space-between="8"
-              @swiper="onSwiper"
-              @slideChange="onSlideChange"
-              :pagination="{ clickable: true }"
-            >
-              <swiper-slide v-for="(item, index) in serviceLst.Odd" :key="index"
-                ><v-card
-                  class="item-service"
-                  @click="btShowService(serviceLst.Odd[index])"
-                >
-                  <template v-slot:title>
-                    <span style="font-size: 14px">{{
-                      serviceLst.Odd[index].ServiceName
-                    }}</span>
-                  </template>
-                  <template v-slot:subtitle>
-                    {{
-                      new Intl.NumberFormat().format(
-                        serviceLst.Odd[index].Price
-                      )
-                    }}đ
-                  </template>
-                </v-card>
-                <v-card
-                  class="item-service"
-                  v-if="serviceLst.Even[index]"
-                  @click="btShowService(serviceLst.Even[index])"
-                >
-                  <template v-slot:title>
-                    <span style="font-size: 14px">{{
-                      serviceLst.Even[index].ServiceName
-                    }}</span>
-                  </template>
-                  <template v-slot:subtitle>
-                    {{
-                      new Intl.NumberFormat().format(
-                        serviceLst.Even[index].Price
-                      )
-                    }}đ
-                  </template>
-                </v-card>
-              </swiper-slide>
-            </swiper>
-          </v-row>
+          <div v-if="typeTab">
+            <v-row v-if="serviceLst.Odd">
+              <swiper
+                v-if="serviceLst.Odd.length > 0"
+                class="mySwiper swiper-pk"
+                :modules="modules"
+                :slides-per-view="4"
+                :space-between="8"
+                @swiper="onSwiper"
+                @slideChange="onSlideChange"
+                :pagination="{ clickable: true }"
+              >
+                <swiper-slide
+                  v-for="(item, index) in serviceLst.Odd"
+                  :key="index"
+                  ><v-card
+                    class="item-service"
+                    @click="btShowService(serviceLst.Odd[index], true)"
+                  >
+                    <template v-slot:title>
+                      <span style="font-size: 14px">{{
+                        serviceLst.Odd[index].ServiceName
+                      }}</span>
+                    </template>
+                    <template v-slot:subtitle>
+                      {{
+                        new Intl.NumberFormat().format(
+                          serviceLst.Odd[index].Price
+                        )
+                      }}đ
+                    </template>
+                  </v-card>
+                  <v-card
+                    class="item-service"
+                    v-if="serviceLst.Even[index]"
+                    @click="btShowService(serviceLst.Even[index], true)"
+                  >
+                    <template v-slot:title>
+                      <span style="font-size: 14px">{{
+                        serviceLst.Even[index].ServiceName
+                      }}</span>
+                    </template>
+                    <template v-slot:subtitle>
+                      {{
+                        new Intl.NumberFormat().format(
+                          serviceLst.Even[index].Price
+                        )
+                      }}đ
+                    </template>
+                  </v-card>
+                </swiper-slide>
+              </swiper>
+            </v-row>
 
-          <v-data-table
-            no-data-text="Không có dữ liệu"
-            :headers="headers"
-            :items="desserts"
-            :search="search"
-            sort-asc-icon="mdi-menu-up"
-            sort-desc-icon="mdi-menu-down"
-            :hide-default-footer="true"
-            :disable-pagination="true"
-            :items-per-page="-1"
-            class="table-pres"
-          >
-          </v-data-table>
+            <v-data-table
+              no-data-text="Không có dữ liệu"
+              :headers="headers"
+              :items="medicalInfo.TipMedicalLst"
+              :search="search"
+              sort-asc-icon="mdi-menu-up"
+              sort-desc-icon="mdi-menu-down"
+              :hide-default-footer="true"
+              :disable-pagination="true"
+              :items-per-page="-1"
+              class="table-pres"
+            >
+              <template v-slot:item.Price="{ item }">
+                {{ new Intl.NumberFormat().format(item.raw.Price) }}
+              </template>
+              <template v-slot:item.Total="{ item }">
+                {{ new Intl.NumberFormat().format(item.raw.Total) }}
+              </template>
+              <template v-slot:item.Discount="{ item }">
+                <span v-if="item.raw.Discount">
+                  {{ new Intl.NumberFormat().format(item.raw.Discount) }}
+                </span>
+              </template>
+              <template v-slot:item.Action="{ item }">
+                <v-icon
+                  color="primary"
+                  size="small"
+                  class="me-2"
+                  @click="btShowService(item.raw, false)"
+                  >mdi-pencil
+                </v-icon>
+
+                <v-icon
+                  color="primary"
+                  size="small"
+                  @click="btRemoveService(item.raw)"
+                >
+                  mdi-delete
+                  <v-tooltip text="Xóa"> </v-tooltip>
+                </v-icon>
+              </template>
+            </v-data-table>
+          </div>
+          <div v-else>
+            <v-row v-if="productLst.Odd">
+              <swiper
+                v-if="productLst.Odd.length > 0"
+                class="mySwiper swiper-pk"
+                :modules="modules"
+                :slides-per-view="4"
+                :space-between="8"
+                @swiper="onSwiper"
+                @slideChange="onSlideChange"
+                :pagination="pagination"
+              >
+                <swiper-slide
+                  v-for="(item, index) in productLst.Odd"
+                  :key="index"
+                >
+                  <v-card
+                    class="item-service"
+                    @click="btShowProduct(productLst.Odd[index], true)"
+                  >
+                    <template v-slot:title>
+                      <span style="font-size: 14px">{{
+                        productLst.Odd[index].ProductName
+                      }}</span>
+                    </template>
+                    <template v-slot:subtitle>
+                      {{
+                        new Intl.NumberFormat().format(
+                          productLst.Odd[index].Exprice
+                        )
+                      }}đ
+                    </template>
+                  </v-card>
+                  <v-card
+                    class="item-service"
+                    v-if="productLst.Even[index]"
+                    @click="btShowProduct(productLst.Even[index], true)"
+                  >
+                    <template v-slot:title>
+                      <span style="font-size: 14px">{{
+                        productLst.Even[index].ProductName
+                      }}</span>
+                    </template>
+                    <template v-slot:subtitle>
+                      {{
+                        new Intl.NumberFormat().format(
+                          productLst.Even[index].Exprice
+                        )
+                      }}đ
+                    </template>
+                  </v-card>
+                </swiper-slide>
+              </swiper>
+            </v-row>
+
+            <v-data-table
+              no-data-text="Không có dữ liệu"
+              :headers="productHeaders"
+              :items="medicalInfo.PrescriptionLst"
+              :search="search"
+              sort-asc-icon="mdi-menu-up"
+              sort-desc-icon="mdi-menu-down"
+              :hide-default-footer="true"
+              :disable-pagination="true"
+              :items-per-page="-1"
+              class="table-pres"
+            >
+              <template v-slot:item.Action="{ item }">
+                <v-icon
+                  color="primary"
+                  size="small"
+                  class="me-2"
+                  @click="btShowProduct(item.raw, false)"
+                  >mdi-pencil
+                </v-icon>
+
+                <v-icon
+                  color="primary"
+                  size="small"
+                  @click="btRemoveProduct(item.raw)"
+                >
+                  mdi-delete
+                  <v-tooltip text="Xóa"> </v-tooltip>
+                </v-icon>
+              </template>
+            </v-data-table>
+          </div>
         </v-card-text>
       </v-card>
     </v-col>
     <v-col lg="4">
       <v-card style="margin-left: -12px; width: calc(100% + 12px)">
         <v-card-title>
-          <span class="text-h6">Hóa đơn</span>
+          <h6 class="text-h6 px-2 py-2">Hóa đơn dịch vụ</h6>
         </v-card-title>
         <v-card-text>
           <v-row>
@@ -193,13 +318,13 @@
               <p class="text-right font-weight-bold">0đ</p>
             </v-col>
 
-            <v-col cols="6">
+            <!-- <v-col cols="6">
               <p class="text-left">Thuế</p>
             </v-col>
 
             <v-col cols="6" style="text-align: right">
               <p class="text-right font-weight-bold">5%</p>
-            </v-col>
+            </v-col> -->
 
             <v-col cols="6">
               <p class="text-left">Khách cần thanh toán</p>
@@ -250,7 +375,8 @@
   <v-dialog v-model="isShowAddService" persistent width="500">
     <v-card>
       <v-card-title>
-        <h6 class="text-h6 px-3 py-2">Thêm sản phẩm</h6>
+        <h6 class="text-h6 px-3 py-2" v-if="typeService">Thêm dịch vụ</h6>
+        <h6 class="text-h6 px-3 py-2" v-else>Cập nhật dịch vụ</h6>
       </v-card-title>
       <v-card-text>
         <v-row>
@@ -259,38 +385,49 @@
               <v-col cols="12">
                 <v-text-field
                   v-model="serviceInfo.ServiceName"
-                  label="Tên sản phẩm"
+                  label="Tên dịch vụ"
                   hide-details
                   required
                 ></v-text-field>
               </v-col>
-              <v-col cols="12">
+              <v-col cols="12" lg="6" md="6">
                 <v-text-field
                   label="Giá"
                   hide-details
                   v-model="priceFormatted"
                 ></v-text-field>
               </v-col>
-              <v-col cols="12">
+              <v-col cols="12" lg="6" md="6">
+                <v-text-field
+                  label="Giảm giá"
+                  v-model="discountFormatted"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" lg="6" md="6">
                 <v-text-field
                   label="Đơn vị bán"
                   v-model="serviceInfo.Unit"
                   hide-details
                 ></v-text-field>
               </v-col>
-              <v-col cols="12">
+              <v-col cols="12" lg="6" md="6">
                 <v-text-field
                   label="Số lượng"
                   v-model="serviceInfo.Quantity"
                   hide-details
                 ></v-text-field>
               </v-col>
+
               <v-col cols="12">
-                <v-text-field
-                  label="Giảm giá"
-                  v-model="serviceInfo.Discount"
+                <v-select
+                  v-model="serviceInfo.EmployCare"
+                  :items="employLst"
+                  label="Người thực hiện"
+                  item-title="Title"
+                  item-value="UserName"
                   hide-details
-                ></v-text-field>
+                ></v-select>
               </v-col>
               <v-col cols="12">
                 <v-textarea
@@ -312,24 +449,104 @@
         >
           Đóng
         </v-btn>
-        <v-btn> Lưu thông tin </v-btn>
+        <v-btn @click="btAddService"> Lưu thông tin </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <v-dialog v-model="isShowAddProduct" persistent width="500">
+    <v-card>
+      <v-card-title>
+        <h6 class="text-h6 px-3 py-2">Kê đơn thuốc</h6>
+      </v-card-title>
+      <v-card-text>
+        <v-row>
+          <v-col cols="12">
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="productInfo.ProductName"
+                  label="Tên sản phẩm"
+                  hide-details
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" lg="6" md="6">
+                <v-text-field
+                  label="Giá"
+                  hide-details
+                  v-model="priceFormatted"
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="12" lg="6" md="6">
+                <v-text-field
+                  label="Đơn vị"
+                  v-model="productInfo.Unit"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" lg="6" md="6">
+                <v-text-field
+                  label="Số lượng"
+                  v-model="productInfo.Quantity"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" lg="6" md="6">
+                <!-- <v-autocomplete
+                  v-model="productInfo.Dosage"
+                  label="Liều dùng"
+                  :items="dosageLst"
+                  item-title="Title"
+                  item-value="PatientID"
+                  hide-details
+                ></v-autocomplete> -->
+                <v-text-field
+                  label="Liều dùng"
+                  v-model="productInfo.Dosage"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-textarea
+                  label="Mô tả"
+                  v-model="productInfo.Description"
+                  hide-details
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="blue-darken-1"
+          variant="text"
+          @click="isShowAddProduct = false"
+        >
+          Đóng
+        </v-btn>
+        <v-btn @click="btAddProduct"> Lưu thông tin </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <notifications />
 </template>
 
 <script>
 import { pathAll, pathTeeth } from "../../customer/variable";
-import { GetMedicalByID } from "@/api/medical";
+import { GetMedicalByID, AddMedicalLst } from "@/api/medical";
 import { items } from "../variables";
 import { GetEmployLst } from "@/api/user";
 import { getRoleText } from "@/utils/role";
 import { GetServiceLst } from "@/api/service";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Pagination } from "swiper/modules";
-
+import { PKGetProductLst } from "@/api/product";
 import "swiper/css";
 import "swiper/css/pagination";
+import { formatDate } from "@/helpers/getTime";
 
 export default {
   components: {
@@ -338,45 +555,38 @@ export default {
   },
   data() {
     return {
+      pagination: {
+        clickable: true,
+        type: "fraction",
+      },
       pathAll: pathAll,
       pathTeeth: pathTeeth,
       typeTab: true,
       items: items,
       headers: [
+        { title: "STT", sortable: false, key: "Key" },
+        { title: "Thủ thuật", key: "ServiceName", sortable: false },
+        { title: "Thực hiện", key: "EmployCareName", sortable: false },
+        { title: "Số lượng", key: "Quantity", sortable: false },
+        { title: "Đơn giá", key: "Price", sortable: false },
+        { title: "Giảm giá", key: "Discount", sortable: false },
+        { title: "Tổng", key: "Total", sortable: false },
+        { title: "", key: "Action", sortable: false },
+      ],
+      desserts: [],
+      productHeaders: [
         {
           title: "STT",
-          align: "start",
           sortable: false,
           key: "Key",
+          width: "60px",
         },
-        { title: "Thủ thuật", key: "calories" },
-        { title: "Thực hiện", key: "name" },
-        { title: "Số lượng", key: "carbs" },
-        { title: "Đơn giá", key: "protein" },
-        { title: "Giảm giá", key: "fat" },
-        { title: "Tổng", key: "fat" },
-        { title: "Chức năng", key: "" },
-      ],
-      desserts: [
-        {
-          Key: 1,
-          name: "Frozen Yogurt",
-          calories: 200,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          iron: "1%",
-        },
-        {
-          Key: 1,
-
-          name: "Ice cream sandwich",
-          calories: 200,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          iron: "1%",
-        },
+        { title: "Thuốc", key: "ProductName", sortable: false },
+        // { title: "Giá", key: "Exprice", sortable: false },
+        { title: "SL", key: "Quantity", sortable: false },
+        { title: "Liều dùng", key: "Dosage", sortable: false },
+        { title: "Mô tả", key: "Description", sortable: false },
+        { title: "Action", key: "Action", width: "80px" },
       ],
       search: "",
       medicalInfo: {},
@@ -389,13 +599,208 @@ export default {
       modules: [Pagination],
       isShowAddService: false,
       serviceInfo: {},
+      price: 0,
+      typeService: true,
+      productLst: [],
+      pageNumber: 1,
+      rowspPage: 100000,
+      search: "",
+      isShowAddProduct: false,
+      typeProduct: false,
+      productInfo: {},
+      moneyDiscount: null,
     };
   },
+  computed: {
+    priceFormatted: {
+      get: function () {
+        return this.formatAsCurrency(this.price, 0);
+      },
+      set: function (newValue) {
+        if (newValue) {
+          this.price = Number(newValue?.replace(/[^0-9\.]/g, ""));
+        } else {
+          this.price = null;
+        }
+      },
+    },
+    discountFormatted: {
+      get: function () {
+        return this.formatAsCurrency(this.moneyDiscount, 0);
+      },
+      set: function (newValue) {
+        if (newValue) {
+          this.moneyDiscount = Number(newValue?.replace(/[^0-9\.]/g, ""));
+        } else {
+          this.moneyDiscount = null;
+        }
+      },
+    },
+  },
+  watch: {
+    typeTab(newValue) {
+      if (newValue) {
+        // this.getServiceLst();
+      } else {
+        this.getProductLst();
+      }
+    },
+  },
   methods: {
-    btShowService(data) {
-      console.log(data);
+    btSavePK() {
+      AddMedicalLst({
+        Data: {
+          ...this.medicalInfo,
+          DateReturn: formatDate(this.medicalInfo.DateReturn),
+        },
+      }).then((res) => {
+        if (res) {
+          notify({
+            type: "success",
+            title: "Thành công",
+            text: "Cập nhật phiếu khám thành công",
+          });
+        }
+      });
+    },
+    getProductLst() {
+      PKGetProductLst({
+        PageNumber: this.pageNumber,
+        RowspPage: this.rowspPage,
+        Search: this.search,
+      }).then((res) => {
+        if (res) {
+          var data = res.Data.map((item, index) => {
+            return {
+              ...item,
+              Key: index + 1,
+              Quantity: 1,
+            };
+          });
+          this.productLst.Even = data.filter((p) => p.Key % 2 == 0);
+          this.productLst.Odd = data.filter((p) => p.Key % 2 != 0);
+        }
+      });
+    },
+    btShowProduct(data, isBool) {
+      this.typeProduct = isBool;
+      this.isShowAddProduct = true;
+      this.productInfo = { ...data };
+      this.priceFormatted = this.productInfo.Exprice.toString();
+    },
+    btAddProduct() {
+      if (this.typeProduct) {
+        var check = this.medicalInfo.PrescriptionLst.find(
+          (p) => p.ProductID == this.productInfo.ProductID
+        );
+        if (check) {
+          notify({
+            type: "warn",
+            title: "Nhắc nhở",
+            text: "Thuốc này đã có trong đơn",
+          });
+          return;
+        }
+      } else {
+        this.medicalInfo.PrescriptionLst =
+          this.medicalInfo.PrescriptionLst.filter(
+            (p) => p.ProductID != this.productInfo.ProductID
+          );
+      }
+      this.medicalInfo.PrescriptionLst.push({
+        ...this.productInfo,
+        Total: this.productInfo.Quantity * this.productInfo.Exprice,
+        Price: this.productInfo.Exprice,
+      });
+      this.medicalInfo.PrescriptionLst = this.medicalInfo.PrescriptionLst.map(
+        (item, index) => {
+          return {
+            ...item,
+            Key: index + 1,
+          };
+        }
+      );
+      this.isShowAddProduct = false;
+    },
+    btRemoveProduct(data) {
+      this.medicalInfo.PrescriptionLst =
+        this.medicalInfo.PrescriptionLst.filter(
+          (p) => p.ProductID != data.ProductID
+        ).map((item, index) => {
+          return {
+            ...item,
+            Key: index + 1,
+          };
+        });
+    },
+    btAddService() {
+      if (this.typeService) {
+        var check = this.medicalInfo.TipMedicalLst.find(
+          (p) => p.ServiceID == this.serviceInfo.ServiceID
+        );
+        console.log("123", check);
+        if (check) {
+          notify({
+            type: "warn",
+            title: "Nhắc nhở",
+            text: "Dịch vụ đã có trong phiếu",
+          });
+          return;
+        }
+      } else {
+        this.medicalInfo.TipMedicalLst = this.medicalInfo.TipMedicalLst.filter(
+          (p) => p.ServiceID != this.serviceInfo.ServiceID
+        );
+      }
+      this.medicalInfo.TipMedicalLst.push({
+        ...this.serviceInfo,
+        EmployCareName: this.serviceInfo.EmployCare
+          ? this.employLst.find(
+              (p) => p.UserName == this.serviceInfo.EmployCare
+            ).FullName
+          : "",
+        Total: this.serviceInfo.Quantity * this.serviceInfo.Price,
+      });
+      this.medicalInfo.TipMedicalLst = this.medicalInfo.TipMedicalLst.map(
+        (item, index) => {
+          return {
+            ...item,
+            Key: index + 1,
+          };
+        }
+      );
+      this.isShowAddService = false;
+      console.log(this.medicalInfo.TipMedicalLst);
+    },
+    btShowService(data, isBool) {
+      this.typeService = isBool;
       this.isShowAddService = true;
-      this.serviceInfo = data;
+      this.serviceInfo = { ...data };
+      this.priceFormatted = this.serviceInfo.Price.toString();
+      if (isBool) {
+        this.discountFormatted = null;
+      } else {
+        this.discountFormatted = this.serviceInfo.MoneyDiscount.toString();
+      }
+    },
+    btRemoveService(data) {
+      this.medicalInfo.TipMedicalLst = this.medicalInfo.TipMedicalLst.filter(
+        (p) => p.ServiceID != data.ServiceID
+      ).map((item, index) => {
+        return {
+          ...item,
+          Key: index + 1,
+        };
+      });
+    },
+    formatAsCurrency(value, dec) {
+      dec = dec || 0;
+      if (value === null) {
+        return "";
+      }
+      return (
+        "" + value?.toFixed(dec).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+      );
     },
     getServiceLst() {
       GetServiceLst({
@@ -408,12 +813,11 @@ export default {
             return {
               ...item,
               Key: index + 1,
+              Quantity: 1,
             };
           });
-          console.log("124");
           this.serviceLst.Even = data.filter((p) => p.Key % 2 == 0);
           this.serviceLst.Odd = data.filter((p) => p.Key % 2 != 0);
-          console.log(this.serviceLst);
         }
       });
     },
@@ -448,6 +852,29 @@ export default {
                 (p) => p.Text == item.Pathological
               ).CheckBox = true;
             }
+          }
+          if (this.medicalInfo.TipMedicalLst) {
+            this.medicalInfo.TipMedicalLst = this.medicalInfo.TipMedicalLst.map(
+              (item, index) => {
+                return {
+                  ...item,
+                  Key: index + 1,
+                  ServiceID: item.TipID,
+                  ServiceName: item.TipName,
+                  Total: item.Quantity * item.Price - item.MoneyDiscount,
+                };
+              }
+            );
+          }
+          if (this.medicalInfo.PrescriptionLst) {
+            this.medicalInfo.PrescriptionLst =
+              this.medicalInfo.PrescriptionLst.map((item, index) => {
+                return {
+                  ...item,
+                  Key: index + 1,
+                  Exprice: item.Price,
+                };
+              });
           }
         }
       });
@@ -499,6 +926,11 @@ export default {
       .v-card-title {
         line-height: 16px;
         white-space: normal;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
       }
     }
     .v-card-subtitle {
