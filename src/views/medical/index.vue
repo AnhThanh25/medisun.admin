@@ -68,7 +68,7 @@
           <v-btn
             color="blue"
             variant="tonal"
-            @click="$router.push('/kham-benh/tao-phieu-tong-quat')"
+            @click="btCreateMedical"
             icon="mdi-note-plus-outline"
             style="height: 42px"
           ></v-btn>
@@ -90,32 +90,56 @@
       </template>
     </v-data-table>
   </v-card>
+  <v-dialog v-model="isShowDelMedical" width="400">
+    <v-card>
+      <v-toolbar
+        class="pl-2"
+        color="error"
+        title="Xóa phiếu khám"
+        center
+      ></v-toolbar>
+      <v-card-text>
+        <div class="text-h5 pt-4">
+          Có chắc bạn muốn xóa phiếu khám này không?
+        </div>
+      </v-card-text>
+      <v-card-actions class="justify-end">
+        <v-btn color="blue" variant="text" @click="isShowDelMedical = false"
+          >Đóng</v-btn
+        >
+        <v-btn variant="text" @click="delMedical">Xóa</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <notifications />
 </template>
 
 <script>
-import { GetMedicalLst } from "@/api/medical";
+import { GetMedicalLst, DelMedical } from "@/api/medical";
 import { formatDateUpload, formatDateDisplay } from "@/helpers/getTime";
 
 export default {
   data() {
     return {
-      typeTeeth: 1,
-      isShowCreateCustomer: false,
+      isShowDelMedical: false,
       search: "",
-      sortBy: [{ key: "calories", order: "asc" }],
       headers: [
         {
           title: "STT",
-          align: "start",
+
           sortable: false,
           key: "Key",
         },
-        { title: "Mã phiếu", key: "MedicalID" },
-        { title: "Ngày lập", key: "TimeCreate" },
-        { title: "Khách hàng", key: "PatientName" },
-        { title: "Nhân viên phụ trách", key: "EmployCareName" },
-        { title: "Ghi chú", key: "Note" },
-        { title: "Chức năng", key: "Action" },
+        { title: "Mã phiếu", key: "MedicalID", sortable: false },
+        { title: "Ngày lập", key: "TimeCreate", sortable: false },
+        { title: "Khách hàng", key: "PatientName", sortable: false },
+        {
+          title: "Nhân viên phụ trách",
+          key: "EmployCareName",
+          sortable: false,
+        },
+        { title: "Ghi chú", key: "Note", sortable: false },
+        { title: "", key: "Action", sortable: false, width: "80px" },
       ],
       desserts: [],
       pageNumber: 1,
@@ -123,6 +147,7 @@ export default {
       search: "",
       timeStart: new Date(),
       timeEnd: new Date(),
+      itemDel: {},
     };
   },
   methods: {
@@ -133,13 +158,13 @@ export default {
       this.itemDel = { ...data };
       this.isShowDelMedical = true;
     },
-    delGeneralty() {
-      DelGeneralty({
-        GeneraltyID: this.itemDel.GeneraltyID,
+    delMedical() {
+      DelMedical({
+        MedicalID: this.itemDel.MedicalID,
       }).then((res) => {
         if (res) {
           this.isShowDelMedical = false;
-          this.getGeneraltyLst();
+          this.getMedicalLst();
           notify({
             type: "success",
             title: "Thành công",

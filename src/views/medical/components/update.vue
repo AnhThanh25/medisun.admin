@@ -3,7 +3,7 @@
     <v-col lg="8">
       <v-card>
         <v-card-title>
-          <div style="display: flex; justify-content: space-between">
+          <div class="d-flex" style="justify-content: space-between">
             <h6 class="text-h6 px-3 py-2">Cập nhật phiếu khám</h6>
             <div>
               <v-btn>Chọn PKTQ</v-btn>
@@ -298,7 +298,17 @@
     <v-col lg="4">
       <v-card style="margin-left: -12px; width: calc(100% + 12px)">
         <v-card-title>
-          <h6 class="text-h6 px-2 py-2">Hóa đơn dịch vụ</h6>
+          <div class="d-flex" style="justify-content: space-between">
+            <h6 class="text-h6 px-1 py-2">Hóa đơn dịch vụ</h6>
+            <v-btn
+              class="mt-2"
+              variant="tonal"
+              color="success"
+              size="small"
+              @click="addDebtMedical"
+              >Xác nhận</v-btn
+            >
+          </div>
         </v-card-title>
         <v-card-text>
           <v-row>
@@ -307,68 +317,228 @@
             </v-col>
 
             <v-col cols="6" style="text-align: right">
-              <p class="text-right font-weight-bold">10.000.000đ</p>
+              <p class="text-right font-weight-bold">
+                {{ new Intl.NumberFormat().format(totalBill) }}đ
+              </p>
+            </v-col>
+
+            <v-col cols="6" style="padding: 0 12px; margin: -4px 0">
+              <p class="text-left">
+                Giảm giá
+
+                <v-menu
+                  v-model="isMenuDiscount"
+                  activator="parent"
+                  transition="scale-transition"
+                  :close-on-content-click="false"
+                >
+                  <template v-slot:activator="{ props }">
+                    <v-btn
+                      variant="text"
+                      icon="mdi-plus"
+                      color="success"
+                      style="border-radius: 50% !important"
+                      v-bind="props"
+                    >
+                    </v-btn>
+                  </template>
+                  <v-card min-width="300" style="padding-top: 20px !important">
+                    <v-card-text>
+                      <div class="d-flex">
+                        <v-text-field
+                          label="Số tiền giảm giá"
+                          hide-details
+                          color="success"
+                          v-model="discountAllFormatted"
+                        ></v-text-field>
+
+                        <v-btn
+                          class="ml-2"
+                          variant="tonal"
+                          size="large"
+                          color="success"
+                          @click="btSaveDiscountAll"
+                        >
+                          Lưu</v-btn
+                        >
+                      </div>
+                    </v-card-text>
+                  </v-card>
+                </v-menu>
+              </p>
+            </v-col>
+
+            <v-col cols="6" style="text-align: right">
+              <p class="text-right font-weight-bold">
+                {{
+                  new Intl.NumberFormat().format(
+                    debtMedicalInfo.MoneyDiscount ?? 0
+                  )
+                }}đ
+              </p>
+            </v-col>
+            <v-col cols="6">
+              <p class="text-left">Đã thanh toán</p>
+            </v-col>
+            <v-col cols="6" style="text-align: right">
+              <p class="text-right font-weight-bold">
+                {{ new Intl.NumberFormat().format(totalMoneyPaid) }}đ
+              </p>
+            </v-col>
+
+            <v-col cols="6" style="padding: 0 12px; margin: -4px 0">
+              <p class="text-left">
+                Thanh toán
+                <v-menu
+                  v-model="isMenuCustomerPay"
+                  activator="parent"
+                  transition="scale-transition"
+                  :close-on-content-click="false"
+                >
+                  <template v-slot:activator="{ props }">
+                    <v-btn
+                      variant="text"
+                      icon="mdi-plus"
+                      color="success"
+                      style="border-radius: 50% !important"
+                      v-bind="props"
+                    >
+                    </v-btn>
+                  </template>
+                  <v-card min-width="300" style="padding-top: 20px !important">
+                    <v-card-text>
+                      <div class="d-flex">
+                        <v-text-field
+                          label="Số tiền thanh toán"
+                          hide-details
+                          color="success"
+                          v-model="customerPayFormatted"
+                        ></v-text-field>
+
+                        <v-btn
+                          class="ml-2"
+                          variant="tonal"
+                          size="large"
+                          color="success"
+                          @click="btCustomerPay"
+                        >
+                          Lưu</v-btn
+                        >
+                      </div>
+                    </v-card-text>
+                  </v-card>
+                </v-menu>
+              </p>
+            </v-col>
+
+            <v-col cols="6" style="text-align: right">
+              <p class="text-right font-weight-bold text-success">
+                {{ new Intl.NumberFormat().format(customerPay) }}đ
+              </p>
+            </v-col>
+
+            <v-col cols="8" style="padding: 0 12px; margin: -4px 0">
+              <p class="text-left">
+                Hình thức thanh toán
+                <v-menu activator="parent" transition="scale-transition">
+                  <template v-slot:activator="{ props }">
+                    <v-btn
+                      variant="text"
+                      icon="mdi-plus"
+                      color="success"
+                      style="border-radius: 50% !important"
+                      v-bind="props"
+                    >
+                    </v-btn>
+                  </template>
+
+                  <v-list style="width: 150px">
+                    <v-list-item
+                      v-for="(item, index) in paymentLst"
+                      :key="index"
+                      :value="index"
+                      @click="debtMedicalInfo.TypePay = item.Title"
+                    >
+                      <v-list-item-title>{{ item.Title }}</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </p>
+            </v-col>
+            <v-col cols="4" style="text-align: right">
+              <p class="text-right font-weight-bold">
+                {{ debtMedicalInfo.TypePay }}
+              </p>
             </v-col>
 
             <v-col cols="6">
-              <p class="text-left">Giảm giá</p>
+              <p class="text-left">Còn nợ</p>
             </v-col>
 
             <v-col cols="6" style="text-align: right">
-              <p class="text-right font-weight-bold">0đ</p>
-            </v-col>
-
-            <!-- <v-col cols="6">
-              <p class="text-left">Thuế</p>
-            </v-col>
-
-            <v-col cols="6" style="text-align: right">
-              <p class="text-right font-weight-bold">5%</p>
-            </v-col> -->
-
-            <v-col cols="6">
-              <p class="text-left">Khách cần thanh toán</p>
-            </v-col>
-
-            <v-col cols="6" style="text-align: right">
-              <p class="text-right font-weight-bold">10.510.500đ</p>
-            </v-col>
-
-            <v-col cols="6">
-              <v-btn
-                class="text-left"
-                color="secondary"
-                style="margin-top: -8px"
-                >Thanh toán</v-btn
-              >
-            </v-col>
-
-            <v-col cols="6" style="text-align: right">
-              <p class="text-right font-weight-bold text-success">5.000.000đ</p>
-            </v-col>
-
-            <v-col cols="6">
-              <p class="text-left">Hình thức thanh toán</p>
-            </v-col>
-
-            <v-col cols="6" style="text-align: right">
-              <p class="text-right font-weight-bold">Tiền mặt</p>
-            </v-col>
-
-            <v-col cols="6">
-              <p class="text-left">Tính vào công nợ</p>
-            </v-col>
-
-            <v-col cols="6" style="text-align: right">
-              <p class="text-right font-weight-bold text-error">5.510.500đ</p>
+              <p class="text-right font-weight-bold text-error">
+                {{ new Intl.NumberFormat().format(debtBill) }}đ
+              </p>
             </v-col>
           </v-row>
+          <v-divider style="margin: 16px 0" />
+          <v-text-field
+            label="Ghi chú"
+            hide-details
+            v-model="debtMedicalInfo.Note"
+          ></v-text-field>
         </v-card-text>
+      </v-card>
+      <v-card class="mt-3" style="margin-left: -12px; width: calc(100% + 12px)">
+        <v-card-title>
+          <div class="d-flex" style="justify-content: space-between">
+            <h6 class="text-h6 px-1 py-2">Công nợ phiếu khám</h6>
+          </div>
+        </v-card-title>
+
+        <v-list lines="two" style="margin-top: -16px">
+          <v-list-item v-for="(item, index) in debtMedicalLst" :key="index">
+            <template v-slot:prepend>
+              <v-avatar color="primary">
+                <span style="font-size: 10px">
+                  {{ item.TypePay }}
+                </span>
+              </v-avatar>
+            </template>
+            <v-list-item-title
+              >Đã trả:
+              <strong style="color: #05b187"
+                >{{ new Intl.NumberFormat().format(item.CustomerPay) }}đ</strong
+              >
+            </v-list-item-title>
+            <v-list-item-subtitle
+              ><div>
+                Giảm giá:
+                <span style="color: #1e88e5"
+                  >{{
+                    new Intl.NumberFormat().format(item.MoneyDiscount)
+                  }}đ</span
+                >
+              </div>
+              <div>
+                Thời gian:
+                {{ item.TimeShow }}
+              </div>
+            </v-list-item-subtitle>
+            <template v-slot:append>
+              <v-btn
+                color="error"
+                icon="mdi-delete"
+                variant="text"
+                @click="delDebtMedical(item)"
+              ></v-btn>
+            </template>
+          </v-list-item>
+        </v-list>
       </v-card>
       <v-row class="mt-3">
         <v-btn color="success" class="mr-2">In phiếu khám</v-btn>
         <v-btn color="success" class="mr-2">In đơn thuốc</v-btn>
-        <v-btn>Lưu phiếu</v-btn>
       </v-row>
     </v-col>
   </v-row>
@@ -404,13 +574,7 @@
                   hide-details
                 ></v-text-field>
               </v-col>
-              <v-col cols="12" lg="6" md="6">
-                <v-text-field
-                  label="Đơn vị bán"
-                  v-model="serviceInfo.Unit"
-                  hide-details
-                ></v-text-field>
-              </v-col>
+
               <v-col cols="12" lg="6" md="6">
                 <v-text-field
                   label="Số lượng"
@@ -418,7 +582,13 @@
                   hide-details
                 ></v-text-field>
               </v-col>
-
+              <v-col cols="12" lg="6" md="6">
+                <v-text-field
+                  label="Đơn vị bán"
+                  v-model="serviceInfo.Unit"
+                  hide-details
+                ></v-text-field>
+              </v-col>
               <v-col cols="12">
                 <v-select
                   v-model="serviceInfo.EmployCare"
@@ -537,7 +707,6 @@
 <script>
 import { pathAll, pathTeeth } from "../../customer/variable";
 import { GetMedicalByID, AddMedicalLst } from "@/api/medical";
-import { items } from "../variables";
 import { GetEmployLst } from "@/api/user";
 import { getRoleText } from "@/utils/role";
 import { GetServiceLst } from "@/api/service";
@@ -547,7 +716,13 @@ import { PKGetProductLst } from "@/api/product";
 import "swiper/css";
 import "swiper/css/pagination";
 import { formatDate } from "@/helpers/getTime";
-
+import { paymentLst } from "../variables";
+import {
+  GetDebtMedicalLst,
+  AddDebtMedical,
+  DelDebtMedical,
+} from "@/api/debtMedical";
+import { formatDateDisplay } from "@/helpers/getTime";
 export default {
   components: {
     Swiper,
@@ -555,6 +730,8 @@ export default {
   },
   data() {
     return {
+      isMenuDiscount: false,
+      isMenuCustomerPay: false,
       pagination: {
         clickable: true,
         type: "fraction",
@@ -562,7 +739,7 @@ export default {
       pathAll: pathAll,
       pathTeeth: pathTeeth,
       typeTab: true,
-      items: items,
+      paymentLst: paymentLst,
       headers: [
         { title: "STT", sortable: false, key: "Key" },
         { title: "Thủ thuật", key: "ServiceName", sortable: false },
@@ -609,6 +786,10 @@ export default {
       typeProduct: false,
       productInfo: {},
       moneyDiscount: null,
+      debtMedicalLst: [],
+      debtMedicalInfo: { TypePay: "Tiền mặt" },
+      discountAll: null,
+      customerPay: null,
     };
   },
   computed: {
@@ -636,6 +817,59 @@ export default {
         }
       },
     },
+    discountAllFormatted: {
+      get: function () {
+        return this.formatAsCurrency(this.discountAll, 0);
+      },
+      set: function (newValue) {
+        if (newValue) {
+          this.discountAll = Number(newValue?.replace(/[^0-9\.]/g, ""));
+        } else {
+          this.discountAll = null;
+        }
+      },
+    },
+    customerPayFormatted: {
+      get: function () {
+        return this.formatAsCurrency(this.customerPay, 0);
+      },
+      set: function (newValue) {
+        if (newValue) {
+          this.customerPay = Number(newValue?.replace(/[^0-9\.]/g, ""));
+        } else {
+          this.customerPay = null;
+        }
+      },
+    },
+    totalMoneyPaid() {
+      var total = 0;
+      if (this.debtMedicalLst.length > 0) {
+        total = this.debtMedicalLst.reduce((a, b) => {
+          return a + b.CustomerPay + b.MoneyDiscount;
+        }, 0);
+      }
+      return total;
+    },
+    totalBill() {
+      var total = 0;
+      if (this.medicalInfo.TipMedicalLst) {
+        total = this.medicalInfo.TipMedicalLst.reduce((a, b) => {
+          return a + b.Quantity * b.Price - b.MoneyDiscount ?? 0;
+        }, 0);
+      }
+      this.debtMedicalInfo.TotalMoney = total;
+      return total;
+    },
+    debtBill() {
+      var money = 0;
+      money =
+        this.totalBill -
+        (this.debtMedicalInfo.MoneyDiscount ?? 0) -
+        this.totalMoneyPaid -
+        (this.debtMedicalInfo.CustomerPay ?? 0);
+      this.debtMedicalInfo.Debt = money;
+      return money;
+    },
   },
   watch: {
     typeTab(newValue) {
@@ -647,6 +881,56 @@ export default {
     },
   },
   methods: {
+    delDebtMedical(data) {
+      DelDebtMedical({
+        RowID: data.RowID,
+      }).then((res) => {
+        if (res) {
+          notify({
+            type: "success",
+            title: "Thành công",
+            text: "Xóa hóa đơn thanh toán thành công",
+          });
+          this.getDebtMedicalLst();
+        }
+      });
+    },
+    addDebtMedical() {
+      AddDebtMedical({
+        Data: { ...this.debtMedicalInfo, MedicalID: this.medicalID },
+      }).then((res) => {
+        if (res) {
+          notify({
+            type: "success",
+            title: "Thành công",
+            text: "Thanh toán hóa đơn phiếu khám thành công",
+          });
+          this.getDebtMedicalLst();
+        }
+      });
+    },
+    btCustomerPay() {
+      this.isMenuCustomerPay = false;
+      this.debtMedicalInfo.CustomerPay = this.customerPay;
+    },
+    btSaveDiscountAll() {
+      this.isMenuDiscount = false;
+      this.debtMedicalInfo.MoneyDiscount = this.discountAll;
+    },
+    getDebtMedicalLst() {
+      GetDebtMedicalLst({
+        MedicalID: this.medicalID,
+      }).then((res) => {
+        if (res) {
+          this.debtMedicalLst = res.Data.map((item) => {
+            return {
+              ...item,
+              TimeShow: formatDateDisplay(item.TimeCreate),
+            };
+          });
+        }
+      });
+    },
     btSavePK() {
       AddMedicalLst({
         Data: {
@@ -760,6 +1044,9 @@ export default {
             ).FullName
           : "",
         Total: this.serviceInfo.Quantity * this.serviceInfo.Price,
+        TipID: this.serviceInfo.ServiceID,
+        TipName: this.serviceInfo.ServiceName,
+        MoneyDiscount: this.serviceInfo.MoneyDiscount ?? 0,
       });
       this.medicalInfo.TipMedicalLst = this.medicalInfo.TipMedicalLst.map(
         (item, index) => {
@@ -902,6 +1189,7 @@ export default {
     this.getMedicalByID();
     this.getEmployLst();
     this.getServiceLst();
+    this.getDebtMedicalLst();
   },
 };
 </script>

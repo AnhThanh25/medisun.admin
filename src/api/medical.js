@@ -21,3 +21,11 @@ export function AddMedicalLst(data) {
     data: data,
   });
 }
+
+export function DelMedical(data) {
+  return request({
+    url: "PKMedical/DelMedical",
+    method: "post",
+    data: data,
+  });
+}

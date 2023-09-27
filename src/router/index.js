@@ -146,23 +146,16 @@ export const constantRoutes = [
     ],
   },
   {
-    path: "/labo",
+    path: "/vat-lieu-labo",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
     meta: { title: "Vật liệu labo", icon: "mdi-tooth" },
     children: [
       {
-        name: "Vật liệu",
-        path: "/labo/vat-lieu",
-        component: () => import("@/views/material/labo/index.vue"),
-        meta: { title: "Vật liệu", icon: "mdi-card-outline" },
-        role: 1,
-      },
-      {
-        name: "Phiếu đặt",
-        path: "/labo/phieu-dat",
-        component: () => import("@/views/material/order/index.vue"),
-        meta: { title: "Phiếu đặt", icon: "mdi-card-outline" },
+        name: "Vật liệu labo",
+        path: "/vat-lieu-labo",
+        component: () => import("@/views/material/index.vue"),
+        meta: { title: "Vật liệu labo", icon: "mdi-card-outline" },
         role: 1,
       },
       {
@@ -200,6 +193,13 @@ export const constantRoutes = [
         path: "/cai-dat/dich-vu",
         component: () => import("@/views/setting/service/index.vue"),
         meta: { title: "Dịch vụ", icon: "mdi-card-outline" },
+        role: 1,
+      },
+      {
+        name: "Vật liệu",
+        path: "/cai-dat/vat-lieu",
+        component: () => import("@/views/setting/labo/index.vue"),
+        meta: { title: "Vật liệu", icon: "mdi-card-outline" },
         role: 1,
       },
     ],
