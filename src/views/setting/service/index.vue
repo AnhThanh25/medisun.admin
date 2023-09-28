@@ -44,7 +44,6 @@
 
         <v-icon color="primary" size="small" @click="btShowDel(item.raw)">
           mdi-delete
-          <v-tooltip text="Xóa"> </v-tooltip>
         </v-icon>
       </template>
     </v-data-table>

@@ -160,8 +160,8 @@ export const constantRoutes = [
       },
       {
         name: "Mua vật liệu",
-        path: "/labo/mua-vat-lieu",
-        component: () => import("@/views/material/order/components/create.vue"),
+        path: "/vat-lieu-labo/mua-vat-lieu",
+        component: () => import("@/views/material/components/create.vue"),
         meta: { title: "Mua vật liệu", icon: "mdi-card-outline" },
         role: 1,
         hidden: true,

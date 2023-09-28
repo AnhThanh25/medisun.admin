@@ -31,13 +31,43 @@
             @click="btCreateMedical"
             style="height: 42px"
           ></v-btn>
-        </div> </template
-    ></v-data-table>
+        </div>
+      </template>
+      <template v-slot:item.ImPrice="{ item }">
+        {{ new Intl.NumberFormat().format(item.raw.ImPrice) }}
+      </template>
+      <template v-slot:item.ExPrice="{ item }">
+        {{ new Intl.NumberFormat().format(item.raw.ExPrice) }}
+      </template>
+      <template v-slot:item.Image="{ item }">
+        <img
+          :src="item.raw.Image"
+          alt=""
+          style="height: 60px; width: 60px; object-fit: cover"
+        />
+      </template>
+      <template v-slot:item.Action="{ item }">
+        <v-icon
+          color="primary"
+          size="small"
+          class="me-2"
+          @click="btShowUpdate(item.raw)"
+          >mdi-pencil
+        </v-icon>
+        <v-icon color="primary" size="small" @click="btShowDel(item.raw)">
+          mdi-delete
+          <v-tooltip text="Xóa"> </v-tooltip>
+        </v-icon>
+      </template>
+    </v-data-table>
   </v-card>
   <v-dialog v-model="isShowCreateMaterial" persistent width="600">
     <v-card>
       <v-card-title>
-        <h6 class="text-h5 px-2 py-2">Thêm vật liệu mới</h6>
+        <h6 class="text-h6 px-2 py-2" v-if="materialInfo.MaterialName">
+          Cập nhật thông tin vật liệu
+        </h6>
+        <h6 class="text-h6 px-2 py-2" v-else>Thêm vật liệu mới</h6>
       </v-card-title>
       <v-card-text>
         <v-row>
@@ -72,7 +102,7 @@
               v-model="exPriceFormatted"
             ></v-text-field>
             <v-file-input
-              v-model="materialInfo.LinkImage"
+              v-model="imageMaterial"
               label="Hình ảnh"
               accept="image/png, image/jpeg, image/bmp"
               placeholder="Pick an avatar"
@@ -91,33 +121,56 @@
         >
           Đóng
         </v-btn>
-        <v-btn @click="addMaterial"> Lưu thông tin </v-btn>
+        <v-btn @click="btSaveUpdate" v-if="materialInfo.MaterialName">
+          Lưu thông tin
+        </v-btn>
+        <v-btn @click="addMaterial" v-else> Lưu thông tin </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <v-dialog v-model="isShowDelMaterial" width="400">
+    <v-card>
+      <v-toolbar
+        class="pl-2"
+        color="error"
+        title="Xóa dịch vụ"
+        center
+      ></v-toolbar>
+      <v-card-text>
+        <div class="text-h5 pt-4">Có chắc bạn muốn xóa vật liệu này không?</div>
+      </v-card-text>
+      <v-card-actions class="justify-end">
+        <v-btn color="blue" variant="text" @click="isShowDelMaterial = false"
+          >Đóng</v-btn
+        >
+        <v-btn variant="text" @click="delMaterial">Xóa</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <notifications />
 </template>
 
 <script>
 import { GetMaterialLst, AddMaterial, DelMaterial } from "@/api/material";
+import { urlUploadImageMaterial } from "./variable";
+import Axios from "axios";
+import { getClinicID } from "@/utils/auth";
 export default {
   data() {
     return {
+      isShowDelMaterial: false,
       isShowCreateMaterial: false,
       search: "",
       headers: [
-        {
-          title: "STT",
-          align: "start",
-          sortable: false,
-          key: "Key",
-        },
-        { title: "Mã vật liệu", key: "calories" },
-        { title: "Tên vật liệu", key: "name" },
-        { title: "Giá nhập", key: "carbs" },
-        { title: "Giá bán", key: "carbs" },
-        { title: "Hình ảnh", key: "protein" },
-        { title: "Ghi chú", key: "fat" },
-        { title: "Chức năng", key: "" },
+        { title: "STT", sortable: false, key: "Key" },
+        { title: "Mã vật liệu", key: "MaterialID", sortable: false },
+        { title: "Tên vật liệu", key: "MaterialName", sortable: false },
+        { title: "Giá nhập", key: "ImPrice", sortable: false },
+        { title: "Giá bán", key: "ExPrice", sortable: false },
+        { title: "Đơn vị", key: "Unit", sortable: false },
+        { title: "Hình ảnh", key: "Image", sortable: false },
+        { title: "Ghi chú", key: "Note", sortable: false },
+        { title: "", key: "Action", sortable: false },
       ],
       desserts: [],
       materialInfo: {},
@@ -127,6 +180,8 @@ export default {
       search: "",
       imPrice: null,
       exPrice: null,
+      imageMaterial: null,
+      itemDel: {},
     };
   },
   computed: {
@@ -156,6 +211,76 @@ export default {
     },
   },
   methods: {
+    btShowDel(data) {
+      this.itemDel = { ...data };
+      this.isShowDelMaterial = true;
+    },
+    delMaterial() {
+      DelMaterial({
+        MaterialID: this.itemDel.MaterialID,
+      }).then((res) => {
+        if (res) {
+          this.isShowDelMaterial = false;
+          this.getMaterialLst();
+          notify({
+            type: "success",
+            title: "Thành công",
+            text: "Xóa vật liệu thành công",
+          });
+        }
+      });
+    },
+    btShowUpdate(data) {
+      this.imageMaterial = null;
+      this.materialInfo = data;
+      this.imPriceFormatted = (data.ImPrice ?? 0).toString();
+      this.exPriceFormatted = (data.ExPrice ?? 0).toString();
+      this.isShowCreateMaterial = true;
+    },
+    btSaveUpdate() {
+      AddMaterial({
+        Data: {
+          ...this.materialInfo,
+          ImPrice: this.imPrice,
+          ExPrice: this.exPrice,
+        },
+      }).then((res) => {
+        if (res) {
+          if (this.imageMaterial) {
+            this.uploadImageMaterial(res.MaterialID, "Thêm");
+          } else {
+            this.getMaterialLst();
+            notify({
+              title: "Thành công",
+              text: "Thêm thông tin vật liệu thành công",
+              type: "success",
+            });
+          }
+        }
+      });
+    },
+    uploadImageMaterial(data, text) {
+      const params = new FormData();
+      params.append("file", this.imageMaterial[0]);
+
+      Axios.post(urlUploadImageMaterial(data), params).then((res) => {
+        if (res.data.RespCode == 0) {
+          this.getMaterialLst();
+          notify({
+            title: "Thành công",
+            text: text + " thông tin vật liệu thành công",
+            type: "success",
+          });
+        } else {
+          notify({
+            title: "Lỗi",
+            text: res.data.RespText,
+            type: "error",
+          });
+        }
+        this.isShowCreateMaterial = false;
+      });
+    },
     formatAsCurrency(value, dec) {
       dec = dec || 0;
       if (value === null) {
@@ -167,6 +292,10 @@ export default {
     },
     btCreateMedical() {
       this.isShowCreateMaterial = true;
+      this.imageMaterial = null;
+      this.imPriceFormatted = "";
+      this.exPriceFormatted = "";
+      this.materialInfo = {};
     },
     addMaterial() {
       AddMaterial({
@@ -177,13 +306,16 @@ export default {
         },
       }).then((res) => {
         if (res) {
-          this.isShowCreateMaterial = false;
-          this.getMaterialLst();
-          notify({
-            type: "success",
-            title: "Thành công",
-            text: "Xóa sản phẩm thành công",
-          });
+          if (this.imageMaterial) {
+            this.uploadImageMaterial(res.MaterialID, "Thêm");
+          } else {
+            this.getMaterialLst();
+            notify({
+              title: "Thành công",
+              text: "Thêm thông tin vật liệu thành công",
+              type: "success",
+            });
+          }
         }
       });
     },
@@ -198,6 +330,13 @@ export default {
             return {
               ...item,
               Key: index + 1,
+              Image:
+                "http://202.191.56.172/PKPosAPI/File/GetImageMaterial?ClinicID=" +
+                getClinicID() +
+                "&MaterialID=" +
+                item.MaterialID +
+                "&Size=400?t=" +
+                new Date().getTime(),
             };
           });
         }

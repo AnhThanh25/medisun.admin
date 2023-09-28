@@ -1,209 +1,232 @@
 <template>
-  <v-row>
-    <v-col lg="8">
-      <v-card>
-        <v-card-title>
-          <div style="display: flex; justify-content: space-between">
-            <span class="text-h6">Phiếu đặt vật liệu Labo</span>
-            <!-- <v-btn>Chọn PKTQ</v-btn> -->
-          </div>
-        </v-card-title>
-        <v-card-text>
-          <v-row>
-            <v-col cols="12" sm="6" md="6">
-              <v-select
-                :items="['Anh Thành', 'Khách lẻ']"
-                label="Khách hàng"
-              ></v-select>
-              <v-text-field
-                type="date"
-                label="Ngày đặt"
-                required
-              ></v-text-field>
-              <v-text-field
-                type="date"
-                label="Hạn bảo hành"
-                required
-              ></v-text-field>
-
-              <v-row>
-                <v-col cols="8">
-                  <v-select
-                    :items="['Xưởng hà nội']"
-                    label="Xưởng sản xuất"
-                  ></v-select>
-                  </v-col
-                >
-                <v-col cols="4"><v-btn size="large">Thêm xưởng</v-btn></v-col>
-              </v-row>
-            </v-col>
-            <v-col cols="12" sm="6" md="6">
-              <v-select :items="['Nguyễn Văn A']" label="Nhân viên"></v-select>
-              <v-text-field
-                type="date"
-                label="Ngày nhận"
-                required
-              ></v-text-field>
-              <v-select :items="['Đã nhận']" label="Trạng thái"></v-select>
-              <v-row>
-                <v-col cols="8">
-                  <v-select :items="['Đã nhận']" label="Vật liệu"></v-select
-                ></v-col>
-                <v-col cols="4"
-                  ><v-btn size="large">Thêm vật liệu</v-btn></v-col
-                >
-              </v-row>
-            </v-col>
-          </v-row>
-
-          <v-data-table  no-data-text="Không có dữ liệu"
-            :headers="headers"
-            :items="desserts"
-            :search="search"
-            sort-asc-icon="mdi-menu-up"
-            sort-desc-icon="mdi-menu-down"
-            :hide-default-footer="true"
-            :disable-pagination="true"
-            :items-per-page="-1"
-            class="table-pres"
-          >
-            <template v-slot:item.calories="{ item }">
-              <v-text-field
-                v-model="item.calories"
-                variant="underlined"
-                class="input-custom"
-                 label="Last name"
-              ></v-text-field>
-            </template>
-          </v-data-table>
-        </v-card-text>
-      </v-card>
-    </v-col>
-    <v-col lg="4">
-      <v-card>
-        <v-card-title>
-          <span class="text-h6">Hóa đơn phiếu đặt</span>
-        </v-card-title>
-        <v-card-text>
-          <v-row>
-            <v-col cols="6">
-              <p class="text-left">Tổng tiền</p>
-            </v-col>
-
-            <v-col cols="6" style="text-align: right">
-              <p class="text-right font-weight-bold">10.000.000đ</p>
-            </v-col>
-
-            <v-col cols="6">
-              <p class="text-left">Giảm giá</p>
-            </v-col>
-
-            <v-col cols="6" style="text-align: right">
-              <p class="text-right font-weight-bold">0đ</p>
-            </v-col>
-
-            <v-col cols="6">
-              <p class="text-left">Phải trả xưởng</p>
-            </v-col>
-
-            <v-col cols="6" style="text-align: right">
-              <p class="text-right font-weight-bold">3.000.000đ</p>
-            </v-col>
-            <v-col cols="6">
-              <v-btn
-                class="text-left"
-                color="secondary"
-                style="margin-top: -8px"
-                >Thanh toán</v-btn
-              >
-            </v-col>
-
-            <v-col cols="6" style="text-align: right">
-              <p class="text-right font-weight-bold text-success">5.000.000đ</p>
-            </v-col>
-            <!-- <v-col cols="6">
-              <p class="text-left">Khách cần thanh toán</p>
-            </v-col>
-
-            <v-col cols="6" style="text-align: right">
-              <p class="text-right font-weight-bold">10.510.500đ</p>
-            </v-col> -->
-
-            <v-col cols="6">
-              <p class="text-left">Hình thức thanh toán</p>
-            </v-col>
-
-            <v-col cols="6" style="text-align: right">
-              <p class="text-right font-weight-bold">Tiền mặt</p>
-            </v-col>
-
-            <v-col cols="6">
-              <p class="text-left">Tính vào công nợ</p>
-            </v-col>
-
-            <v-col cols="6" style="text-align: right">
-              <p class="text-right font-weight-bold text-error">5.510.500đ</p>
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-card>
-      <div
-        style="display: flex; justify-content: space-between; margin-top: 8px"
-      >
-        <v-btn color="success">In phiếu khám</v-btn>
-        <v-btn color="success">In đơn thuốc</v-btn>
-        <v-btn>Lưu phiếu</v-btn>
+  <v-card>
+    <v-card-title>
+      <div style="display: flex; justify-content: space-between">
+        <h6 class="text-h6 px-2 py-2">Phiếu đặt vật liệu Labo</h6>
+        <div class="mt-2"></div>
+        <!-- <v-btn>Chọn PKTQ</v-btn> -->
       </div>
-    </v-col>
-  </v-row>
+    </v-card-title>
+    <v-card-text>
+      <v-data-table
+        no-data-text="Không có dữ liệu"
+        :headers="headers"
+        :items="desserts"
+        :search="search"
+        sort-asc-icon="mdi-menu-up"
+        sort-desc-icon="mdi-menu-down"
+        :hide-default-footer="true"
+        :disable-pagination="true"
+        :items-per-page="-1"
+        class="table-pres"
+        style="border: none"
+      >
+        <template v-slot:top>
+          <v-btn variant="tonal" color="blue" @click="btShowMaterial"
+            >Đặt vật liệu</v-btn
+          >
+          <!-- <v-btn variant="tonal" class="ml-2">Thêm xưởng</v-btn> -->
+        </template>
+      </v-data-table>
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="blue-darken-1" variant="text" @click="btClose">
+        Đóng
+      </v-btn>
+      <v-btn @click="addAccountClinic"> Lưu thông tin </v-btn>
+    </v-card-actions>
+  </v-card>
+  <v-dialog v-model="isShowAddMaterial" width="600">
+    <v-card>
+      <v-card-title>
+        <h6 class="text-h6 px-2 py-2">Thêm vật liệu đặt hàng</h6>
+      </v-card-title>
+      <v-card-text>
+        <v-row>
+          <v-col cols="12" sm="6" md="6">
+            <v-autocomplete
+              v-model="materialInfo.MaterialID"
+              label="Chọn vật liệu đặt"
+              :items="materialLst"
+              item-title="MaterialName"
+              item-value="MaterialID"
+            ></v-autocomplete>
+            <v-text-field
+              label="Số lượng"
+              v-model="materialInfo.Quantity"
+            ></v-text-field>
+            <v-text-field
+              label="Giá bán"
+              v-model="exPriceFormatted"
+            ></v-text-field>
+
+            <v-autocomplete
+              v-model="materialInfo.Workshop"
+              label="Chọn xưởng đặt vật liệu"
+              :items="materialLst"
+              item-title="MaterialName"
+              item-value="MaterialID"
+            ></v-autocomplete>
+          </v-col>
+
+          <v-col cols="12" sm="6" md="6">
+            <v-autocomplete
+              v-model="materialInfo.EmployCare"
+              label="Người thực hiện"
+              :items="employLst"
+              item-title="Title"
+              item-value="UserName"
+            ></v-autocomplete>
+            <v-text-field
+              label="Đơn vị"
+              v-model="materialInfo.Unit"
+            ></v-text-field>
+            <v-text-field
+              label="Giảm giá"
+              v-model="discountFormatted"
+            ></v-text-field>
+            <v-text-field
+              label="Ghi chú"
+              hide-details
+              v-model="materialInfo.Note"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="blue-darken-1"
+          variant="text"
+          @click="isShowAddMaterial = false"
+        >
+          Đóng
+        </v-btn>
+        <v-btn @click="btSaveUpdate" v-if="materialInfo.MaterialName">
+          Lưu thông tin
+        </v-btn>
+        <v-btn @click="addMaterial" v-else> Lưu thông tin </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
-import { items } from "../variables";
+import { GetMaterialLst } from "@/api/material";
+import { GetEmployLst } from "@/api/user";
+import { getRoleText } from "@/utils/role";
+
 export default {
   data() {
     return {
-      tab: "1",
-      items: items,
+      isShowAddMaterial: false,
+
       headers: [
         {
           title: "STT",
-          align: "start",
+
           sortable: false,
           key: "Key",
         },
-        { title: "Thủ thuật", key: "calories" },
-        { title: "Thực hiện", key: "name" },
-        { title: "Số lượng", key: "carbs" },
-        { title: "Đơn giá", key: "protein" },
-        { title: "Giảm giá", key: "fat" },
-        { title: "Tổng", key: "fat" },
-        { title: "Chức năng", key: "" },
+        { title: "Thủ thuật", key: "calories", sortable: false },
+        { title: "Thực hiện", key: "name", sortable: false },
+        { title: "SL", key: "carbs", sortable: false },
+        { title: "Đơn giá", key: "protein", sortable: false },
+        { title: "Giảm giá", key: "fat", sortable: false },
+        { title: "Tổng", key: "fat", sortable: false },
+        { title: "", key: "Action", sortable: false },
       ],
-      desserts: [
-        {
-          Key: 1,
-          name: "Frozen Yogurt",
-          calories: 200,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          iron: "1%",
-        },
-        {
-          Key: 1,
-
-          name: "Ice cream sandwich",
-          calories: 200,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          iron: "1%",
-        },
-      ],
+      desserts: [],
       search: "",
+      materialInfo: {},
+      materialLst: [],
+      employLst: [],
+      exPrice: null,
+      discountPrice: null,
     };
   },
+  emits: ["close"],
+  computed: {
+    exPriceFormatted: {
+      get: function () {
+        return this.formatAsCurrency(this.exPrice, 0);
+      },
+      set: function (newValue) {
+        if (newValue) {
+          this.exPrice = Number(newValue?.replace(/[^0-9\.]/g, ""));
+        } else {
+          this.exPrice = null;
+        }
+      },
+    },
+    discountFormatted: {
+      get: function () {
+        return this.formatAsCurrency(this.discountPrice, 0);
+      },
+      set: function (newValue) {
+        if (newValue) {
+          this.discountPrice = Number(newValue?.replace(/[^0-9\.]/g, ""));
+        } else {
+          this.discountPrice = null;
+        }
+      },
+    },
+  },
+  methods: {
+    btAddMaterial() {
+      this.desserts.push({
+        ...this.materialInfo,
+        ExPrice: this.exPrice,
+        MoneyDiscount: this.discountPrice,
+      });
+    },
+    btClose() {
+      this.$emit("close", false);
+    },
+    formatAsCurrency(value, dec) {
+      dec = dec || 0;
+      if (value === null) {
+        return "";
+      }
+      return (
+        "" + value?.toFixed(dec).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+      );
+    },
+    btShowMaterial() {
+      this.isShowAddMaterial = true;
+      this.getMaterialLst();
+      this.getEmployLst();
+    },
+    getMaterialLst() {
+      GetMaterialLst({
+        PageNumber: 1,
+        RowspPage: 100000,
+        Search: "",
+      }).then((res) => {
+        if (res) {
+          this.materialLst = res.Data;
+        }
+      });
+    },
+    getEmployLst() {
+      GetEmployLst({
+        PageNumber: 1,
+        RowspPage: 1000,
+        Search: "",
+      }).then((res) => {
+        if (res) {
+          this.employLst = res.Data.map((item) => {
+            return {
+              ...item,
+              Title: item.FullName + " - " + getRoleText(item.Role),
+            };
+          });
+        }
+      });
+    },
+  },
+  created() {},
 };
 </script>
 
