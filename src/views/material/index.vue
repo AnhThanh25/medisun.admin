@@ -95,12 +95,7 @@ export default {
     return {
       isShowCreateLabo: false,
       headers: [
-        {
-          title: "STT",
-          align: "start",
-          sortable: false,
-          key: "Key",
-        },
+        { title: "STT", sortable: false, key: "Key" },
         { title: "Mã phiếu", key: "calories" },
         { title: "Ngày lập", key: "name" },
         { title: "Khách hàng", key: "carbs" },

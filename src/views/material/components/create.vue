@@ -25,7 +25,15 @@
           <v-btn variant="tonal" color="blue" @click="btShowMaterial"
             >Đặt vật liệu</v-btn
           >
-          <!-- <v-btn variant="tonal" class="ml-2">Thêm xưởng</v-btn> -->
+        </template>
+        <template v-slot:item.Total="{ item }">
+          {{ new Intl.NumberFormat().format(item.raw.Total) }}
+        </template>
+        <template v-slot:item.ExPrice="{ item }">
+          {{ new Intl.NumberFormat().format(item.raw.ExPrice) }}
+        </template>
+        <template v-slot:item.MoneyDiscount="{ item }">
+          {{ new Intl.NumberFormat().format(item.raw.MoneyDiscount) }}
         </template>
       </v-data-table>
     </v-card-text>
@@ -34,7 +42,7 @@
       <v-btn color="blue-darken-1" variant="text" @click="btClose">
         Đóng
       </v-btn>
-      <v-btn @click="addAccountClinic"> Lưu thông tin </v-btn>
+      <v-btn @click="addOrderMaterial"> Lưu thông tin </v-btn>
     </v-card-actions>
   </v-card>
   <v-dialog v-model="isShowAddMaterial" width="600">
@@ -45,6 +53,14 @@
       <v-card-text>
         <v-row>
           <v-col cols="12" sm="6" md="6">
+            <v-autocomplete
+              v-model="materialInfo.PatientID"
+              label="Khách hàng"
+              :items="patientLst"
+              item-title="PatientName"
+              item-value="PatientID"
+              :custom-filter="btFilter"
+            ></v-autocomplete>
             <v-autocomplete
               v-model="materialInfo.MaterialID"
               label="Chọn vật liệu đặt"
@@ -64,9 +80,9 @@
             <v-autocomplete
               v-model="materialInfo.Workshop"
               label="Chọn xưởng đặt vật liệu"
-              :items="materialLst"
-              item-title="MaterialName"
-              item-value="MaterialID"
+              :items="workShopLst"
+              item-title="Value"
+              item-value="Value"
             ></v-autocomplete>
           </v-col>
 
@@ -103,38 +119,34 @@
         >
           Đóng
         </v-btn>
-        <v-btn @click="btSaveUpdate" v-if="materialInfo.MaterialName">
+        <!-- <v-btn @click="btSaveUpdate" v-if="materialInfo.MaterialID">
           Lưu thông tin
-        </v-btn>
-        <v-btn @click="addMaterial" v-else> Lưu thông tin </v-btn>
+        </v-btn> -->
+        <v-btn @click="btAddMaterial"> Lưu thông tin </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import { GetMaterialLst } from "@/api/material";
+import { GetMaterialLst, AddOrderMaterial } from "@/api/material";
 import { GetEmployLst } from "@/api/user";
 import { getRoleText } from "@/utils/role";
+import { GetDefaultValue } from "@/api/default";
+import { GetPatientLst } from "@/api/patient";
 
 export default {
   data() {
     return {
       isShowAddMaterial: false,
-
       headers: [
-        {
-          title: "STT",
-
-          sortable: false,
-          key: "Key",
-        },
-        { title: "Thủ thuật", key: "calories", sortable: false },
-        { title: "Thực hiện", key: "name", sortable: false },
-        { title: "SL", key: "carbs", sortable: false },
-        { title: "Đơn giá", key: "protein", sortable: false },
-        { title: "Giảm giá", key: "fat", sortable: false },
-        { title: "Tổng", key: "fat", sortable: false },
+        { title: "STT", sortable: false, key: "Key" },
+        { title: "Vật liệu", key: "MaterialName", sortable: false },
+        { title: "Thực hiện", key: "EmployCareName", sortable: false },
+        { title: "SL", key: "Quantity", sortable: false },
+        { title: "Giá", key: "ExPrice", sortable: false },
+        { title: "Giảm giá", key: "MoneyDiscount", sortable: false },
+        { title: "Tổng", key: "Total", sortable: false },
         { title: "", key: "Action", sortable: false },
       ],
       desserts: [],
@@ -144,9 +156,13 @@ export default {
       employLst: [],
       exPrice: null,
       discountPrice: null,
+      workShopLst: [],
+      searchPatient: "",
+      patientLst: [],
+      searchCheckFilter: "",
     };
   },
-  emits: ["close"],
+  emits: ["close", "success"],
   computed: {
     exPriceFormatted: {
       get: function () {
@@ -173,13 +189,80 @@ export default {
       },
     },
   },
+  watch: {
+    "materialInfo.MaterialID"(newValue) {
+      this.materialInfo.Unit = this.materialLst.find(
+        (p) => p.MaterialID == newValue
+      ).Unit;
+      this.materialInfo.MaterialName = this.materialLst.find(
+        (p) => p.MaterialID == newValue
+      ).MaterialName;
+      this.exPriceFormatted = this.materialLst
+        .find((p) => p.MaterialID == newValue)
+        .ExPrice.toString();
+    },
+    "materialInfo.EmployCare"(newValue) {
+      this.materialInfo.EmployCareName = this.employLst.find(
+        (p) => p.UserName == newValue
+      ).FullName;
+    },
+  },
   methods: {
+    addOrderMaterial() {
+      AddOrderMaterial({
+        Data: this.desserts,
+      }).then((res) => {
+        if (res) {
+          this.$emit("success");
+        }
+      });
+    },
+    btFilter(value, query) {
+      if (this.searchCheckFilter != query) {
+        this.searchCheckFilter = query;
+        this.getPatientLst(query);
+      }
+    },
+    getPatientLst(search) {
+      GetPatientLst({
+        PageNumber: 1,
+        RowspPage: 10,
+        Search: search,
+      }).then((res) => {
+        if (res) {
+          this.patientLst = res.Data.map((item) => {
+            return {
+              ...item,
+              Title: item.PatientName + " - " + item.Phone,
+            };
+          });
+        }
+      });
+    },
+    getDefaultValue() {
+      GetDefaultValue({ Table: "Xưởng" }).then((res) => {
+        if (res) {
+          this.workShopLst = res.Data;
+        }
+      });
+    },
     btAddMaterial() {
       this.desserts.push({
         ...this.materialInfo,
         ExPrice: this.exPrice,
         MoneyDiscount: this.discountPrice,
+        Total:
+          this.exPrice * parseInt(this.materialInfo.Quantity) -
+          this.discountPrice,
       });
+      this.desserts = this.desserts.map((item, index) => {
+        return {
+          ...item,
+          Key: index + 1,
+        };
+      });
+      this.isShowAddMaterial = false;
+      console.log("123", this.desserts);
     },
     btClose() {
       this.$emit("close", false);
@@ -226,7 +309,10 @@ export default {
       });
     },
   },
-  created() {},
+  created() {
+    this.getDefaultValue();
+    this.getPatientLst("");
+  },
 };
 </script>
 

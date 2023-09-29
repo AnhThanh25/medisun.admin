@@ -202,6 +202,13 @@ export const constantRoutes = [
         meta: { title: "Vật liệu", icon: "mdi-card-outline" },
         role: 1,
       },
+      {
+        name: "Mặc định",
+        path: "/cai-dat/mac-dinh",
+        component: () => import("@/views/setting/default/index.vue"),
+        meta: { title: "Mặc định", icon: "mdi-card-outline" },
+        role: 1,
+      },
     ],
   },
   // { path: "*", redirect: "/404", hidden: true, role: 1 },

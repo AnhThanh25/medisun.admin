@@ -69,21 +69,21 @@ service.interceptors.response.use(
           title: "Hết hạn",
           text: "Phiên đăng nhập hết hạn",
         });
-        // location.reload();
-        // removeToken();
-        // removeUserName();
-        // removeFullName();
-        // removePhoneNumber();
-        // removeHotline();
-        // removeEmail();
-        // removeRole();
-        // removeClinicID();
-        // removeClinicName();
-        // removeAddress();
-        // removeCity();
-        // removeDistrict();
-        // removeCommune();
-        // store.dispatch("user/resetToken").then(() => {});
+        location.reload();
+        removeToken();
+        removeUserName();
+        removeFullName();
+        removePhoneNumber();
+        removeHotline();
+        removeEmail();
+        removeRole();
+        removeClinicID();
+        removeClinicName();
+        removeAddress();
+        removeCity();
+        removeDistrict();
+        removeCommune();
+        store.dispatch("user/resetToken").then(() => {});
       } else {
         notification.notify({
           type: "error",
