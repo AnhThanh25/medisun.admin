@@ -8,13 +8,8 @@
         <v-spacer></v-spacer>
         <div class="ml-auto">
           <div class="d-flex align-center">
-
             <div class="d-flex align-center px-2">
               <span class="text-secondary">
-                <!-- <span class="text-overline">
-                  <i class="mdi mdi-brightness-1 mx-1"></i>
-                </span> -->
-                <!-- <span class="font-weight-regular">Xem tất cả >> </span> -->
                 <v-icon icon="mdi-dots-horizontal icon"></v-icon>
               </span>
             </div>

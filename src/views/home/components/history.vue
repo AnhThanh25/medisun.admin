@@ -15,14 +15,14 @@
         </div>
       </div>
     </div>
-    <div v-for="i in 5" :key="i">
+    <div v-for="(item, index) in dataLogLst" :key="index">
       <div class="item">
         <div class="icon">
           <v-icon icon="mdi-check"></v-icon>
         </div>
         <div class="text">
-          <div class="title">Bác sĩ An vừa tạo PKTQ</div>
-          <div class="time">12/08/2023 16:00</div>
+          <div class="title">{{ item.FullName }} {{ item.Feature }}</div>
+          <div class="time">{{ item.TimeCreate }}</div>
         </div>
       </div>
       <v-divider></v-divider>
@@ -31,7 +31,37 @@
 </template>
 
 <script>
-export default {};
+import { GetLogLst } from "@/api/log";
+import { formatDateDisplay } from "@/helpers/getTime";
+export default {
+  data() {
+    return {
+      dataLogLst: [],
+      pageNumber: 1,
+      rowspPage: 5,
+      search: "",
+    };
+  },
+  methods: {
+    getLogLst() {
+      GetLogLst({
+        PageNumber: this.pageNumber,
+        RowspPage: this.rowspPage,
+        Search: this.search,
+      }).then((res) => {
+        this.dataLogLst = res.Data.map((item, index) => {
+          return {
+            ...item,
+            TimeCreate: formatDateDisplay(item.TimeCreate),
+          };
+        });
+      });
+    },
+  },
+  created() {
+    this.getLogLst();
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -51,12 +81,12 @@ export default {};
     margin-left: 16px;
     margin-bottom: 12px;
     .title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
       margin-top: -4px;
     }
     .time {
-      font-size: 14px;
+      font-size: 12px;
     }
   }
 }

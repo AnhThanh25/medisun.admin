@@ -8,6 +8,33 @@
       </div>
     </v-card-title>
     <v-card-text>
+      <v-row>
+        <v-col cols="6">
+          <v-autocomplete
+            v-model="patientID"
+            label="Khách hàng"
+            :items="patientLst"
+            item-title="PatientName"
+            item-value="PatientID"
+            :custom-filter="btFilter"
+            hide-details
+          ></v-autocomplete>
+        </v-col>
+        <v-col cols="6">
+          <v-autocomplete
+            v-model="employCare"
+            label="Người thực hiện"
+            :items="employLst"
+            item-title="Title"
+            item-value="UserName"
+            hide-details
+          ></v-autocomplete>
+        </v-col>
+        <v-col>
+          <v-text-field label="Ghi chú" v-model="note"></v-text-field>
+        </v-col>
+      </v-row>
+
       <v-data-table
         no-data-text="Không có dữ liệu"
         :headers="headers"
@@ -23,7 +50,7 @@
       >
         <template v-slot:top>
           <v-btn variant="tonal" color="blue" @click="btShowMaterial"
-            >Đặt vật liệu</v-btn
+            >Thêm vật liệu đặt hàng</v-btn
           >
         </template>
         <template v-slot:item.Total="{ item }">
@@ -54,14 +81,6 @@
         <v-row>
           <v-col cols="12" sm="6" md="6">
             <v-autocomplete
-              v-model="materialInfo.PatientID"
-              label="Khách hàng"
-              :items="patientLst"
-              item-title="PatientName"
-              item-value="PatientID"
-              :custom-filter="btFilter"
-            ></v-autocomplete>
-            <v-autocomplete
               v-model="materialInfo.MaterialID"
               label="Chọn vật liệu đặt"
               :items="materialLst"
@@ -87,13 +106,6 @@
           </v-col>
 
           <v-col cols="12" sm="6" md="6">
-            <v-autocomplete
-              v-model="materialInfo.EmployCare"
-              label="Người thực hiện"
-              :items="employLst"
-              item-title="Title"
-              item-value="UserName"
-            ></v-autocomplete>
             <v-text-field
               label="Đơn vị"
               v-model="materialInfo.Unit"
@@ -136,13 +148,15 @@ import { GetDefaultValue } from "@/api/default";
 import { GetPatientLst } from "@/api/patient";
 
 export default {
+  props: {
+    dataUpdate: Object,
+  },
   data() {
     return {
       isShowAddMaterial: false,
       headers: [
         { title: "STT", sortable: false, key: "Key" },
         { title: "Vật liệu", key: "MaterialName", sortable: false },
-        { title: "Thực hiện", key: "EmployCareName", sortable: false },
         { title: "SL", key: "Quantity", sortable: false },
         { title: "Giá", key: "ExPrice", sortable: false },
         { title: "Giảm giá", key: "MoneyDiscount", sortable: false },
@@ -160,6 +174,9 @@ export default {
       searchPatient: "",
       patientLst: [],
       searchCheckFilter: "",
+      patientID: "",
+      employCare: "",
+      note: "",
     };
   },
   emits: ["close", "success"],
@@ -201,16 +218,17 @@ export default {
         .find((p) => p.MaterialID == newValue)
         .ExPrice.toString();
     },
-    "materialInfo.EmployCare"(newValue) {
-      this.materialInfo.EmployCareName = this.employLst.find(
-        (p) => p.UserName == newValue
-      ).FullName;
-    },
   },
   methods: {
     addOrderMaterial() {
       AddOrderMaterial({
-        Data: this.desserts,
+        Data: {
+          OrderMaterialID: this.dataUpdate.OrderMaterialID,
+          PatientID: this.patientID,
+          EmployCare: this.employCare,
+          Note: this.note,
+          Data: this.desserts,
+        },
       }).then((res) => {
         if (res) {
           this.$emit("success");
@@ -262,7 +280,6 @@ export default {
         };
       });
       this.isShowAddMaterial = false;
-      console.log("123", this.desserts);
     },
     btClose() {
       this.$emit("close", false);
@@ -279,7 +296,7 @@ export default {
     btShowMaterial() {
       this.isShowAddMaterial = true;
       this.getMaterialLst();
-      this.getEmployLst();
+      this.getDefaultValue();
     },
     getMaterialLst() {
       GetMaterialLst({
@@ -310,8 +327,20 @@ export default {
     },
   },
   created() {
-    this.getDefaultValue();
     this.getPatientLst("");
+    this.getEmployLst();
+    if (this.dataUpdate.OrderMaterialID) {
+      this.patientID = this.dataUpdate.PatientID;
+      this.employCare = this.dataUpdate.EmployCare;
+      this.note = this.dataUpdate.Note;
+      this.desserts = this.dataUpdate.Data.map((item, index) => {
+        return {
+          ...item,
+          Key: index + 1,
+          Total: item.Quantity * item.ExPrice - item.MoneyDiscount,
+        };
+      });
+    }
   },
 };
 </script>

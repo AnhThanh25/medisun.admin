@@ -72,36 +72,69 @@
             icon="mdi-tooth"
             style="height: 42px"
           ></v-btn>
-        </div> </template
-    ></v-data-table>
+        </div>
+      </template>
+      <template v-slot:item.Action="{ item }">
+        <v-icon
+          color="primary"
+          size="small"
+          class="me-2"
+          @click="btShowUpdate(item.raw)"
+          >mdi-pencil
+        </v-icon>
+
+        <v-icon color="primary" size="small" @click="btShowDel(item.raw)">
+          mdi-delete
+        </v-icon>
+      </template>
+    </v-data-table>
   </v-card>
   <v-dialog v-model="isShowCreateLabo" width="800">
-    <Create @close="btClose" />
+    <Create :dataUpdate="itemUpdate" @close="btClose" @success="btCreateSuccess" />
+  </v-dialog>
+  <v-dialog v-model="isShowDelLabo" width="400">
+    <v-card>
+      <v-toolbar
+        class="pl-2"
+        color="error"
+        title="Xóa phiếu đặt vật liệu"
+        center
+      ></v-toolbar>
+      <v-card-text>
+        <div class="text-h5 pt-4">
+          Có chắc bạn muốn xóa phiếu đặt vật liệu này không?
+        </div>
+      </v-card-text>
+      <v-card-actions class="justify-end">
+        <v-btn color="blue" variant="text" @click="isShowDelLabo = false"
+          >Đóng</v-btn
+        >
+        <v-btn variant="text" @click="delLabo">Xóa</v-btn>
+      </v-card-actions>
+    </v-card>
   </v-dialog>
 </template>
 
 <script>
-import {
-  GetOrderMaterialLst,
-  AddOrderMaterial,
-  DelOrderMaterial,
-} from "@/api/material";
+import { GetOrderMaterialLst, DelOrderMaterial } from "@/api/material";
 import Create from "./components/create.vue";
+import { formatDateUpload, formatDateDisplay } from "@/helpers/getTime";
 export default {
   components: {
     Create,
   },
   data() {
     return {
+      isShowDelLabo: false,
       isShowCreateLabo: false,
       headers: [
         { title: "STT", sortable: false, key: "Key" },
-        { title: "Mã phiếu", key: "calories" },
-        { title: "Ngày lập", key: "name" },
-        { title: "Khách hàng", key: "carbs" },
-        { title: "Nhân viên phụ trách", key: "protein" },
-        { title: "Ghi chú", key: "fat" },
-        { title: "Chức năng", key: "" },
+        { title: "Mã phiếu", key: "OrderMaterialID" },
+        { title: "Ngày lập", key: "TimeCreate" },
+        { title: "Khách hàng", key: "PatientName" },
+        { title: "NV phụ trách", key: "EmployCareName" },
+        { title: "Ghi chú", key: "Note" },
+        { title: "", key: "Action" },
       ],
       desserts: [],
       pageNumber: 1,
@@ -113,9 +146,37 @@ export default {
         input: "DD-MM-YYYY",
       },
       itemDel: {},
+      itemUpdate: {},
     };
   },
   methods: {
+    btShowUpdate(data) {
+      this.itemUpdate = data;
+      this.isShowCreateLabo = true;
+    },
+    btCreateSuccess() {
+      this.isShowCreateLabo = false;
+      this.getOrderMaterialLst();
+    },
+    btShowDel(data) {
+      this.isShowDelLabo = true;
+      this.itemDel = data;
+    },
+    delLabo() {
+      DelOrderMaterial({ OrderMaterialID: this.itemDel.OrderMaterialID }).then(
+        (res) => {
+          if (res) {
+            this.isShowDelLabo = false;
+            this.getOrderMaterialLst();
+            notify({
+              type: "success",
+              title: "Thành công",
+              text: "Xóa phiếu đặt thành công",
+            });
+          }
+        }
+      );
+    },
     btClose() {
       this.isShowCreateLabo = false;
     },
@@ -124,12 +185,22 @@ export default {
     },
     getOrderMaterialLst() {
       GetOrderMaterialLst({
-        PageNumber: 4,
-        RowspPage: 5,
-        Search: "",
-        TimeStart: "sample string 7",
-        TimeEnd: "sample string 8",
-      }).then((res) => {});
+        PageNumber: this.pageNumber,
+        RowspPage: this.rowspPage,
+        Search: this.search,
+        TimeStart: formatDateUpload(this.timeStart) + " 00:00:00",
+        TimeEnd: formatDateUpload(this.timeEnd) + " 23:59:59",
+      }).then((res) => {
+        if (res) {
+          this.desserts = res.Data.map((item, index) => {
+            return {
+              ...item,
+              Key: index + 1,
+              TimeCreate: formatDateDisplay(item.TimeCreate),
+            };
+          });
+        }
+      });
     },
   },
   created() {

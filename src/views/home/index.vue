@@ -42,7 +42,7 @@
 
 <script>
 import Now from "./components/now.vue";
-import OrderCalendar from "./components/order-calendar.vue";
+import OrderCalendar from "./components/appointment.vue";
 import History from "./components/history.vue";
 export default {
   components: {
