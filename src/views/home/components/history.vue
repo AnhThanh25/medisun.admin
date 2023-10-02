@@ -1,32 +1,35 @@
 <template>
-  <v-card class="pa-4">
-    <div class="d-sm-flex align-center mb-2">
-      <div>
-        <h3 class="text-h6 title font-weight-medium">Nhật ký hoạt động</h3>
+  <v-card>
+    <v-card-text class="pb-0">
+      <div class="d-sm-flex align-center">
+        <div>
+          <h3 class="text-h6 pt-3">Nhật ký hoạt động</h3>
+        </div>
+        <v-spacer></v-spacer>
+        <div class="ml-auto">
+          <v-btn
+            class="mt-3"
+            variant="text"
+            icon="mdi-dots-horizontal"
+            size="x-small"
+          ></v-btn>
+        </div>
       </div>
-      <v-spacer></v-spacer>
-      <div class="ml-auto">
-        <div class="d-flex align-center">
-          <div class="d-flex align-center px-2">
-            <span class="text-secondary">
-              <v-icon icon="mdi-dots-horizontal "></v-icon>
-            </span>
+    </v-card-text>
+    <v-list>
+      <v-list-item v-for="(item, index) in dataLogLst" :key="index" >
+        <div class="item">
+          <div class="icon">
+            <v-icon icon="mdi-check"></v-icon>
+          </div>
+          <div class="text">
+            <div class="title">{{ item.FullName }} {{ item.Feature }}</div>
+            <div class="time">{{ item.TimeCreate }}</div>
           </div>
         </div>
-      </div>
-    </div>
-    <div v-for="(item, index) in dataLogLst" :key="index">
-      <div class="item">
-        <div class="icon">
-          <v-icon icon="mdi-check"></v-icon>
-        </div>
-        <div class="text">
-          <div class="title">{{ item.FullName }} {{ item.Feature }}</div>
-          <div class="time">{{ item.TimeCreate }}</div>
-        </div>
-      </div>
-      <v-divider></v-divider>
-    </div>
+        <v-divider></v-divider>
+      </v-list-item>
+    </v-list>
   </v-card>
 </template>
 
@@ -67,7 +70,7 @@ export default {
 <style lang="scss" scoped>
 .item {
   display: flex;
-  margin-top: 12px;
+  // margin-top: 12px;
   .icon {
     font-size: 16px;
     background: rgb(var(--v-theme-success), 0.1);

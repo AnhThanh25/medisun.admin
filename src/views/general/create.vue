@@ -6,25 +6,24 @@
     <v-card-text>
       <v-row>
         <v-col cols="12" sm="6" md="6">
-          <VDatePicker2
-            locale="vi"
-            v-model="generalInfo.TimeCreate"
-            mode="date"
-            :masks="masks"
+          <v-autocomplete
+            v-model="generalInfo.PatientID"
+            label="Số điện thoại - Khách hàng"
+            :items="patientLst"
+            item-title="Title"
+            item-value="PatientID"
+            @update:search="btFilter"
+            no-data-text="Khách hàng chưa có trong hệ thống"
           >
-            <template #default="{ inputValue, inputEvents }">
-              <v-text-field
-                v-model="generalInfo.TimeCreate"
-                :value="inputValue"
-                v-on="inputEvents"
-                label="Thời gian tạo"
-                append-inner-icon="mdi-calendar"
-              />
+            <template v-slot:append>
+              <v-btn
+                icon="mdi-plus"
+                variant="tonal"
+                color="secondary"
+                @click="btShowCreate"
+              ></v-btn>
             </template>
-          </VDatePicker2>
-          <v-text-field label="Khách hàng" v-model="generalInfo.Title">
-          </v-text-field>
-
+          </v-autocomplete>
           <v-select
             v-model="generalInfo.EmployCare"
             :items="employLst"
@@ -112,6 +111,143 @@
       <v-btn @click="addGeneralty"> Lưu thông tin </v-btn>
     </v-card-actions>
   </v-card>
+  <v-dialog v-model="isShowCreateCustomer" persistent width="600">
+    <v-card>
+      <v-card-title>
+        <h6 class="text-h6 px-3 py-2">{{ patientInfo.Dialog }}</h6>
+      </v-card-title>
+      <v-card-text>
+        <v-row>
+          <v-col cols="12">
+            <v-row>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                  v-model="patientInfo.PatientName"
+                  label="Tên khách hàng"
+                  hide-details
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                  label="Số điện thoại"
+                  v-model="patientInfo.Phone"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" sm="6" md="6">
+                <v-select
+                  v-model="patientInfo.Sex"
+                  :items="['Nam', 'Nữ', 'Không xác định']"
+                  hide-details
+                  label="Giới tính"
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <VDatePicker2
+                  locale="vi"
+                  v-model="patientInfo.Birthday"
+                  mode="date"
+                  :masks="masks"
+                >
+                  <template #default="{ inputValue, inputEvents }">
+                    <v-text-field
+                      v-model="patientInfo.Birthday"
+                      :value="inputValue"
+                      v-on="inputEvents"
+                      label="Ngày sinh"
+                      append-inner-icon="mdi-calendar"
+                      hide-details
+                    />
+                  </template>
+                </VDatePicker2>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" sm="6" md="6">
+                <v-select
+                  v-model="patientInfo.City"
+                  label="Tỉnh/TP"
+                  hide-details
+                  :items="cityLst"
+                  item-title="City"
+                  item-value="City"
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <v-select
+                  v-model="patientInfo.District"
+                  :items="districtLst"
+                  item-title="District"
+                  item-value="District"
+                  label="Quận/Huyện"
+                  hide-details
+                ></v-select>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" sm="6" md="6">
+                <v-select
+                  v-model="patientInfo.Commune"
+                  :items="communeLst"
+                  item-title="Commune"
+                  item-value="Commune"
+                  label="Phường/Xã"
+                  hide-details
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                  v-model="patientInfo.Address"
+                  label="Địa chỉ"
+                  hide-details
+                  required
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                  v-model="patientInfo.Job"
+                  label="Nghề nghiệp"
+                  hide-details
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <v-select
+                  v-model="patientInfo.EmployCare"
+                  :items="employLst"
+                  item-title="Title"
+                  item-value="UserName"
+                  label="Nhân viên phụ trách"
+                  hide-details
+                ></v-select>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="blue-darken-1"
+          variant="text"
+          @click="isShowCreateCustomer = false"
+        >
+          Đóng
+        </v-btn>
+        <v-btn @click="addPatientLst"> Lưu thông tin </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <notifications />
 </template>
 
 <script>
@@ -121,6 +257,12 @@ import { pathAll, pathTeeth } from "../customer/variable";
 import { AddGeneralty } from "@/api/generalty";
 import { GetEmployLst } from "@/api/user";
 import { getRoleText } from "@/utils/role";
+import { GetPatientLst, AddPatientLst } from "@/api/patient";
+import {
+  GetCity,
+  GetDistrictByCity,
+  GetCommuneByCityAndDistrict,
+} from "@/api/default";
 export default {
   components: {
     TeethAdults,
@@ -146,10 +288,117 @@ export default {
       },
       generalID: null,
       employLst: [],
+      patientLst: [],
+      patientInfo: {},
+      isShowCreateCustomer: false,
+      cityLst: [],
+      districtLst: [],
+      communeLst: [],
     };
   },
+  watch: {
+    "patientInfo.City"() {
+      this.getDistrictByCity();
+    },
+    "patientInfo.District"() {
+      this.getCommuneByCityAndDistrict();
+    },
+  },
   methods: {
+    addPatientLst() {
+      AddPatientLst({
+        Data: {
+          ...this.patientInfo,
+          Birthday: formatDate(this.patientInfo.Birthday),
+          PathlogicalLst:[]
+        },
+      }).then((res) => {
+        if (res) {
+          this.isShowCreateCustomer = false;
+          this.getPatientLst();
+          if (this.patientInfo.Dialog == "Thêm khách hàng") {
+            notify({
+              type: "success",
+              title: "Thành công",
+              text: "Thêm khách hàng mới thành công",
+            });
+          }
+        }
+      });
+    },
+    getCity() {
+      GetCity({}).then((res) => {
+        if (res) {
+          this.cityLst = res.Data;
+        }
+      });
+    },
+    getDistrictByCity() {
+      if (this.patientInfo.City) {
+        GetDistrictByCity({ City: this.patientInfo.City }).then((res) => {
+          if (res) {
+            this.districtLst = res.Data;
+          }
+        });
+      }
+    },
+    getCommuneByCityAndDistrict() {
+      if (this.patientInfo.City && this.patientInfo.District) {
+        GetCommuneByCityAndDistrict({
+          City: this.patientInfo.City,
+          District: this.patientInfo.District,
+        }).then((res) => {
+          if (res) {
+            this.communeLst = res.Data;
+          }
+        });
+      }
+    },
+    btShowCreate() {
+      this.isShowCreateCustomer = true;
+      this.patientInfo = { Dialog: "Thêm khách hàng" };
+    },
+    btFilter(value) {
+      this.getPatientLst(value);
+    },
+    getPatientLst(search) {
+      GetPatientLst({
+        PageNumber: 1,
+        RowspPage: 10,
+        Search: search,
+      }).then((res) => {
+        if (res) {
+          this.patientLst = res.Data.map((item) => {
+            return {
+              ...item,
+              Title: item.Phone + " - " + item.PatientName,
+            };
+          });
+        }
+      });
+    },
     addGeneralty() {
+      this.generalInfo.PathlogicalLst = []
+       for (var i = 0; i < this.pathAll.length; i++) {
+        var item = this.pathAll[i];
+        if (item.CheckBox) {
+          var path = {
+            Type: "Tiền sử bệnh toàn thân",
+            Pathological: item.Text,
+          };
+          this.generalInfo.PathlogicalLst.push(path);
+        }
+      }
+      for (var i = 0; i < this.pathTeeth.length; i++) {
+        var item = this.pathTeeth[i];
+        if (item.CheckBox) {
+          var path = {
+            Type: "Tiền sử bệnh răng miệng",
+            Pathological: item.Text,
+          };
+          this.generalInfo.PathlogicalLst.push(path);
+        }
+      }
       AddGeneralty({
         Data: this.generalInfo,
       }).then((res) => {
@@ -216,6 +465,8 @@ export default {
   },
   created() {
     this.getEmployLst();
+    this.getPatientLst("");
+    this.getCity();
   },
 };
 </script>

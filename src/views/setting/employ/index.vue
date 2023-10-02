@@ -81,13 +81,13 @@
               <v-col cols="12" sm="6" md="6">
                 <VDatePicker2
                   locale="vi"
-                  v-model="employUpdate.DateOfBirth"
+                  v-model="employInfo.DateOfBirth"
                   mode="date"
                   :masks="masks"
                 >
                   <template #default="{ inputValue, inputEvents }">
                     <v-text-field
-                      v-model="employUpdate.DateOfBirth"
+                      v-model="employInfo.DateOfBirth"
                       :value="inputValue"
                       v-on="inputEvents"
                       label="Ngày sinh"
@@ -369,7 +369,7 @@ export default {
       });
     },
     addAccountClinic() {
-      if (!employInfo.Address) {
+      if (!this.employInfo.Address) {
         notify({
           type: "error",
           title: "Lỗi",
@@ -377,7 +377,7 @@ export default {
         });
         return;
       }
-      if (!employInfo.FullName) {
+      if (!this.employInfo.FullName) {
         notify({
           type: "error",
           title: "Lỗi",
@@ -385,7 +385,7 @@ export default {
         });
         return;
       }
-      if (!employInfo.PhoneNumber) {
+      if (!this.employInfo.PhoneNumber) {
         notify({
           type: "error",
           title: "Lỗi",
@@ -393,7 +393,7 @@ export default {
         });
         return;
       } else {
-        if (isPhoneNumber(employInfo.PhoneNumber)) {
+        if (this.isPhoneNumber(this.employInfo.PhoneNumber)) {
         } else {
           notify({
             type: "error",
@@ -403,7 +403,7 @@ export default {
           return;
         }
       }
-      if (!employInfo.Email) {
+      if (!this.employInfo.Email) {
         notify({
           type: "error",
           title: "Lỗi",
@@ -411,7 +411,7 @@ export default {
         });
         return;
       } else {
-        if (isEmail(employInfo.Email)) {
+        if (this.isEmail(this.employInfo.Email)) {
         } else {
           notify({
             type: "error",
@@ -421,7 +421,7 @@ export default {
           return;
         }
       }
-      if (!employInfo.DateOfBirth) {
+      if (!this.employInfo.DateOfBirth) {
         notify({
           type: "error",
           title: "Lỗi",
@@ -429,7 +429,7 @@ export default {
         });
         return;
       }
-      if (!employInfo.Password || !employInfo.PasswordConfirm) {
+      if (!this.employInfo.Password || !this.employInfo.PasswordConfirm) {
         notify({
           type: "error",
           title: "Lỗi",
@@ -437,7 +437,7 @@ export default {
         });
         return;
       } else {
-        if (employInfo.Password === employInfo.PasswordConfirm) {
+        if (this.employInfo.Password === this.employInfo.PasswordConfirm) {
         } else {
           notify({
             type: "error",

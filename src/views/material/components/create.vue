@@ -16,8 +16,8 @@
             :items="patientLst"
             item-title="PatientName"
             item-value="PatientID"
-            :custom-filter="btFilter"
-            hide-details
+            @update:search="btFilter"
+            hide-no-data
           ></v-autocomplete>
         </v-col>
         <v-col cols="6">
@@ -173,7 +173,6 @@ export default {
       workShopLst: [],
       searchPatient: "",
       patientLst: [],
-      searchCheckFilter: "",
       patientID: "",
       employCare: "",
       note: "",
@@ -235,11 +234,8 @@ export default {
         }
       });
     },
-    btFilter(value, query) {
-      if (this.searchCheckFilter != query) {
-        this.searchCheckFilter = query;
-        this.getPatientLst(query);
-      }
+    btFilter(value) {
+      this.getPatientLst(value);
     },
     getPatientLst(search) {
       GetPatientLst({

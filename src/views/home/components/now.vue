@@ -3,17 +3,11 @@
     <v-card-text class="pa-4">
       <div class="d-sm-flex align-center mb-2">
         <div>
-          <h6 class="text-h6 font-weight-semibold">{{ title }}</h6>
+          <h6 class="text-h6 px-1 pt-3">{{ title }}</h6>
         </div>
         <v-spacer></v-spacer>
         <div class="ml-auto">
-          <div class="d-flex align-center">
-            <div class="d-flex align-center px-2">
-              <span class="text-secondary">
-                <v-icon icon="mdi-dots-horizontal icon"></v-icon>
-              </span>
-            </div>
-          </div>
+          <v-btn class="mt-3" variant="text" icon="mdi-dots-horizontal" size="x-small"></v-btn>
         </div>
       </div>
 
@@ -30,9 +24,7 @@
 </template>
 
 <script>
-// Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from "swiper/vue";
-// Import Swiper styles
 import "swiper/css";
 import ItemBox from "./item.vue";
 
@@ -56,24 +48,7 @@ export default {
   },
 };
 </script>
+<style scoped>
 
-<style lang="scss" scoped>
-// .row-now {
-//   display: flex;
-//   overflow-x: scroll;
-//   &::-webkit-scrollbar-track-piece {
-//     background: #ffffff;
-//     padding-right: 2px;
-//   }
-
-//   &::-webkit-scrollbar {
-//     width: 6px;
-//     height: 6px;
-//   }
-
-//   &::-webkit-scrollbar-thumb {
-//     background: #c6c6c7;
-//     border-radius: 20px;
-//   }
-// }
 </style>
+

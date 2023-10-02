@@ -46,7 +46,7 @@
 }
 
 .v-btn {
-  text-transform: capitalize;
+  text-transform: initial !important;
   letter-spacing: $btn-letter-spacing;
 }
 .v-btn--icon.v-btn--density-default {

@@ -6,7 +6,7 @@
           <div class="d-flex" style="justify-content: space-between">
             <h6 class="text-h6 px-3 py-2">Tạo phiếu khám</h6>
             <div>
-              <v-btn>Chọn PKTQ</v-btn>
+              <!-- <v-btn>Chọn PKTQ</v-btn> -->
               <v-btn color="secondary" class="ml-2" @click="btSavePK"
                 >Lưu phiếu</v-btn
               >
@@ -16,10 +16,23 @@
         <v-card-text>
           <v-row>
             <v-col cols="12" sm="6" md="6">
-              <v-text-field
-                label="Khách hàng"
-                v-model="medicalInfo.Title"
-              ></v-text-field>
+              <v-autocomplete
+                v-model="medicalInfo.PatientID"
+                label="Số điện thoại - Khách hàng"
+                :items="patientLst"
+                item-title="Title"
+                item-value="PatientID"
+                @update:search="btFilter"
+              >
+                <template v-slot:append>
+                  <v-btn
+                    icon="mdi-plus"
+                    variant="tonal"
+                    color="secondary"
+                    @click="btShowCreate"
+                  ></v-btn>
+                </template>
+              </v-autocomplete>
               <v-select
                 v-model="medicalInfo.EmployCare"
                 :items="employLst"
@@ -116,8 +129,6 @@
                 :modules="modules"
                 :slides-per-view="4"
                 :space-between="8"
-                @swiper="onSwiper"
-                @slideChange="onSlideChange"
                 :pagination="{ clickable: true }"
               >
                 <swiper-slide
@@ -213,8 +224,6 @@
                 :modules="modules"
                 :slides-per-view="4"
                 :space-between="8"
-                @swiper="onSwiper"
-                @slideChange="onSlideChange"
                 :pagination="pagination"
               >
                 <swiper-slide
@@ -489,53 +498,6 @@
           ></v-text-field>
         </v-card-text>
       </v-card>
-      <!-- <v-card class="mt-3" style="margin-left: -12px; width: calc(100% + 12px)">
-        <v-card-title>
-          <div class="d-flex" style="justify-content: space-between">
-            <h6 class="text-h6 px-1 py-2">Công nợ phiếu khám</h6>
-          </div>
-        </v-card-title>
-
-        <v-list lines="two" style="margin-top: -16px">
-          <v-list-item v-for="(item, index) in debtMedicalLst" :key="index">
-            <template v-slot:prepend>
-              <v-avatar color="primary">
-                <span style="font-size: 10px">
-                  {{ item.TypePay }}
-                </span>
-              </v-avatar>
-            </template>
-            <v-list-item-title
-              >Đã trả:
-              <strong style="color: #05b187"
-                >{{ new Intl.NumberFormat().format(item.CustomerPay) }}đ</strong
-              >
-            </v-list-item-title>
-            <v-list-item-subtitle
-              ><div>
-                Giảm giá:
-                <span style="color: #1e88e5"
-                  >{{
-                    new Intl.NumberFormat().format(item.MoneyDiscount)
-                  }}đ</span
-                >
-              </div>
-              <div>
-                Thời gian:
-                {{ item.TimeShow }}
-              </div>
-            </v-list-item-subtitle>
-            <template v-slot:append>
-              <v-btn
-                color="error"
-                icon="mdi-delete"
-                variant="text"
-                @click="delDebtMedical(item)"
-              ></v-btn>
-            </template>
-          </v-list-item>
-        </v-list>
-      </v-card> -->
       <v-row class="mt-3">
         <v-btn color="success" class="mr-2">In phiếu khám</v-btn>
         <v-btn color="success" class="mr-2">In đơn thuốc</v-btn>
@@ -663,14 +625,6 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12" lg="6" md="6">
-                <!-- <v-autocomplete
-                  v-model="productInfo.Dosage"
-                  label="Liều dùng"
-                  :items="dosageLst"
-                  item-title="Title"
-                  item-value="PatientID"
-                  hide-details
-                ></v-autocomplete> -->
                 <v-text-field
                   label="Liều dùng"
                   v-model="productInfo.Dosage"
@@ -701,6 +655,142 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <v-dialog v-model="isShowCreateCustomer" persistent width="600">
+    <v-card>
+      <v-card-title>
+        <h6 class="text-h6 px-3 py-2">{{ patientInfo.Dialog }}</h6>
+      </v-card-title>
+      <v-card-text>
+        <v-row>
+          <v-col cols="12">
+            <v-row>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                  v-model="patientInfo.PatientName"
+                  label="Tên khách hàng"
+                  hide-details
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                  label="Số điện thoại"
+                  v-model="patientInfo.Phone"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" sm="6" md="6">
+                <v-select
+                  v-model="patientInfo.Sex"
+                  :items="['Nam', 'Nữ', 'Không xác định']"
+                  hide-details
+                  label="Giới tính"
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <VDatePicker2
+                  locale="vi"
+                  v-model="patientInfo.Birthday"
+                  mode="date"
+                  :masks="masks"
+                >
+                  <template #default="{ inputValue, inputEvents }">
+                    <v-text-field
+                      v-model="patientInfo.Birthday"
+                      :value="inputValue"
+                      v-on="inputEvents"
+                      label="Ngày sinh"
+                      append-inner-icon="mdi-calendar"
+                      hide-details
+                    />
+                  </template>
+                </VDatePicker2>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" sm="6" md="6">
+                <v-select
+                  v-model="patientInfo.City"
+                  label="Tỉnh/TP"
+                  hide-details
+                  :items="cityLst"
+                  item-title="City"
+                  item-value="City"
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <v-select
+                  v-model="patientInfo.District"
+                  :items="districtLst"
+                  item-title="District"
+                  item-value="District"
+                  label="Quận/Huyện"
+                  hide-details
+                ></v-select>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" sm="6" md="6">
+                <v-select
+                  v-model="patientInfo.Commune"
+                  :items="communeLst"
+                  item-title="Commune"
+                  item-value="Commune"
+                  label="Phường/Xã"
+                  hide-details
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                  v-model="patientInfo.Address"
+                  label="Địa chỉ"
+                  hide-details
+                  required
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                  v-model="patientInfo.Job"
+                  label="Nghề nghiệp"
+                  hide-details
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <v-select
+                  v-model="patientInfo.EmployCare"
+                  :items="employLst"
+                  item-title="Title"
+                  item-value="UserName"
+                  label="Nhân viên phụ trách"
+                  hide-details
+                ></v-select>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="blue-darken-1"
+          variant="text"
+          @click="isShowCreateCustomer = false"
+        >
+          Đóng
+        </v-btn>
+        <v-btn @click="addPatientLst"> Lưu thông tin </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
   <notifications />
 </template>
 
@@ -717,7 +807,12 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { formatDate } from "@/helpers/getTime";
 import { paymentLst } from "../variables";
-
+import { GetPatientLst, AddPatientLst } from "@/api/patient";
+import {
+  GetCity,
+  GetDistrictByCity,
+  GetCommuneByCityAndDistrict,
+} from "@/api/default";
 export default {
   components: {
     Swiper,
@@ -785,6 +880,12 @@ export default {
       debtMedicalInfo: { TypePay: "Tiền mặt" },
       discountAll: null,
       customerPay: null,
+      cityLst: [],
+      districtLst: [],
+      communeLst: [],
+      patientLst: [],
+      patientInfo: {},
+      isShowCreateCustomer: false,
     };
   },
   computed: {
@@ -874,36 +975,86 @@ export default {
         this.getProductLst();
       }
     },
+    "patientInfo.City"() {
+      this.getDistrictByCity();
+    },
+    "patientInfo.District"() {
+      this.getCommuneByCityAndDistrict();
+    },
   },
   methods: {
-    // delDebtMedical(data) {
-    //   DelDebtMedical({
-    //     RowID: data.RowID,
-    //   }).then((res) => {
-    //     if (res) {
-    //       notify({
-    //         type: "success",
-    //         title: "Thành công",
-    //         text: "Xóa hóa đơn thanh toán thành công",
-    //       });
-    //       this.getDebtMedicalLst();
-    //     }
-    //   });
-    // },
-    // addDebtMedical() {
-    //   AddDebtMedical({
-    //     Data: { ...this.debtMedicalInfo, MedicalID: this.medicalID },
-    //   }).then((res) => {
-    //     if (res) {
-    //       notify({
-    //         type: "success",
-    //         title: "Thành công",
-    //         text: "Thanh toán hóa đơn phiếu khám thành công",
-    //       });
-    //       this.getDebtMedicalLst();
-    //     }
-    //   });
-    // },
+    addPatientLst() {
+      AddPatientLst({
+        Data: {
+          ...this.patientInfo,
+          Birthday: formatDate(this.patientInfo.Birthday),
+          PathlogicalLst: [],
+        },
+      }).then((res) => {
+        if (res) {
+          this.isShowCreateCustomer = false;
+          this.getPatientLst();
+          if (this.patientInfo.Dialog == "Thêm khách hàng") {
+            notify({
+              type: "success",
+              title: "Thành công",
+              text: "Thêm khách hàng mới thành công",
+            });
+          }
+        }
+      });
+    },
+    getCity() {
+      GetCity({}).then((res) => {
+        if (res) {
+          this.cityLst = res.Data;
+        }
+      });
+    },
+    getDistrictByCity() {
+      if (this.patientInfo.City) {
+        GetDistrictByCity({ City: this.patientInfo.City }).then((res) => {
+          if (res) {
+            this.districtLst = res.Data;
+          }
+        });
+      }
+    },
+    getCommuneByCityAndDistrict() {
+      if (this.patientInfo.City && this.patientInfo.District) {
+        GetCommuneByCityAndDistrict({
+          City: this.patientInfo.City,
+          District: this.patientInfo.District,
+        }).then((res) => {
+          if (res) {
+            this.communeLst = res.Data;
+          }
+        });
+      }
+    },
+    btShowCreate() {
+      this.isShowCreateCustomer = true;
+      this.patientInfo = { Dialog: "Thêm khách hàng" };
+    },
+    btFilter(value) {
+      this.getPatientLst(value);
+    },
+    getPatientLst(search) {
+      GetPatientLst({
+        PageNumber: 1,
+        RowspPage: 10,
+        Search: search,
+      }).then((res) => {
+        if (res) {
+          this.patientLst = res.Data.map((item) => {
+            return {
+              ...item,
+              Title: item.Phone + " - " + item.PatientName,
+            };
+          });
+        }
+      });
+    },
     btCustomerPay() {
       this.isMenuCustomerPay = false;
       this.debtMedicalInfo.CustomerPay = this.customerPay;
@@ -912,25 +1063,35 @@ export default {
       this.isMenuDiscount = false;
       this.debtMedicalInfo.MoneyDiscount = this.discountAll;
     },
-    // getDebtMedicalLst() {
-    //   GetDebtMedicalLst({
-    //     MedicalID: this.medicalID,
-    //   }).then((res) => {
-    //     if (res) {
-    //       this.debtMedicalLst = res.Data.map((item) => {
-    //         return {
-    //           ...item,
-    //           TimeShow: formatDateDisplay(item.TimeCreate),
-    //         };
-    //       });
-    //     }
-    //   });
-    // },
+
     btSavePK() {
+      this.medicalInfo.PathlogicalLst = []
+       for (var i = 0; i < this.pathAll.length; i++) {
+        var item = this.pathAll[i];
+        if (item.CheckBox) {
+          var path = {
+            Type: "Tiền sử bệnh toàn thân",
+            Pathological: item.Text,
+          };
+          this.medicalInfo.PathlogicalLst.push(path);
+        }
+      }
+      for (var i = 0; i < this.pathTeeth.length; i++) {
+        var item = this.pathTeeth[i];
+        if (item.CheckBox) {
+          var path = {
+            Type: "Tiền sử bệnh răng miệng",
+            Pathological: item.Text,
+          };
+          this.medicalInfo.PathlogicalLst.push(path);
+        }
+      }
       AddMedicalLst({
         Data: {
           ...this.medicalInfo,
           DateReturn: formatDate(this.medicalInfo.DateReturn),
+          TipMedicalLst: this.medicalInfo.TipMedicalLst ?? [],
+          PrescriptionLst: this.medicalInfo.PrescriptionLst ?? [],
         },
       }).then((res) => {
         if (res) {
@@ -1131,6 +1292,7 @@ export default {
     this.medicalID = this.$route.params.id;
     this.getEmployLst();
     this.getServiceLst();
+    this.getCity();
     // this.getDebtMedicalLst();
   },
 };

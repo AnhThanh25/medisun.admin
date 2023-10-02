@@ -212,12 +212,12 @@ export const constantRoutes = [
     ],
   },
   // { path: "*", redirect: "/404", hidden: true, role: 1 },
-  {
-    path: "/404",
-    redirect: "/",
-    component: () => import("@/views/404"),
-    hidden: true,
-  },
+  // {
+  //   path: "/404",
+  //   redirect: "/",
+  //   component: () => import("@/views/404"),
+  //   hidden: true,
+  // },
 ];
 
 const router = createRouter({

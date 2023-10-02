@@ -147,6 +147,27 @@ export default {
   },
   methods: {
     addGeneralty() {
+      this.generalInfo.PathlogicalLst = [];
+      for (var i = 0; i < this.pathAll.length; i++) {
+        var item = this.pathAll[i];
+        if (item.CheckBox) {
+          var path = {
+            Type: "Tiền sử bệnh toàn thân",
+            Pathological: item.Text,
+          };
+          this.generalInfo.PathlogicalLst.push(path);
+        }
+      }
+      for (var i = 0; i < this.pathTeeth.length; i++) {
+        var item = this.pathTeeth[i];
+        if (item.CheckBox) {
+          var path = {
+            Type: "Tiền sử bệnh răng miệng",
+            Pathological: item.Text,
+          };
+          this.generalInfo.PathlogicalLst.push(path);
+        }
+      }
       AddGeneralty({
         Data: this.generalInfo,
       }).then((res) => {
@@ -164,7 +185,6 @@ export default {
     },
 
     saveReasonTeeth(number, data) {
-      console.log(number, data);
       if (data.length > 0) {
         for (var i = 0; i < data.length; i++) {
           var check = this.generalInfo.TeethLst.find(

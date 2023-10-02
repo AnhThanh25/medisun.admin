@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { onMounted, ref, watch } from "vue";
 import {
   GetCity,
@@ -171,11 +171,11 @@ function getOTP() {
     }
   });
 }
-function isPhoneNumber(input: string) {
+function isPhoneNumber(input) {
   const phoneRegex = /^0[0-9]{9}$/;
   return phoneRegex.test(input);
 }
-function isEmail(input: string) {
+function isEmail(input) {
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
   return emailRegex.test(input);

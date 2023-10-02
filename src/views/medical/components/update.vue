@@ -6,7 +6,7 @@
           <div class="d-flex" style="justify-content: space-between">
             <h6 class="text-h6 px-3 py-2">Cập nhật phiếu khám</h6>
             <div>
-              <v-btn>Chọn PKTQ</v-btn>
+              <!-- <v-btn>Chọn PKTQ</v-btn> -->
               <v-btn color="secondary" class="ml-2" @click="btSavePK"
                 >Lưu phiếu</v-btn
               >
@@ -932,6 +932,27 @@ export default {
       });
     },
     btSavePK() {
+      this.medicalInfo.PathlogicalLst = [];
+      for (var i = 0; i < this.pathAll.length; i++) {
+        var item = this.pathAll[i];
+        if (item.CheckBox) {
+          var path = {
+            Type: "Tiền sử bệnh toàn thân",
+            Pathological: item.Text,
+          };
+          this.medicalInfo.PathlogicalLst.push(path);
+        }
+      }
+      for (var i = 0; i < this.pathTeeth.length; i++) {
+        var item = this.pathTeeth[i];
+        if (item.CheckBox) {
+          var path = {
+            Type: "Tiền sử bệnh răng miệng",
+            Pathological: item.Text,
+          };
+          this.medicalInfo.PathlogicalLst.push(path);
+        }
+      }
       AddMedicalLst({
         Data: {
           ...this.medicalInfo,
