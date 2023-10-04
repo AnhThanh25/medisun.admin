@@ -28,9 +28,30 @@
     </div>
     <v-row>
       <v-col cols="8" sm="8">
-        <Now :title="'Đang khám (8)'" :type="1" />
-        <Now :title="'Đang chờ (6)'" :type="2" />
-        <Now :title="'Khám xong (10)'" :type="3" />
+        <Now
+          :title="'Đang khám (' + nowLst.length + ')'"
+          :type="1"
+          :data="nowLst"
+          @reloadData="reloadData"
+        />
+        <Now
+          :title="'Đang chờ (' + waitingLst.length + ')'"
+          :type="2"
+          :data="waitingLst"
+          @reloadData="reloadData"
+        />
+        <Now
+          :title="'Khám xong (' + finishedLst.length + ')'"
+          :type="3"
+          :data="finishedLst"
+          @reloadData="reloadData"
+        />
+         <Now
+          :title="'Hủy khám (' + cancelLst.length + ')'"
+          :type="4"
+          :data="cancelLst"
+          @reloadData="reloadData"
+        />
       </v-col>
       <v-col cols="4" sm="4">
         <OrderCalendar />
@@ -44,11 +65,42 @@
 import Now from "./components/now.vue";
 import OrderCalendar from "./components/appointment.vue";
 import History from "./components/history.vue";
+import { GetDashHomeLst, AddDashHomeLst } from "@/api/dashHome";
+import { formatDateUpload } from "@/helpers/getTime";
 export default {
   components: {
     Now,
     OrderCalendar,
     History,
+  },
+  data() {
+    return {
+      timeGet: new Date(),
+      finishedLst: [],
+      waitingLst: [],
+      nowLst: [],
+      cancelLst:[]
+    };
+  },
+  methods: {
+    reloadData() {
+      this.getDashHomeLst();
+    },
+    getDashHomeLst() {
+      GetDashHomeLst({
+        TimeGet: formatDateUpload(this.timeGet) + " 00:00:00",
+      }).then((res) => {
+        if (res) {
+          this.finishedLst = res.Data.filter((p) => p.Status == 3);
+          this.nowLst = res.Data.filter((p) => p.Status == 2);
+          this.waitingLst = res.Data.filter((p) => p.Status == 1);
+          this.cancelLst = res.Data.filter((p) => p.Status == 0);
+        }
+      });
+    },
+  },
+  created() {
+    this.getDashHomeLst();
   },
 };
 </script>
@@ -64,7 +116,7 @@ export default {
     margin-bottom: 12px;
     border-radius: 7px;
     margin-top: -16px;
-    box-shadow: #919eab4d 0 0 2px,#919eab1f 0 12px 24px -4px!important;
+    box-shadow: #919eab4d 0 0 2px, #919eab1f 0 12px 24px -4px !important;
   }
 }
 </style>

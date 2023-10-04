@@ -253,7 +253,6 @@
 <script>
 import TeethAdults from "./components/teeth-adults.vue";
 import TeethKids from "./components/teeth-kids.vue";
-import { pathAll, pathTeeth } from "../customer/variable";
 import { AddGeneralty } from "@/api/generalty";
 import { GetEmployLst } from "@/api/user";
 import { getRoleText } from "@/utils/role";
@@ -263,6 +262,7 @@ import {
   GetDistrictByCity,
   GetCommuneByCityAndDistrict,
 } from "@/api/default";
+import { formatDate } from "@/helpers/getTime";
 export default {
   components: {
     TeethAdults,
@@ -270,8 +270,70 @@ export default {
   },
   data() {
     return {
-      pathAll: pathAll,
-      pathTeeth: pathTeeth,
+      pathAll: [
+        {
+          Text: "Gan",
+          CheckBox: false,
+        },
+        {
+          Text: "Tiểu đường",
+          CheckBox: false,
+        },
+        {
+          Text: "Thấp khớp",
+          CheckBox: false,
+        },
+        {
+          Text: "Thần kinh",
+          CheckBox: false,
+        },
+        {
+          Text: "Dị ứng",
+          CheckBox: false,
+        },
+        {
+          Text: "Tiêu hóa",
+          CheckBox: false,
+        },
+        {
+          Text: "Hô hấp",
+          CheckBox: false,
+        },
+        {
+          Text: "Tim mạch",
+          CheckBox: false,
+        },
+        {
+          Text: "Thận",
+          CheckBox: false,
+        },
+        {
+          Text: "Khác",
+          CheckBox: false,
+        },
+      ],
+      pathTeeth: [
+        {
+          Text: "Đã từng nhổ răng",
+          CheckBox: false,
+        },
+        {
+          Text: "Khớp thái dương hàm",
+          CheckBox: false,
+        },
+        {
+          Text: "Đã từng chỉnh nha",
+          CheckBox: false,
+        },
+        {
+          Text: "Đã từng đeo hàm",
+          CheckBox: false,
+        },
+        {
+          Text: "Khác",
+          CheckBox: false,
+        },
+      ],
       typeTeeth: 1,
       generalInfo: {
         TypeTeeth: "Hàm người lớn",
@@ -310,7 +372,7 @@ export default {
         Data: {
           ...this.patientInfo,
           Birthday: formatDate(this.patientInfo.Birthday),
-          PathlogicalLst:[]
+          PathlogicalLst: [],
         },
       }).then((res) => {
         if (res) {
@@ -378,8 +440,8 @@ export default {
       });
     },
     addGeneralty() {
-      this.generalInfo.PathlogicalLst = []
-       for (var i = 0; i < this.pathAll.length; i++) {
+      this.generalInfo.PathlogicalLst = [];
+      for (var i = 0; i < this.pathAll.length; i++) {
         var item = this.pathAll[i];
         if (item.CheckBox) {
           var path = {

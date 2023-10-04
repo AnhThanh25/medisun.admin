@@ -85,16 +85,16 @@
               </v-row>
             </v-col>
           </v-row>
-          <v-row style="padding: 0 12px">
+          <v-row style="padding: 12px 12px 12px">
             <span style="width: calc(50% - 12px)">
               <v-text-field
-                v-model="search"
+                v-model="searchMedical"
                 label="Tìm kiếm dịch vụ/thuốc"
-                class=""
                 variant="outlined"
                 hide-details
                 density="compact"
                 prepend-inner-icon="mdi-magnify"
+                @input="btSearch"
               ></v-text-field>
             </span>
             <v-btn-toggle
@@ -116,8 +116,6 @@
                 :modules="modules"
                 :slides-per-view="4"
                 :space-between="8"
-                @swiper="onSwiper"
-                @slideChange="onSlideChange"
                 :pagination="{ clickable: true }"
               >
                 <swiper-slide
@@ -213,8 +211,6 @@
                 :modules="modules"
                 :slides-per-view="4"
                 :space-between="8"
-                @swiper="onSwiper"
-                @slideChange="onSlideChange"
                 :pagination="pagination"
               >
                 <swiper-slide
@@ -663,14 +659,6 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12" lg="6" md="6">
-                <!-- <v-autocomplete
-                  v-model="productInfo.Dosage"
-                  label="Liều dùng"
-                  :items="dosageLst"
-                  item-title="Title"
-                  item-value="PatientID"
-                  hide-details
-                ></v-autocomplete> -->
                 <v-text-field
                   label="Liều dùng"
                   v-model="productInfo.Dosage"
@@ -759,7 +747,6 @@ export default {
           width: "60px",
         },
         { title: "Thuốc", key: "ProductName", sortable: false },
-        // { title: "Giá", key: "Exprice", sortable: false },
         { title: "SL", key: "Quantity", sortable: false },
         { title: "Liều dùng", key: "Dosage", sortable: false },
         { title: "Mô tả", key: "Description", sortable: false },
@@ -790,6 +777,7 @@ export default {
       debtMedicalInfo: { TypePay: "Tiền mặt" },
       discountAll: null,
       customerPay: null,
+      searchMedical: "",
     };
   },
   computed: {
@@ -876,11 +864,19 @@ export default {
       if (newValue) {
         // this.getServiceLst();
       } else {
-        this.getProductLst();
+        this.getProductLst(this.searchMedical);
       }
     },
   },
+
   methods: {
+    btSearch() {
+      if (this.typeTab) {
+        this.getServiceLst(this.searchMedical);
+      }else{
+        this.getProductLst(this.searchMedical);
+      }
+    },
     delDebtMedical(data) {
       DelDebtMedical({
         RowID: data.RowID,
@@ -968,11 +964,11 @@ export default {
         }
       });
     },
-    getProductLst() {
+    getProductLst(search) {
       PKGetProductLst({
         PageNumber: this.pageNumber,
         RowspPage: this.rowspPage,
-        Search: this.search,
+        Search: search,
       }).then((res) => {
         if (res) {
           var data = res.Data.map((item, index) => {
@@ -1110,11 +1106,11 @@ export default {
         "" + value?.toFixed(dec).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
       );
     },
-    getServiceLst() {
+    getServiceLst(search) {
       GetServiceLst({
         PageNumber: 1,
         RowspPage: 1000,
-        Search: "",
+        Search: search,
       }).then((res) => {
         if (res) {
           var data = res.Data.map((item, index) => {
@@ -1209,7 +1205,7 @@ export default {
     this.medicalID = this.$route.params.id;
     this.getMedicalByID();
     this.getEmployLst();
-    this.getServiceLst();
+    this.getServiceLst("");
     this.getDebtMedicalLst();
   },
 };
@@ -1220,7 +1216,7 @@ export default {
   margin-top: 20px;
 }
 .swiper-pk {
-  margin-top: 10px;
+  // margin-top: 10px;
   width: calc(100% - 20px);
   .swiper-pagination {
     margin-bottom: -10px;

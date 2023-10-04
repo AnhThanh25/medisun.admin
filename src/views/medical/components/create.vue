@@ -101,7 +101,7 @@
           <v-row style="padding: 0 12px">
             <span style="width: calc(50% - 12px)">
               <v-text-field
-                v-model="search"
+                v-model="searchMedical"
                 label="Tìm kiếm dịch vụ/thuốc"
                 class=""
                 variant="outlined"
@@ -886,6 +886,7 @@ export default {
       patientLst: [],
       patientInfo: {},
       isShowCreateCustomer: false,
+      searchMedical: "",
     };
   },
   computed: {
@@ -981,6 +982,11 @@ export default {
     "patientInfo.District"() {
       this.getCommuneByCityAndDistrict();
     },
+    searchMedical(newValue) {
+      if (this.typeTab) {
+        this.getServiceLst(newValue);
+      }
+    },
   },
   methods: {
     addPatientLst() {
@@ -1065,8 +1071,8 @@ export default {
     },
 
     btSavePK() {
-      this.medicalInfo.PathlogicalLst = []
-       for (var i = 0; i < this.pathAll.length; i++) {
+      this.medicalInfo.PathlogicalLst = [];
+      for (var i = 0; i < this.pathAll.length; i++) {
         var item = this.pathAll[i];
         if (item.CheckBox) {
           var path = {
@@ -1250,11 +1256,11 @@ export default {
         "" + value?.toFixed(dec).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
       );
     },
-    getServiceLst() {
+    getServiceLst(search) {
       GetServiceLst({
         PageNumber: 1,
         RowspPage: 1000,
-        Search: "",
+        Search: search,
       }).then((res) => {
         if (res) {
           var data = res.Data.map((item, index) => {
@@ -1293,6 +1299,7 @@ export default {
     this.getEmployLst();
     this.getServiceLst();
     this.getCity();
+    this.getPatientLst("");
     // this.getDebtMedicalLst();
   },
 };

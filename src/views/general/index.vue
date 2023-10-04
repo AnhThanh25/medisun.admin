@@ -201,6 +201,9 @@ export default {
       });
     },
   },
+  created() {
+    this.getGeneraltyLst();
+  },
 };
 </script>
 

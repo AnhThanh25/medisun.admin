@@ -57,7 +57,7 @@
               icon="mdi-check-circle-outline"
               size="x-small"
               variant="text"
-              color="more"
+              :color="item.Status == 3 ? 'success':'more'"
             ></v-btn></div
         ></v-list-item-title>
       </v-list-item>
@@ -78,7 +78,7 @@
           style="margin-bottom: 3px"
         ></v-icon>
         <p class="text">
-          {{ appointInfo.AppointmentDate }} -
+          {{ appointInfo.AppointmentDateShow }} -
           {{ appointInfo.AppointmentType }}
         </p>
       </v-card-text>
@@ -136,15 +136,15 @@ export default {
   methods: {
     confirmAppointment() {
       UpdateAppointment({
-        Data: { ...this.appointInfo, Status: 2 },
+        Data: { ...this.appointInfo, Status: 3 },
       }).then((res) => {
         if (res) {
-          this.isShowCreateService = false;
-          this.getServiceLst();
+          this.isShowAppointInfo = false;
+          this.getAppointmentLst();
           notify({
             type: "success",
-            title: "Xác nhận",
-            text: "Xác nhận khách hàng đã đến",
+            title: "Thành công",
+            text: "Xác nhận khách hàng đã đến thành công",
           });
         }
       });
@@ -162,7 +162,7 @@ export default {
           this.dataAll = res.Data.map((item) => {
             return {
               ...item,
-              AppointmentDate: formatDateHHMM(item.AppointmentDate),
+              AppointmentDateShow: formatDateHHMM(item.AppointmentDate),
             };
           });
           this.appointmentLst = this.dataAll.filter(

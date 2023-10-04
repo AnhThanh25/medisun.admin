@@ -7,7 +7,12 @@
         </div>
         <v-spacer></v-spacer>
         <div class="ml-auto">
-          <v-btn class="mt-3" variant="text" icon="mdi-dots-horizontal" size="x-small"></v-btn>
+          <v-btn
+            class="mt-3"
+            variant="text"
+            icon="mdi-dots-horizontal"
+            size="x-small"
+          ></v-btn>
         </div>
       </div>
 
@@ -17,7 +22,9 @@
         @swiper="onSwiper"
         @slideChange="onSlideChange"
       >
-        <swiper-slide v-for="i in 10" :key="i"><ItemBox :type="type"/></swiper-slide>
+        <swiper-slide v-for="(item, index) in data" :key="index"
+          ><ItemBox :type="type" :object="item" @reloadData="reloadData"
+        /></swiper-slide>
       </swiper>
     </v-card-text>
   </v-card>
@@ -31,14 +38,21 @@ import ItemBox from "./item.vue";
 export default {
   props: {
     title: String,
-    type: Number
+    type: Number,
+    data: Array,
   },
   components: {
     Swiper,
     SwiperSlide,
     ItemBox,
   },
+  emits: ["reloadData"],
+
   methods: {
+    reloadData() {
+      this.$emit("reloadData");
+    },
+
     onSwiper(swiper) {
       console.log(swiper);
     },
@@ -48,7 +62,4 @@ export default {
   },
 };
 </script>
-<style scoped>
-
-</style>
-
+<style scoped></style>
