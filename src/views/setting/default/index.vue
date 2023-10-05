@@ -160,7 +160,6 @@ import {
   UpdateDefaultValue,
   DelDefaultValue,
 } from "@/api/default";
-import { getClinicID } from "@/utils/auth";
 export default {
   data() {
     return {
@@ -207,7 +206,7 @@ export default {
     },
     addDefault() {
       CreateDefaultValue({
-        DefaultValueInfo: { ...this.defaultInfo, ClinicID: getClinicID() },
+        DefaultValueInfo: { ...this.defaultInfo, },
       }).then((res) => {
         if (res) {
           this.isShowCreateDefault = false;

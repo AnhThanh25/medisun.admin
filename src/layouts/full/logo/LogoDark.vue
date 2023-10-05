@@ -1,9 +1,9 @@
 <template>
   <div class="logo">
     <RouterLink to="/">
-        <img src="../../../assets/images/logos/logo-dark.svg" />
+        <img src="@/assets/images/logos/cpc1hn-logo.png" />
     </RouterLink>
-    <div class="title">PK - POS</div>
+    <div class="title">Chăm sóc khách hàng</div>
   </div>
 </template>
 <script setup lang="ts">
@@ -12,12 +12,17 @@ import { RouterLink } from "vue-router";
 <style lang="scss" scoped>
 .logo{
   display: flex;
+  img{
+    height: 32px;
+  }
 }
 .title{
-  font-size: 24px;
+  font-size: 16px;
   text-decoration: none !important;
   color: #11142D;
   font-weight: 700;
+  margin-top: 6px;
+  margin-left: 8px;
 }
 
 </style>

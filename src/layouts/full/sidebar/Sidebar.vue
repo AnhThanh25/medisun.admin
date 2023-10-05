@@ -63,7 +63,10 @@ export default {
           <div v-if="isShowItemSidebar(item)" class="subSidebar">
             <v-list-group
               class="v-list-group__header"
-              v-if="item.children && item.children.filter(p=> p.hidden != true).length > 1"
+              v-if="
+                item.children &&
+                item.children.filter((p) => p.hidden != true).length > 1
+              "
             >
               <template v-slot:activator="{ props }">
                 <v-list-item v-bind="props" style="margin-bottom: 4px">

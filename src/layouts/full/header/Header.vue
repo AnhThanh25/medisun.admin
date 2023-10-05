@@ -6,15 +6,7 @@ import {
   removeUserName,
   removeFullName,
   removePhoneNumber,
-  removeHotline,
-  removeEmail,
-  removeRole,
-  removeClinicID,
-  removeClinicName,
-  removeAddress,
-  removeCity,
-  removeDistrict,
-  removeCommune,
+  removeEmployCode,
 } from "@/utils/auth";
 import router from "@/router";
 const userprofile = ref(profile);
@@ -23,15 +15,7 @@ function btLogout() {
   removeUserName();
   removeFullName();
   removePhoneNumber();
-  removeHotline();
-  removeEmail();
-  removeRole();
-  removeClinicID();
-  removeClinicName();
-  removeAddress();
-  removeCity();
-  removeDistrict();
-  removeCommune();
+  removeEmployCode();
   router.push("/");
   location.reload();
 }

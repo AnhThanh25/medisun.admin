@@ -157,7 +157,6 @@
 import { GetMaterialLst, AddMaterial, DelMaterial } from "@/api/material";
 import { urlUploadImageMaterial } from "./variable";
 import Axios from "axios";
-import { getClinicID } from "@/utils/auth";
 export default {
   data() {
     return {
@@ -353,13 +352,7 @@ export default {
             return {
               ...item,
               Key: index + 1,
-              Image:
-                "http://202.191.56.172/PKPosAPI/File/GetImageMaterial?ClinicID=" +
-                getClinicID() +
-                "&MaterialID=" +
-                item.MaterialID +
-                "&Size=400?t=" +
-                new Date().getTime(),
+             
             };
           });
           this.totalLength = res.TotalRows;

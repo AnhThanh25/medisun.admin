@@ -3,10 +3,10 @@ import { RouterView } from "vue-router";
 import { ref, onMounted } from "vue";
 import SidebarVue from "./sidebar/Sidebar.vue";
 import HeaderVue from "./header/Header.vue";
-import { getClinicName } from "@/utils/auth";
+import { getFullName } from "@/utils/auth";
 const drawer = ref(undefined || true);
 const innerW = window.innerWidth;
-const clinicName = getClinicName();
+const fullName = getFullName();
 
 onMounted(() => {
   if (innerW < 950) {
@@ -40,9 +40,9 @@ onMounted(() => {
       <!-- ---------------------------------------------- -->
       <!-- User Profile -->
       <!-- ---------------------------------------------- -->
-      <h3 class="text-h5" style="color: rgb(var(--v-theme-primary))">
-        {{ clinicName }}
-      </h3>
+      <h6 class="text-h6" style="color: rgb(var(--v-theme-text))">
+        {{ fullName }}
+      </h6>
       <HeaderVue />
     </v-app-bar>
 

@@ -1,5 +1,4 @@
-<script setup lang="ts">
-import Logo from "@/layouts/full/logo/LogoDark.vue";
+<script setup>
 /* Login form */
 import LoginForm from "@/components/auth/LoginForm.vue";
 </script>
@@ -16,22 +15,16 @@ import LoginForm from "@/components/auth/LoginForm.vue";
           >
             <v-card-item class="pa-sm-8">
               <div class="d-flex justify-center py-4">
-                <Logo />
+                <div class="logo">
+                  <RouterLink to="/">
+                    <img src="@/assets/images/logos/cpc1hn-logo.png" />
+                  </RouterLink>
+                </div>
               </div>
-              <div class="text-center mb-3" style="letter-spacing:2px; font-weight:600">Quản lý phòng khám</div>
+              <div class="text-center title" >
+                Chăm sóc khách hàng
+              </div>
               <LoginForm />
-              <h6
-                class="text-h6 text-muted font-weight-medium d-flex justify-center align-center mt-3"
-           
-              >
-                Chưa có tài khoản?
-                <RouterLink
-                  to="/dang-ky"
-                  class="text-primary text-decoration-none text-body-1 opacity-1 font-weight-medium pl-2"
-                >
-                  Tạo tài khoản</RouterLink
-                >
-              </h6>
             </v-card-item>
           </v-card>
         </v-col>
@@ -39,3 +32,18 @@ import LoginForm from "@/components/auth/LoginForm.vue";
     </v-container>
   </div>
 </template>
+<style lang="scss" scoped>
+.logo {
+  display: flex;
+  img {
+    height: 60px;
+  }
+}
+.title {
+  font-size: 24px;
+  text-decoration: none !important;
+  color: rgb(var(--v-theme-primary));
+  font-weight: 500;
+  margin-left: 8px;
+}
+</style>

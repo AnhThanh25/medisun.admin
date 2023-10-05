@@ -1,6 +1,32 @@
 <template>
   <v-card>
-    <v-card-title class="text-h6 py-4"> Khách hàng </v-card-title>
+    <v-card-title>
+      <div class="d-flex" style="justify-content: space-between">
+        <h6 class="text-h6 py-2">Khách hàng</h6>
+        <div>
+          <v-btn
+            color="primary"
+            variant="tonal"
+            icon="mdi-account-search"
+            style="height: 42px"
+            class="mr-1"
+          ></v-btn>
+          <v-btn
+            color="success"
+            variant="tonal"
+            icon="mdi-microsoft-excel"
+            style="height: 42px"
+            class="mr-1"
+          ></v-btn>
+          <v-btn
+            color="error"
+            variant="tonal"
+            icon="mdi-face-agent"
+            style="height: 42px"
+          ></v-btn>
+        </div>
+      </div>
+    </v-card-title>
     <v-data-table-server
       no-data-text="Không có dữ liệu"
       :headers="headers"
@@ -15,23 +41,51 @@
       <template v-slot:top>
         <div class="d-flex flex-wrap gap-2">
           <span>
-            <v-text-field
-              v-model="search"
-              label="Tìm kiếm"
+            <v-select
+              v-model="placeName"
+              :items="placeLst"
+              label="Địa bàn"
+              item-title="City"
+              item-value="City"
               class="ml-4"
-              variant="outlined"
-              hide-details
-              density="compact"
-             style="width: 250px !important"
-              prepend-inner-icon="mdi-magnify"
-              clearable
-            ></v-text-field>
+              style="width: 220px !important"
+            ></v-select>
           </span>
+          <span>
+            <v-select
+              v-model="placeName"
+              :items="placeLst"
+              label="Loại tổ chức"
+              item-title="City"
+              item-value="City"
+              style="width: 200px !important"
+            ></v-select>
+          </span>
+          <span>
+            <v-select
+              v-model="placeName"
+              :items="placeLst"
+              label="Trạng thái"
+              item-title="City"
+              item-value="City"
+              style="width: 200px !important"
+            ></v-select>
+          </span>
+          <span>
+            <v-select
+              v-model="placeName"
+              :items="placeLst"
+              label="Hạng KH"
+              item-title="City"
+              item-value="City"
+              style="width: 200px !important"
+            ></v-select>
+          </span>
+
           <v-btn
             color="blue"
             variant="tonal"
-            @click="btShowCreate"
-            icon="mdi-account-plus"
+            icon="mdi-clock-plus"
             style="height: 42px"
           ></v-btn>
         </div>
@@ -210,22 +264,18 @@
 </template>
 
 <script>
-import { GetPatientLst, AddPatientLst } from "@/api/patient";
+import { GetCRMLstByCity, GetCRMLstByLevel, GetPlaceLstByID } from "@/api/crm";
 import { formatDate } from "@/helpers/getTime";
 import {
   GetCity,
   GetDistrictByCity,
   GetCommuneByCityAndDistrict,
 } from "@/api/default";
-import { GetEmployLst } from "@/api/user";
 import { getRoleText, roleLst } from "@/utils/role";
 import { pathAll, pathTeeth } from "./variable";
 export default {
   data() {
     return {
-      pathAll: pathAll,
-      pathTeeth: pathTeeth,
-      patientInfo: {},
       isShowCreateCustomer: false,
       isShowUpdateCustomer: false,
       headers: [
@@ -244,32 +294,24 @@ export default {
       search: "",
       date: null,
       menu2: false,
-      cityLst: [],
-      districtLst: [],
-      communeLst: [],
-      employLst: [],
-      masks: {
-        input: "DD-MM-YYYY",
-      },
+      placeName: "",
       totalLength: 0,
+      placeLst: [],
     };
   },
   watch: {
-    "patientInfo.City"() {
-      this.getDistrictByCity();
-    },
-    "patientInfo.District"() {
-      this.getCommuneByCityAndDistrict();
+    placeName() {
+      this.getCRMLstByCity();
     },
     pageNumber() {
-      this.getPatientLst();
+      this.getCRMLstByCity();
     },
     rowspPage() {
-      this.getPatientLst();
+      this.getCRMLstByCity();
     },
     search(newValue) {
       if (newValue.length > 4 || newValue.length == 0) {
-        this.getPatientLst();
+        this.getCRMLstByCity();
       }
     },
   },
@@ -280,150 +322,32 @@ export default {
     btRow(data) {
       this.rowspPage = data;
     },
-    btShowCreate() {
-      this.isShowCreateCustomer = true;
-      this.patientInfo = { Dialog: "Thêm khách hàng" };
+    getPlaceLstByID() {
+      GetPlaceLstByID({}).then((res) => {
+        this.placeLst = res.Data;
+      });
     },
-    btShowUpdate(data) {
-      this.patientInfo = { ...data, Dialog: "Chỉnh sửa thông tin khác hàng" };
-      if (this.patientInfo.PathlogicalLst) {
-        var dataPathAll = this.patientInfo.PathlogicalLst.filter(
-          (p) => p.Type == "Tiền sử bệnh toàn thân"
-        );
-        this.pathAll = [...pathAll];
-        console.log(pathAll);
-        for (var i = 0; i < dataPathAll.length; i++) {
-          var item = dataPathAll[i];
-          this.pathAll.find((p) => p.Text == item.Pathological).CheckBox = true;
-        }
-        var dataPathTeeth = this.patientInfo.PathlogicalLst.filter(
-          (p) => p.Type == "Tiền sử bệnh răng miệng"
-        );
-        this.pathTeeth = [...pathTeeth];
-        for (var i = 0; i < dataPathTeeth.length; i++) {
-          var item = dataPathTeeth[i];
-          this.pathTeeth.find(
-            (p) => p.Text == item.Pathological
-          ).CheckBox = true;
-        }
-      }
-
-      this.isShowCreateCustomer = true;
-    },
-    getEmployLst() {
-      GetEmployLst({
-        PageNumber: 1,
-        RowspPage: 1000,
+    getCRMLstByCity() {
+      GetCRMLstByCity({
+        City: this.placeName,
+        PageNumber: this.currentPage,
+        RowspPage: this.pageSize,
         Search: "",
+        PlaceType: this.placeType,
+        Product: this.productName,
       }).then((res) => {
-        if (res) {
-          this.employLst = res.Data.map((item) => {
-            return {
-              ...item,
-              Title: item.FullName + " - " + getRoleText(item.Role),
-            };
-          });
-        }
-      });
-    },
-    addPatientLst() {
-      this.patientInfo.PathlogicalLst = [];
-      for (var i = 0; i < this.pathAll.length; i++) {
-        var item = this.pathAll[i];
-        if (item.CheckBox) {
-          var path = {
-            Type: "Tiền sử bệnh toàn thân",
-            Pathological: item.Text,
+        this.desserts = res.Data.map((item, index) => {
+          return {
+            ...item,
+            Key: index + 1,
           };
-          this.patientInfo.PathlogicalLst.push(path);
-        }
-      }
-      for (var i = 0; i < this.pathTeeth.length; i++) {
-        var item = this.pathTeeth[i];
-        if (item.CheckBox) {
-          var path = {
-            Type: "Tiền sử bệnh răng miệng",
-            Pathological: item.Text,
-          };
-          this.patientInfo.PathlogicalLst.push(path);
-        }
-      }
-      AddPatientLst({
-        Data: {
-          ...this.patientInfo,
-          Birthday: formatDate(this.patientInfo.Birthday),
-        },
-      }).then((res) => {
-        if (res) {
-          this.isShowCreateCustomer = false;
-          this.getPatientLst();
-          if (this.patientInfo.Dialog == "Thêm khách hàng") {
-            notify({
-              type: "success",
-              title: "Thành công",
-              text: "Thêm khách hàng mới thành công",
-            });
-          } else {
-            notify({
-              type: "success",
-              title: "Thành công",
-              text: "Cập nhật khách hàng thành công",
-            });
-          }
-        }
-      });
-    },
-    getCity() {
-      GetCity({}).then((res) => {
-        if (res) {
-          this.cityLst = res.Data;
-        }
-      });
-    },
-    getDistrictByCity() {
-      if (this.patientInfo.City) {
-        GetDistrictByCity({ City: this.patientInfo.City }).then((res) => {
-          if (res) {
-            this.districtLst = res.Data;
-          }
         });
-      }
-    },
-    getCommuneByCityAndDistrict() {
-      if (this.patientInfo.City && this.patientInfo.District) {
-        GetCommuneByCityAndDistrict({
-          City: this.patientInfo.City,
-          District: this.patientInfo.District,
-        }).then((res) => {
-          if (res) {
-            this.communeLst = res.Data;
-          }
-        });
-      }
-    },
-    getPatientLst() {
-      GetPatientLst({
-        PageNumber: this.pageNumber,
-        RowspPage: this.rowspPage,
-        Search: this.search,
-      }).then((res) => {
-        if (res) {
-          this.desserts = res.Data.map((item, index) => {
-            var num = (this.pageNumber - 1) * this.rowspPage;
-            return {
-              ...item,
-              Key: index + 1 + num,
-            };
-          });
-          this.totalLength = res.TotalRows;
-        }
+        this.dataLength = res.TotalRows;
       });
     },
   },
   created() {
-    this.getPatientLst();
-    this.getCity();
-    this.getEmployLst();
+    this.getPlaceLstByID();
   },
 };
 </script>

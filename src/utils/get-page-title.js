@@ -1,5 +1,5 @@
 
-const title = 'PKPos' || 'Vue Admin Template'
+const title = 'Chăm sóc khách hàng' || 'CPC1HN'
 
 export default function getPageTitle(pageTitle) {
   if (pageTitle) {

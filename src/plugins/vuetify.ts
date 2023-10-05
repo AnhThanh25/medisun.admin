@@ -19,6 +19,7 @@ const Lighttheme: ThemeDefinition = {
     secondary: "#03c9d7",
     more: "#999",
     blue: "#1e88e5",
+    text: "#11142d",
   },
 };
 
