@@ -3,9 +3,10 @@ import { RouterView } from "vue-router";
 import { ref, onMounted } from "vue";
 import SidebarVue from "./sidebar/Sidebar.vue";
 import HeaderVue from "./header/Header.vue";
-
+import { getClinicName } from "@/utils/auth";
 const drawer = ref(undefined || true);
 const innerW = window.innerWidth;
+const clinicName = getClinicName();
 
 onMounted(() => {
   if (innerW < 950) {
@@ -15,7 +16,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-app style="background: #f6f6f6; ">
+  <v-app style="background: #f6f6f6">
     <!-- ---------------------------------------------- -->
     <!---Sidebar -->
     <!-- ---------------------------------------------- -->
@@ -39,6 +40,9 @@ onMounted(() => {
       <!-- ---------------------------------------------- -->
       <!-- User Profile -->
       <!-- ---------------------------------------------- -->
+      <h3 class="text-h5" style="color: rgb(var(--v-theme-primary))">
+        {{ clinicName }}
+      </h3>
       <HeaderVue />
     </v-app-bar>
 
@@ -46,7 +50,7 @@ onMounted(() => {
     <!---Page Wrapper -->
     <!-- ---------------------------------------------- -->
 
-    <v-main style="--v-layout-top: 44px;">
+    <v-main style="--v-layout-top: 44px">
       <v-container fluid class="page-wrapper">
         <RouterView />
       </v-container>

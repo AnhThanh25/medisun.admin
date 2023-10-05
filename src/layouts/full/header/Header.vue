@@ -18,7 +18,6 @@ import {
 } from "@/utils/auth";
 import router from "@/router";
 const userprofile = ref(profile);
-
 function btLogout() {
   removeToken();
   removeUserName();
@@ -43,6 +42,7 @@ function btLogout() {
     <!-- ---------------------------------------------- -->
     <!-- User Profile -->
     <!-- ---------------------------------------------- -->
+
     <v-menu anchor="bottom end" origin="auto" min-width="300">
       <template v-slot:activator="{ props }">
         <v-btn
@@ -71,9 +71,9 @@ function btLogout() {
         >
           <template v-slot:prepend>
             <v-icon
-              class="feather-lg v-icon "
+              class="feather-lg v-icon"
               v-if="item.icon"
-              style="font-size:32px; margin-right:12px"
+              style="font-size: 32px; margin-right: 12px"
               >{{ item.icon }}</v-icon
             >
           </template>
