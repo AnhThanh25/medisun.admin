@@ -18,6 +18,7 @@
             item-value="PatientID"
             @update:search="btFilter"
             hide-no-data
+            hide-details
           ></v-autocomplete>
         </v-col>
         <v-col cols="6">
@@ -35,7 +36,10 @@
         </v-col>
       </v-row>
 
-      <v-data-table
+      <v-data-table-server
+        :items-length="totalLength"
+        @update:itemsPerPage="btRow"
+        @update:page="btPage"
         no-data-text="Không có dữ liệu"
         :headers="headers"
         :items="desserts"
@@ -62,7 +66,7 @@
         <template v-slot:item.MoneyDiscount="{ item }">
           {{ new Intl.NumberFormat().format(item.raw.MoneyDiscount) }}
         </template>
-      </v-data-table>
+      </v-data-table-server>
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
@@ -106,6 +110,22 @@
           </v-col>
 
           <v-col cols="12" sm="6" md="6">
+            <VDatePicker2
+              locale="vi"
+              v-model="materialInfo.DateReceived"
+              mode="date"
+              :masks="masks"
+            >
+              <template #default="{ inputValue, inputEvents }">
+                <v-text-field
+                  v-model="materialInfo.DateReceived"
+                  :value="inputValue"
+                  v-on="inputEvents"
+                  label="Ngày nhận"
+                  append-inner-icon="mdi-clock"
+                />
+              </template>
+            </VDatePicker2>
             <v-text-field
               label="Đơn vị"
               v-model="materialInfo.Unit"
@@ -116,7 +136,7 @@
             ></v-text-field>
             <v-text-field
               label="Ghi chú"
-              hide-details
+              hide-details=""
               v-model="materialInfo.Note"
             ></v-text-field>
           </v-col>
@@ -146,7 +166,7 @@ import { GetEmployLst } from "@/api/user";
 import { getRoleText } from "@/utils/role";
 import { GetDefaultValue } from "@/api/default";
 import { GetPatientLst } from "@/api/patient";
-
+import { formatDateUpload, formatDateDisplayDDMMYY } from "@/helpers/getTime";
 export default {
   props: {
     dataUpdate: Object,
@@ -176,6 +196,9 @@ export default {
       patientID: "",
       employCare: "",
       note: "",
+      masks: {
+        input: "DD-MM-YYYY",
+      },
     };
   },
   emits: ["close", "success"],
@@ -268,6 +291,11 @@ export default {
         Total:
           this.exPrice * parseInt(this.materialInfo.Quantity) -
           this.discountPrice,
+        DateReceived:
+          formatDateUpload(this.materialInfo.DateReceived) + " 00:00:00",
+        DateReceivedShow: formatDateDisplayDDMMYY(
+          this.materialInfo.DateReceived
+        ),
       });
       this.desserts = this.desserts.map((item, index) => {
         return {

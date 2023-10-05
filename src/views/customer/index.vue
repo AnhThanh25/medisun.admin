@@ -1,15 +1,16 @@
 <template>
   <v-card>
     <v-card-title class="text-h6 py-4"> Khách hàng </v-card-title>
-
-    <v-data-table
+    <v-data-table-server
       no-data-text="Không có dữ liệu"
       :headers="headers"
       :items="desserts"
-      :search="search"
-      items-per-page-text="Số dòng 1 trang"
+      items-per-page-text=""
       sort-asc-icon="mdi-menu-up"
       sort-desc-icon="mdi-menu-down"
+      :items-length="totalLength"
+      @update:itemsPerPage="btRow"
+      @update:page="btPage"
     >
       <template v-slot:top>
         <div class="d-flex flex-wrap gap-2">
@@ -21,8 +22,9 @@
               variant="outlined"
               hide-details
               density="compact"
-              style="width: 250px !important"
+             style="width: 250px !important"
               prepend-inner-icon="mdi-magnify"
+              clearable
             ></v-text-field>
           </span>
           <v-btn
@@ -46,7 +48,7 @@
       <template v-slot:item.DebtNow="{ item }">
         {{ new Intl.NumberFormat().format(item.raw.DebtNow) }}
       </template>
-    </v-data-table>
+    </v-data-table-server>
   </v-card>
   <v-dialog v-model="isShowCreateCustomer" persistent width="1024">
     <v-card>
@@ -204,7 +206,6 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-
   <notifications />
 </template>
 
@@ -225,10 +226,8 @@ export default {
       pathAll: pathAll,
       pathTeeth: pathTeeth,
       patientInfo: {},
-
       isShowCreateCustomer: false,
       isShowUpdateCustomer: false,
-      search: "",
       headers: [
         { title: "STT", sortable: false, key: "Key" },
         { title: "Mã KH", key: "PatientID" },
@@ -252,6 +251,7 @@ export default {
       masks: {
         input: "DD-MM-YYYY",
       },
+      totalLength: 0,
     };
   },
   watch: {
@@ -261,8 +261,25 @@ export default {
     "patientInfo.District"() {
       this.getCommuneByCityAndDistrict();
     },
+    pageNumber() {
+      this.getPatientLst();
+    },
+    rowspPage() {
+      this.getPatientLst();
+    },
+    search(newValue) {
+      if (newValue.length > 4 || newValue.length == 0) {
+        this.getPatientLst();
+      }
+    },
   },
   methods: {
+    btPage(data) {
+      this.pageNumber = data;
+    },
+    btRow(data) {
+      this.rowspPage = data;
+    },
     btShowCreate() {
       this.isShowCreateCustomer = true;
       this.patientInfo = { Dialog: "Thêm khách hàng" };
@@ -384,7 +401,6 @@ export default {
         });
       }
     },
-
     getPatientLst() {
       GetPatientLst({
         PageNumber: this.pageNumber,
@@ -393,11 +409,13 @@ export default {
       }).then((res) => {
         if (res) {
           this.desserts = res.Data.map((item, index) => {
+            var num = (this.pageNumber - 1) * this.rowspPage;
             return {
               ...item,
-              Key: index + 1,
+              Key: index + 1 + num,
             };
           });
+          this.totalLength = res.TotalRows;
         }
       });
     },

@@ -2,7 +2,10 @@
   <v-card>
     <v-card-title class="text-h6 py-4">Danh sách lịch hẹn</v-card-title>
 
-    <v-data-table
+    <v-data-table-server
+      :items-length="totalLength"
+      @update:itemsPerPage="btRow"
+      @update:page="btPage"
       no-data-text="Không có dữ liệu"
       :headers="headers"
       :items="desserts"
@@ -62,8 +65,9 @@
               variant="outlined"
               hide-details
               density="compact"
-              style="width: 250px !important"
+             style="width: 250px !important"
               prepend-inner-icon="mdi-magnify"
+              clearable
             ></v-text-field>
           </span>
           <v-btn
@@ -94,7 +98,7 @@
           {{ item.raw.StatusText }}
         </v-chip>
       </template>
-    </v-data-table>
+    </v-data-table-server>
   </v-card>
   <v-dialog v-model="isShowCreateAppointment" persistent width="500">
     <v-card>
@@ -340,7 +344,6 @@ export default {
       headers: [
         {
           title: "STT",
-          align: "start",
           sortable: false,
           key: "Key",
         },
@@ -363,6 +366,10 @@ export default {
       employLst: [],
       serviceLst: [],
       itemDel: {},
+      totalLength: 0,
+      pageNumber: 1,
+      rowspPage: 10,
+      search: "",
     };
   },
   watch: {
@@ -372,8 +379,25 @@ export default {
     timeEnd() {
       this.getAppointmentLst();
     },
+    pageNumber() {
+      this.getAppointmentLst();
+    },
+    rowspPage() {
+      this.getAppointmentLst();
+    },
+    search(newValue) {
+      if (newValue.length > 4 || newValue.length == 0) {
+        this.getAppointmentLst();
+      }
+    },
   },
   methods: {
+    btPage(data) {
+      this.pageNumber = data;
+    },
+    btRow(data) {
+      this.rowspPage = data;
+    },
     getServiceLst() {
       GetServiceLst({
         PageNumber: 1,
@@ -476,6 +500,9 @@ export default {
       GetAppointmentLst({
         TimeStart: formatDateUpload(this.timeStart) + " 00:00:00",
         TimeEnd: formatDateUpload(this.timeEnd) + " 23:59:59",
+        PageNumber: this.pageNumber,
+        RowspPage: this.rowspPage,
+        Search: this.search,
       }).then((res) => {
         if (res) {
           this.desserts = res.Data.map((item, index) => {
@@ -487,6 +514,7 @@ export default {
               ColorText: getStatusAppointment(item.Status).Color,
             };
           });
+          this.totalLength = res.TotalRows;
         }
       });
     },

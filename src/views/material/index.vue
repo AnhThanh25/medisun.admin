@@ -3,11 +3,13 @@
     <v-card-title class="text-h6 py-4"
       >Danh sách phiếu đặt mua vật liệu</v-card-title
     >
-    <v-data-table
+    <v-data-table-server
+      :items-length="totalLength"
+      @update:itemsPerPage="btRow"
+      @update:page="btPage"
       no-data-text="Không có dữ liệu"
       :headers="headers"
       :items="desserts"
-      :search="search"
       items-per-page-text="Số dòng 1 trang"
       sort-asc-icon="mdi-menu-up"
       sort-desc-icon="mdi-menu-down"
@@ -63,6 +65,7 @@
               density="compact"
               style="width: 250px !important"
               prepend-inner-icon="mdi-magnify"
+              clearable
             ></v-text-field>
           </span>
           <v-btn
@@ -87,10 +90,14 @@
           mdi-delete
         </v-icon>
       </template>
-    </v-data-table>
+    </v-data-table-server>
   </v-card>
   <v-dialog v-model="isShowCreateLabo" width="800">
-    <Create :dataUpdate="itemUpdate" @close="btClose" @success="btCreateSuccess" />
+    <Create
+      :dataUpdate="itemUpdate"
+      @close="btClose"
+      @success="btCreateSuccess"
+    />
   </v-dialog>
   <v-dialog v-model="isShowDelLabo" width="400">
     <v-card>
@@ -147,9 +154,35 @@ export default {
       },
       itemDel: {},
       itemUpdate: {},
+      totalLength: 0,
     };
   },
+  watch: {
+    timeStart() {
+      this.getOrderMaterialLst();
+    },
+    timeEnd() {
+      this.getOrderMaterialLst();
+    },
+    pageNumber() {
+      this.getOrderMaterialLst();
+    },
+    rowspPage() {
+      this.getOrderMaterialLst();
+    },
+    search(newValue) {
+      if (newValue.length > 4 || newValue.length == 0) {
+        this.getOrderMaterialLst();
+      }
+    },
+  },
   methods: {
+    btPage(data) {
+      this.pageNumber = data;
+    },
+    btRow(data) {
+      this.rowspPage = data;
+    },
     btShowUpdate(data) {
       this.itemUpdate = data;
       this.isShowCreateLabo = true;
@@ -199,6 +232,7 @@ export default {
               TimeCreate: formatDateDisplay(item.TimeCreate),
             };
           });
+          this.totalLength = res.TotalRows;
         }
       });
     },

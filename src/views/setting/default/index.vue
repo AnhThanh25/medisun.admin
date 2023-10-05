@@ -1,7 +1,9 @@
 <template>
   <v-card>
     <v-card-title class="text-h6 py-4"> Dữ liệu mặc định </v-card-title>
-    <v-data-table
+    <v-data-table-server :items-length="totalLength"
+      @update:itemsPerPage="btRow"
+      @update:page="btPage"
       no-data-text="Không có dữ liệu"
       :headers="headers"
       :items="desserts"
@@ -20,8 +22,9 @@
               variant="outlined"
               hide-details
               density="compact"
-              style="width: 250px !important"
+             style="width: 250px !important"
               prepend-inner-icon="mdi-magnify"
+              clearable
             ></v-text-field>
           </span>
 
@@ -47,7 +50,7 @@
           mdi-delete
         </v-icon>
       </template>
-    </v-data-table>
+     </v-data-table-server>
   </v-card>
   <v-dialog v-model="isShowCreateDefault" persistent width="500">
     <v-card>

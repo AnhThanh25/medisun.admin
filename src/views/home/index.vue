@@ -3,26 +3,38 @@
     <div class="top">
       <v-row>
         <v-col cols="8" sm="8">
-          <v-text-field
-            v-model="search"
-            label="Tìm kiếm"
-            class=""
-            variant="outlined"
-            hide-details
-            density="compact"
-            style="width: 300px !important"
-            prepend-inner-icon="mdi-magnify"
-          ></v-text-field>
+          <div class="d-flex">
+            <span>
+              <v-text-field
+                v-model="search"
+                label="Tìm kiếm"
+                variant="outlined"
+                hide-details
+                density="compact"
+                style="width: 300px !important"
+                prepend-inner-icon="mdi-magnify"
+              ></v-text-field>
+            </span>
+
+            <v-btn
+              style="height: 41px"
+              class="ml-2"
+              color="secondary"
+              variant="tonal"
+        
+              icon="mdi-calendar-plus"
+            ></v-btn>
+          </div>
         </v-col>
         <v-col cols="4" sm="4">
-          <v-row>
+          <!-- <v-row>
             <v-col cols="6" sm="6">
               <v-btn>Lịch hẹn: 10</v-btn>
             </v-col>
             <v-col cols="6" sm="6">
               <v-btn color="secondary">Tái khám: 10</v-btn>
             </v-col>
-          </v-row>
+          </v-row> -->
         </v-col>
       </v-row>
     </div>
@@ -46,7 +58,7 @@
           :data="finishedLst"
           @reloadData="reloadData"
         />
-         <Now
+        <Now
           :title="'Hủy khám (' + cancelLst.length + ')'"
           :type="4"
           :data="cancelLst"
@@ -79,7 +91,7 @@ export default {
       finishedLst: [],
       waitingLst: [],
       nowLst: [],
-      cancelLst:[]
+      cancelLst: [],
     };
   },
   methods: {

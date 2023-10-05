@@ -8,7 +8,7 @@
         <div class="phone">{{ object.Phone }}</div>
       </div>
     </div>
-    <div class="bt" v-if="object.Status != 1">
+    <div class="bt" v-if="object.Status == 2 || object.Status == 3">
       <v-btn
         icon="mdi-clipboard-text"
         size="x-small"
@@ -39,7 +39,7 @@
         "
       ></v-btn>
 
-      <v-menu transition="scale-transition">
+      <v-menu transition="scale-transition" v-if="object.Status == 2">
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-dots-horizontal"
@@ -70,7 +70,7 @@
         >
       </v-menu>
     </div>
-    <div class="bt-wait" v-else>
+    <div class="bt-wait" v-if="object.Status == 1">
       <v-btn size="small" variant="tonal" @click="btUpdateDash(object.RowID, 3)"
         >Vào khám</v-btn
       >
@@ -85,7 +85,7 @@
     </div>
     <div class="bottom" :class="'color' + type" v-if="object.DentistName">
       <div>
-        <span style="color: #64748b">Bác sĩ:</span> {{ object.DentistName }}
+        <span style="color: #64748b">Bs:</span> {{ object.DentistName }}
       </div>
     </div>
   </div>

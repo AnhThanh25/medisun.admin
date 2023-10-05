@@ -1,10 +1,12 @@
 <template>
   <v-card>
     <v-card-title class="text-h6 py-4"> Danh sách dịch vụ </v-card-title>
-    <v-data-table  no-data-text="Không có dữ liệu"
+    <v-data-table-server :items-length="totalLength"
+      @update:itemsPerPage="btRow"
+      @update:page="btPage"  
+      no-data-text="Không có dữ liệu"
       :headers="headers"
       :items="desserts"
-      :search="search"
       items-per-page-text="Số dòng 1 trang"
       sort-asc-icon="mdi-menu-up"
       sort-desc-icon="mdi-menu-down"
@@ -19,8 +21,9 @@
               variant="outlined"
               hide-details
               density="compact"
-              style="width: 250px !important"
+             style="width: 250px !important"
               prepend-inner-icon="mdi-magnify"
+              clearable
             ></v-text-field>
           </span>
 
@@ -46,7 +49,7 @@
           mdi-delete
         </v-icon>
       </template>
-    </v-data-table>
+     </v-data-table-server>
   </v-card>
   <v-dialog v-model="isShowCreateService" persistent width="500">
     <v-card>
@@ -209,7 +212,21 @@ export default {
       serviceUpdate: {},
       price: null,
       itemDel: {},
+      totalLength: 0,
     };
+  },
+  watch: {
+    pageNumber() {
+      this.getServiceLst();
+    },
+    rowspPage() {
+      this.getServiceLst();
+    },
+    search(newValue) {
+      if (newValue.length > 4 || newValue.length == 0) {
+        this.getServiceLst();
+      }
+    },
   },
   computed: {
     priceFormatted: {
@@ -223,6 +240,12 @@ export default {
   },
 
   methods: {
+     btPage(data) {
+      this.pageNumber = data;
+    },
+    btRow(data) {
+      this.rowspPage = data;
+    },
     btShowDel(data) {
       this.itemDel = { ...data };
       this.isShowDelService = true;
@@ -298,6 +321,7 @@ export default {
               PriceShow: new Intl.NumberFormat().format(item.Price),
             };
           });
+          this.totalLength = res.TotalRows;
         }
       });
     },

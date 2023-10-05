@@ -157,6 +157,9 @@ export default {
       GetAppointmentLst({
         TimeStart: formatDateUpload(this.timeStart) + " 00:00:00",
         TimeEnd: formatDateUpload(this.timeEnd) + " 23:59:59",
+        PageNumber: 1,
+        RowspPage: 1000,
+        Search: "",
       }).then((res) => {
         if (res) {
           this.dataAll = res.Data.map((item) => {

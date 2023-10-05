@@ -1,11 +1,13 @@
 <template>
   <v-card>
     <v-card-title class="text-h6 py-4"> Danh sách thuốc kê đơn </v-card-title>
-    <v-data-table
+    <v-data-table-server
+      :items-length="totalLength"
+      @update:itemsPerPage="btRow"
+      @update:page="btPage"
       no-data-text="Không có dữ liệu"
       :headers="headers"
       :items="desserts"
-      :search="search"
       items-per-page-text="Số dòng 1 trang"
       sort-asc-icon="mdi-menu-up"
       sort-desc-icon="mdi-menu-down"
@@ -22,6 +24,7 @@
               density="compact"
               style="width: 250px !important"
               prepend-inner-icon="mdi-magnify"
+              clearable
             ></v-text-field>
           </span>
 
@@ -51,7 +54,7 @@
           <v-tooltip text="Xóa"> </v-tooltip>
         </v-icon>
       </template>
-    </v-data-table>
+    </v-data-table-server>
   </v-card>
   <v-dialog v-model="isShowCreateProduct" persistent width="500">
     <v-card>
@@ -221,7 +224,6 @@ export default {
         { title: "Action", key: "Action", width: "80px" },
       ],
       desserts: [],
-
       pageNumber: 1,
       rowspPage: 10,
       search: "",
@@ -230,7 +232,21 @@ export default {
       productUpdate: {},
       price: null,
       itemDel: {},
+      totalLength: 0,
     };
+  },
+  watch: {
+    pageNumber() {
+      this.getProductLst();
+    },
+    rowspPage() {
+      this.getProductLst();
+    },
+    search(newValue) {
+      if (newValue.length > 4 || newValue.length == 0) {
+        this.getProductLst();
+      }
+    },
   },
   computed: {
     priceFormatted: {
@@ -319,6 +335,7 @@ export default {
               PriceShow: new Intl.NumberFormat().format(item.Price),
             };
           });
+          this.totalLength = res.TotalRows;
         }
       });
     },

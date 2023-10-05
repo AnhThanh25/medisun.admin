@@ -2,10 +2,13 @@
   <v-card>
     <v-card-title class="text-h6 py-4"> Danh sách nhân sự </v-card-title>
 
-    <v-data-table  no-data-text="Không có dữ liệu"
+    <v-data-table-server
+      :items-length="totalLength"
+      @update:itemsPerPage="btRow"
+      @update:page="btPage"
+      no-data-text="Không có dữ liệu"
       :headers="headers"
       :items="desserts"
-      :search="search"
       items-per-page-text="Số dòng 1 trang"
       sort-asc-icon="mdi-menu-up"
       sort-desc-icon="mdi-menu-down"
@@ -22,6 +25,7 @@
               density="compact"
               style="width: 250px !important"
               prepend-inner-icon="mdi-magnify"
+              clearable
             ></v-text-field>
           </span>
 
@@ -41,7 +45,7 @@
           icon="mdi-pencil-circle-outline"
         ></v-btn>
       </template>
-    </v-data-table>
+    </v-data-table-server>
   </v-card>
   <v-dialog v-model="isShowCreateEmploy" persistent width="600">
     <v-card>
@@ -309,15 +313,9 @@ export default {
       fromDateVal: "",
       isShowUpdateEmploy: false,
       isShowCreateEmploy: false,
-      search: "",
       sortBy: [{ key: "calories", order: "asc" }],
       headers: [
-        {
-          title: "STT",
-          align: "start",
-          sortable: false,
-          key: "Key",
-        },
+        { title: "STT", sortable: false, key: "Key" },
         { title: "Tên NV", key: "FullName" },
         { title: "Tài khoản", key: "UserName" },
         { title: "Email", key: "Email" },
@@ -337,9 +335,22 @@ export default {
       masks: {
         input: "DD-MM-YYYY",
       },
+      totalLength: 0,
     };
   },
-
+  watch: {
+    pageNumber() {
+      this.getEmployLst();
+    },
+    rowspPage() {
+      this.getEmployLst();
+    },
+    search(newValue) {
+      if (newValue.length > 4 || newValue.length == 0) {
+        this.getEmployLst();
+      }
+    },
+  },
   methods: {
     btShowUpdate(data) {
       this.employUpdate = data;
@@ -365,6 +376,7 @@ export default {
               RoleText: getRoleText(item.Role),
             };
           });
+          this.totalLength = res.TotalRows;
         }
       });
     },

@@ -1,11 +1,13 @@
 <template>
   <v-card>
     <v-card-title class="text-h6 py-4">Danh sách vật liệu labo</v-card-title>
-    <v-data-table
+    <v-data-table-server
+      :items-length="totalLength"
+      @update:itemsPerPage="btRow"
+      @update:page="btPage"
       no-data-text="Không có dữ liệu"
       :headers="headers"
       :items="desserts"
-      :search="search"
       items-per-page-text="Số dòng 1 trang"
       sort-asc-icon="mdi-menu-up"
       sort-desc-icon="mdi-menu-down"
@@ -22,6 +24,7 @@
               density="compact"
               style="width: 250px !important"
               prepend-inner-icon="mdi-magnify"
+              clearable
             ></v-text-field>
           </span>
           <v-btn
@@ -59,7 +62,7 @@
           <v-tooltip text="Xóa"> </v-tooltip>
         </v-icon>
       </template>
-    </v-data-table>
+    </v-data-table-server>
   </v-card>
   <v-dialog v-model="isShowCreateMaterial" persistent width="600">
     <v-card>
@@ -182,6 +185,7 @@ export default {
       exPrice: null,
       imageMaterial: null,
       itemDel: {},
+      totalLength: 0,
     };
   },
   computed: {
@@ -210,7 +214,26 @@ export default {
       },
     },
   },
+  watch: {
+    pageNumber() {
+      this.getMaterialLst();
+    },
+    rowspPage() {
+      this.getMaterialLst();
+    },
+    search(newValue) {
+      if (newValue.length > 4 || newValue.length == 0) {
+        this.getMaterialLst();
+      }
+    },
+  },
   methods: {
+    btPage(data) {
+      this.pageNumber = data;
+    },
+    btRow(data) {
+      this.rowspPage = data;
+    },
     btShowDel(data) {
       this.itemDel = { ...data };
       this.isShowDelMaterial = true;
@@ -339,6 +362,7 @@ export default {
                 new Date().getTime(),
             };
           });
+          this.totalLength = res.TotalRows;
         }
       });
     },

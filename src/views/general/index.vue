@@ -3,11 +3,13 @@
     <v-card-title>
       <h6 class="text-h6 py-4">Danh sách phiếu khám tổng quát</h6>
     </v-card-title>
-    <v-data-table
+    <v-data-table-server
+      :items-length="totalLength"
+      @update:itemsPerPage="btRow"
+      @update:page="btPage"
       no-data-text="Không có dữ liệu"
       :headers="headers"
       :items="desserts"
-      :search="search"
       items-per-page-text="Số dòng 1 trang"
       sort-asc-icon="mdi-menu-up"
       sort-desc-icon="mdi-menu-down"
@@ -61,8 +63,9 @@
               variant="outlined"
               hide-details
               density="compact"
-              style="width: 250px !important"
+             style="width: 250px !important"
               prepend-inner-icon="mdi-magnify"
+              clearable
             ></v-text-field>
           </span>
 
@@ -89,7 +92,7 @@
           <v-tooltip text="Xóa"> </v-tooltip>
         </v-icon>
       </template>
-    </v-data-table>
+    </v-data-table-server>
   </v-card>
   <v-dialog v-model="isShowDelGeneral" width="400">
     <v-card>
@@ -146,6 +149,7 @@ export default {
         input: "DD-MM-YYYY",
       },
       itemDel: {},
+      totalLength: 0,
     };
   },
   watch: {
@@ -155,8 +159,25 @@ export default {
     timeEnd() {
       this.getGeneraltyLst();
     },
+    pageNumber() {
+      this.getGeneraltyLst();
+    },
+    rowspPage() {
+      this.getGeneraltyLst();
+    },
+    search(newValue) {
+      if (newValue.length > 4 || newValue.length == 0) {
+        this.getGeneraltyLst();
+      }
+    },
   },
   methods: {
+    btPage(data) {
+      this.pageNumber = data;
+    },
+    btRow(data) {
+      this.rowspPage = data;
+    },
     btShowUpdate(data) {
       this.$router.push(
         "/kham-benh/cap-nhat-phieu-tong-quat/" + data.GeneraltyID
@@ -197,6 +218,7 @@ export default {
               TimeCreate: formatDateDisplay(item.TimeCreate),
             };
           });
+          this.totalLength = res.TotalRows;
         }
       });
     },

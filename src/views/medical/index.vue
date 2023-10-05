@@ -1,11 +1,13 @@
 <template>
   <v-card>
     <v-card-title class="text-h6 py-4">Danh sách phiếu khám</v-card-title>
-    <v-data-table
+    <v-data-table-server
+      :items-length="totalLength"
+      @update:itemsPerPage="btRow"
+      @update:page="btPage"
       no-data-text="Không có dữ liệu"
       :headers="headers"
       :items="desserts"
-      :search="search"
       items-per-page-text="Số dòng 1 trang"
       sort-asc-icon="mdi-menu-up"
       sort-desc-icon="mdi-menu-down"
@@ -60,8 +62,9 @@
               variant="outlined"
               hide-details
               density="compact"
-              style="width: 250px !important"
+             style="width: 250px !important"
               prepend-inner-icon="mdi-magnify"
+              clearable
             ></v-text-field>
           </span>
 
@@ -88,7 +91,7 @@
           <v-tooltip text="Xóa"> </v-tooltip>
         </v-icon>
       </template>
-    </v-data-table>
+    </v-data-table-server>
   </v-card>
   <v-dialog v-model="isShowDelMedical" width="400">
     <v-card>
@@ -124,12 +127,7 @@ export default {
       isShowDelMedical: false,
       search: "",
       headers: [
-        {
-          title: "STT",
-
-          sortable: false,
-          key: "Key",
-        },
+        { title: "STT", sortable: false, key: "Key" },
         { title: "Mã phiếu", key: "MedicalID", sortable: false },
         { title: "Ngày lập", key: "TimeCreate", sortable: false },
         { title: "Khách hàng", key: "PatientName", sortable: false },
@@ -148,9 +146,35 @@ export default {
       timeStart: new Date(),
       timeEnd: new Date(),
       itemDel: {},
+      totalLength: 0,
     };
   },
+  watch: {
+    timeStart() {
+      this.getMedicalLst();
+    },
+    timeEnd() {
+      this.getMedicalLst();
+    },
+    pageNumber() {
+      this.getMedicalLst();
+    },
+    rowspPage() {
+      this.getMedicalLst();
+    },
+    search(newValue) {
+      if (newValue.length > 4 || newValue.length == 0) {
+        this.getMedicalLst();
+      }
+    },
+  },
   methods: {
+    btPage(data) {
+      this.pageNumber = data;
+    },
+    btRow(data) {
+      this.rowspPage = data;
+    },
     btShowUpdate(data) {
       this.$router.push("/kham-benh/cap-nhat-phieu-kham/" + data.MedicalID);
     },
@@ -189,6 +213,7 @@ export default {
               TimeCreate: formatDateDisplay(item.TimeCreate),
             };
           });
+          this.totalLength = res.TotalRows;
         }
       });
     },

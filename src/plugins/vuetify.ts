@@ -4,7 +4,7 @@ import type { ThemeDefinition } from "vuetify";
 import "@mdi/font/css/materialdesignicons.css";
 // import * as component from "vuetify/components";
 import * as directives from "vuetify/directives";
-import { VDataTable } from "vuetify/labs/VDataTable";
+import { VDataTable,VDataTableServer  } from "vuetify/labs/VDataTable";
 import { VDatePicker } from "vuetify/labs/VDatePicker";
 // import "v-calendar/style.css";
 const Lighttheme: ThemeDefinition = {
@@ -33,6 +33,7 @@ export default createVuetify({
   components: {
     VDataTable,
     VDatePicker,
+    VDataTableServer 
   },
   defaults: {
     VBtn: {

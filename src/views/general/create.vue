@@ -91,7 +91,9 @@
           :teethLst="generalInfo.TeethLst"
         />
       </v-row>
-      <v-data-table
+      <v-data-table-server :items-length="totalLength"
+      @update:itemsPerPage="btRow"
+      @update:page="btPage"
         v-if="generalInfo.TeethLst.length > 0"
         no-data-text="Không có dữ liệu"
         :headers="teethHeaders"
@@ -104,7 +106,7 @@
         class="table-pres"
         style="margin-top: 12px"
       >
-      </v-data-table>
+       </v-data-table-server>
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
