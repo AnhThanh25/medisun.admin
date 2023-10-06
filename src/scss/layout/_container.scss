@@ -33,12 +33,12 @@ html {
 .page-wrapper {
   max-width: 1400px !important;
   min-height: calc(100vh - 60px);
-  // padding: 24px;
+  padding: 8px !important;
   // padding-bottom: 30px;
   // padding-right: 0px;
   // overflow-y: scroll;
   @media screen and (max-width: 600px) {
-    padding: 10px;
+    padding: 6px;
   }
 }
 .maxWidth {

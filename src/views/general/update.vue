@@ -119,7 +119,7 @@
 <script>
 import TeethAdults from "./components/teeth-adults.vue";
 import TeethKids from "./components/teeth-kids.vue";
-import { pathAll, pathTeeth } from "../customer/variable";
+import { pathAll, pathTeeth } from "../../utils/variable";
 import { GetGeneraltyByID, AddGeneralty } from "@/api/generalty";
 import { GetEmployLst } from "@/api/user";
 import { getRoleText } from "@/utils/role";

@@ -697,7 +697,7 @@
 </template>
 
 <script>
-import { pathAll, pathTeeth } from "../../customer/variable";
+import { pathAll, pathTeeth } from "../../../utils/variable";
 import { GetMedicalByID, AddMedicalLst } from "@/api/medical";
 import { GetEmployLst } from "@/api/user";
 import { getRoleText } from "@/utils/role";

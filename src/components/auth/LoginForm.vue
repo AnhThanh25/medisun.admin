@@ -7,7 +7,7 @@
       <v-text-field
         v-model="userName"
         hide-details
-        color="secondary"
+        color="primary"
       ></v-text-field>
     </v-col>
     <v-col cols="12">
@@ -17,7 +17,7 @@
       <v-text-field
         v-model="password"
         hide-details
-        color="secondary"
+        color="primary"
         :type="show1 ? 'text' : 'password'"
         :append-inner-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
         @click:append-inner="show1 = !show1"
@@ -25,9 +25,7 @@
     </v-col>
 
     <v-col cols="12" class="pt-8">
-      <v-btn to="/"  size="large" block flat @click="login"
-        >Đăng nhập</v-btn
-      >
+      <v-btn to="/" size="large" block flat @click="login">Đăng nhập</v-btn>
     </v-col>
   </v-row>
   <notifications />

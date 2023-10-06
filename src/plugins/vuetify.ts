@@ -31,6 +31,7 @@ export default createVuetify({
       light: Lighttheme,
     },
   },
+
   components: {
     VDataTable,
     VDatePicker,

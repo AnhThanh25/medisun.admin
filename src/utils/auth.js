@@ -1,11 +1,15 @@
 import Cookies from "js-cookie";
 
-const TokenKey = "TokenPK";
-const UserName = "UserNamePK";
-const FullName = "FullNamePK";
-const PhoneNumber = "PhoneNumberPK";
+const TokenKey = "TokenCRM";
+const UserName = "UserNameCRM";
+const FullName = "FullNameCRM";
+const PhoneNumber = "PhoneNumberCRM";
 
-const EmployCode = "CommunePK";
+const EmployCode = "CommuneCRM";
+const PlaceName = "PlaceNameCRM";
+const TypePlace = "TypePlaceCRM";
+const PageNumber = "PageNumberCRM";
+const RowspPage = "RowspPageCRM";
 
 export function setToken(token) {
   return Cookies.set(TokenKey, token, { expires: 356 });
@@ -55,4 +59,44 @@ export function getEmployCode() {
 }
 export function removeEmployCode() {
   return Cookies.remove(EmployCode);
+}
+
+export function setPlaceName(name) {
+  return Cookies.set(PlaceName, name);
+}
+export function getPlaceName() {
+  return Cookies.get(PlaceName);
+}
+export function removePlaceName() {
+  return Cookies.remove(PlaceName);
+}
+
+export function setTypePlace(name) {
+  return Cookies.set(TypePlace, name);
+}
+export function getTypePlace() {
+  return Cookies.get(TypePlace);
+}
+export function removeTypePlace() {
+  return Cookies.remove(TypePlace);
+}
+
+export function setPageNumber(name) {
+  return Cookies.set(PageNumber, name);
+}
+export function getPageNumber() {
+  return Cookies.get(PageNumber);
+}
+export function removePageNumber() {
+  return Cookies.remove(PageNumber);
+}
+
+export function setRowspPage(name) {
+  return Cookies.set(RowspPage, name);
+}
+export function getRowspPage() {
+  return Cookies.get(RowspPage);
+}
+export function removeRowspPage() {
+  return Cookies.remove(RowspPage);
 }

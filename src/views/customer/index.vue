@@ -4,13 +4,40 @@
       <div class="d-flex" style="justify-content: space-between">
         <h6 class="text-h6 py-2">Khách hàng</h6>
         <div>
-          <v-btn
-            color="primary"
-            variant="tonal"
-            icon="mdi-account-search"
-            style="height: 42px"
-            class="mr-1"
-          ></v-btn>
+          <v-menu
+            v-model="isMenuSearch"
+            activator="parent"
+            transition="slide-y-transition"
+            :close-on-content-click="false"
+          >
+            <template v-slot:activator="{ props }">
+              <v-btn
+                color="primary"
+                variant="tonal"
+                icon="mdi-account-search"
+                style="height: 42px"
+                class="mr-1"
+                v-bind="props"
+              ></v-btn>
+            </template>
+            <v-card width="300" style="padding-top: 20px !important">
+              <v-card-text>
+                <v-text-field
+                  v-model="searchCustomer"
+                  label="Số điện thoại / Mã tổ chức"
+                  prepend-inner-icon="mdi-magnify"
+                  hide-details
+                  size="small"
+                  color="primary"
+                />
+
+                <v-btn class="mt-2" variant="tonal" color="primary" block>
+                  Tìm kiếm</v-btn
+                >
+              </v-card-text>
+            </v-card>
+          </v-menu>
+
           <v-btn
             color="success"
             variant="tonal"
@@ -18,12 +45,38 @@
             style="height: 42px"
             class="mr-1"
           ></v-btn>
-          <v-btn
-            color="error"
-            variant="tonal"
-            icon="mdi-face-agent"
-            style="height: 42px"
-          ></v-btn>
+          <v-menu
+            v-model="isMenuCare"
+            activator="parent"
+            transition="slide-y-transition"
+            :close-on-content-click="false"
+          >
+            <template v-slot:activator="{ props }">
+              <v-btn
+                color="error"
+                variant="tonal"
+                icon="mdi-face-agent"
+                style="height: 42px"
+                v-bind="props"
+              ></v-btn>
+            </template>
+            <v-card width="300" style="padding-top: 20px !important">
+              <v-card-text>
+                <v-text-field
+                  v-model="searchCustomer"
+                  label="Nhân viên chăm sóc"
+                  prepend-inner-icon="mdi-magnify"
+                  hide-details
+                  size="small"
+                  color="error"
+                />
+
+                <v-btn class="mt-2" variant="tonal" color="error" block>
+                  Tìm kiếm</v-btn
+                >
+              </v-card-text>
+            </v-card>
+          </v-menu>
         </div>
       </div>
     </v-card-title>
@@ -34,9 +87,11 @@
       items-per-page-text=""
       sort-asc-icon="mdi-menu-up"
       sort-desc-icon="mdi-menu-down"
-      :items-length="totalLength"
+      :items-length="dataLength"
       @update:itemsPerPage="btRow"
       @update:page="btPage"
+      height="calc(100vh - 210px)"
+      :loading="loadding"
     >
       <template v-slot:top>
         <div class="d-flex flex-wrap gap-2">
@@ -47,50 +102,116 @@
               label="Địa bàn"
               item-title="City"
               item-value="City"
-              class="ml-4"
+              class="ml-1"
               style="width: 220px !important"
+              hide-details
             ></v-select>
           </span>
           <span>
             <v-select
-              v-model="placeName"
-              :items="placeLst"
+              v-model="typePlace"
+              :items="typePlaceLst"
               label="Loại tổ chức"
-              item-title="City"
-              item-value="City"
+              item-title="label"
+              item-value="value"
               style="width: 200px !important"
+              hide-details
             ></v-select>
           </span>
           <span>
             <v-select
-              v-model="placeName"
-              :items="placeLst"
+              v-model="statusCustomer"
+              :items="statusLst"
               label="Trạng thái"
-              item-title="City"
-              item-value="City"
-              style="width: 200px !important"
+              item-title="label"
+              item-value="value"
+              style="width: 130px !important"
+              hide-details
             ></v-select>
           </span>
           <span>
             <v-select
-              v-model="placeName"
-              :items="placeLst"
+              v-model="rankCustomer"
+              :items="rankLst"
               label="Hạng KH"
-              item-title="City"
-              item-value="City"
-              style="width: 200px !important"
+              item-title="label"
+              item-value="value"
+              style="width: 150px !important"
+              hide-details
             ></v-select>
           </span>
-
-          <v-btn
-            color="blue"
-            variant="tonal"
-            icon="mdi-clock-plus"
-            style="height: 42px"
-          ></v-btn>
+          <span>
+            <v-menu
+              v-model="isMenuTime"
+              activator="parent"
+              transition="slide-y-transition"
+              :close-on-content-click="false"
+            >
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  color="blue"
+                  variant="tonal"
+                  icon="mdi-clock-plus"
+                  style="height: 42px"
+                  v-bind="props"
+                ></v-btn>
+              </template>
+              <v-card
+                width="300"
+                height="400"
+                style="padding-top: 20px !important"
+              >
+                <v-card-text>
+                  <VDatePicker2
+                    locale="vi"
+                    v-model="timeStart"
+                    mode="date"
+                    :masks="masks"
+                  >
+                    <template #default="{ inputValue, inputEvents }">
+                      <v-text-field
+                        v-model="timeStart"
+                        :value="inputValue"
+                        v-on="inputEvents"
+                        label="Bắt đầu"
+                        color="blue"
+                        append-inner-icon="mdi-calendar"
+                        hide-details
+                        size="small"
+                      />
+                    </template>
+                  </VDatePicker2>
+                  <VDatePicker2
+                    locale="vi"
+                    v-model="timeEnd"
+                    mode="date"
+                    :masks="masks"
+                  >
+                    <template #default="{ inputValue, inputEvents }">
+                      <v-text-field
+                        v-model="timeEnd"
+                        :value="inputValue"
+                        v-on="inputEvents"
+                        label="Kết thúc"
+                        class="mt-2"
+                        color="blue"
+                        append-inner-icon="mdi-calendar"
+                        hide-details
+                        size="small"
+                      />
+                    </template>
+                  </VDatePicker2>
+                  <v-btn class="mt-2" variant="tonal" color="blue" block>
+                    Tìm kiếm</v-btn
+                  >
+                </v-card-text>
+              </v-card>
+            </v-menu>
+          </span>
         </div>
       </template>
-      <template v-slot:item.Action="{ item }">
+      <template v-slot:item.Key="{ item }">
+        {{ item.raw.Key }}
         <v-icon
           color="primary"
           size="small"
@@ -98,168 +219,17 @@
           @click="btShowUpdate(item.raw)"
           >mdi-pencil
         </v-icon>
-      </template>
-      <template v-slot:item.DebtNow="{ item }">
-        {{ new Intl.NumberFormat().format(item.raw.DebtNow) }}
+        <v-icon
+          color="primary"
+          size="small"
+          class="me-2"
+          @click="btShowUpdate(item.raw)"
+          >mdi-face-agent
+        </v-icon>
       </template>
     </v-data-table-server>
   </v-card>
-  <v-dialog v-model="isShowCreateCustomer" persistent width="1024">
-    <v-card>
-      <v-card-title>
-        <h6 class="text-h6 px-3 py-2">{{ patientInfo.Dialog }}</h6>
-      </v-card-title>
-      <v-card-text>
-        <v-row>
-          <v-col cols="12" sm="6" md="6">
-            <v-row>
-              <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                  v-model="patientInfo.PatientName"
-                  label="Tên khách hàng"
-                  hide-details
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                  label="Số điện thoại"
-                  v-model="patientInfo.Phone"
-                  hide-details
-                ></v-text-field>
-              </v-col>
-            </v-row>
 
-            <v-row>
-              <v-col cols="12" sm="6" md="6">
-                <v-select
-                  v-model="patientInfo.Sex"
-                  :items="['Nam', 'Nữ', 'Không xác định']"
-                  hide-details
-                  label="Giới tính"
-                ></v-select>
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <VDatePicker2
-                  locale="vi"
-                  v-model="patientInfo.Birthday"
-                  mode="date"
-                  :masks="masks"
-                >
-                  <template #default="{ inputValue, inputEvents }">
-                    <v-text-field
-                      v-model="patientInfo.Birthday"
-                      :value="inputValue"
-                      v-on="inputEvents"
-                      label="Ngày sinh"
-                      append-inner-icon="mdi-calendar"
-                      hide-details
-                    />
-                  </template>
-                </VDatePicker2>
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col cols="12" sm="6" md="6">
-                <v-select
-                  v-model="patientInfo.City"
-                  label="Tỉnh/TP"
-                  hide-details
-                  :items="cityLst"
-                  item-title="City"
-                  item-value="City"
-                ></v-select>
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <v-select
-                  v-model="patientInfo.District"
-                  :items="districtLst"
-                  item-title="District"
-                  item-value="District"
-                  label="Quận/Huyện"
-                  hide-details
-                ></v-select>
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col cols="12" sm="6" md="6">
-                <v-select
-                  v-model="patientInfo.Commune"
-                  :items="communeLst"
-                  item-title="Commune"
-                  item-value="Commune"
-                  label="Phường/Xã"
-                  hide-details
-                ></v-select>
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                  v-model="patientInfo.Address"
-                  label="Địa chỉ"
-                  hide-details
-                  required
-                ></v-text-field>
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                  v-model="patientInfo.Job"
-                  label="Nghề nghiệp"
-                  hide-details
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <v-select
-                  v-model="patientInfo.EmployCare"
-                  :items="employLst"
-                  item-title="Title"
-                  item-value="UserName"
-                  label="Nhân viên phụ trách"
-                  hide-details
-                ></v-select>
-              </v-col>
-            </v-row>
-          </v-col>
-          <v-col cols="12" sm="6" md="6">
-            <strong>Tiền sử bệnh toàn thân</strong>
-            <v-row class="checkBox">
-              <v-checkbox
-                v-model="item.CheckBox"
-                :label="item.Text"
-                v-for="item in pathAll"
-                :key="item.Text"
-              ></v-checkbox>
-            </v-row>
-            <strong>Tiền sử bệnh răng miệng</strong>
-            <v-row class="checkBox">
-              <v-checkbox
-                v-model="item.CheckBox"
-                :label="item.Text"
-                v-for="item in pathTeeth"
-                :key="item.Text"
-              ></v-checkbox>
-            </v-row>
-          </v-col>
-        </v-row>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          color="blue-darken-1"
-          variant="text"
-          @click="isShowCreateCustomer = false"
-        >
-          Đóng
-        </v-btn>
-        <v-btn @click="addPatientLst"> Lưu thông tin </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
   <notifications />
 </template>
 
@@ -272,46 +242,114 @@ import {
   GetCommuneByCityAndDistrict,
 } from "@/api/default";
 import { getRoleText, roleLst } from "@/utils/role";
-import { pathAll, pathTeeth } from "./variable";
+import { typePlaceLst, rankLst } from "@/utils/variable";
+import {
+  getPlaceName,
+  setPlaceName,
+  getTypePlace,
+  setTypePlace,
+  getPageNumber,
+  setPageNumber,
+  setRowspPage,
+  getRowspPage,
+} from "@/utils/auth";
 export default {
   data() {
     return {
+      isMenuSearch: false,
+      isMenuCare: false,
+      isMenuTime: false,
       isShowCreateCustomer: false,
       isShowUpdateCustomer: false,
+      loadding: false,
       headers: [
         { title: "STT", sortable: false, key: "Key" },
-        { title: "Mã KH", key: "PatientID" },
-        { title: "Tên KH", key: "PatientName" },
-        { title: "SĐT", key: "Phone" },
-        { title: "Địa chỉ", key: "Address" },
-        { title: "NV phụ trách", key: "EmployCare" },
-        { title: "Công nợ", key: "DebtNow" },
-        { title: "Action", key: "Action" },
+
+        { title: "Tổ chức", key: "PlaceName", sortable: false },
+        { title: "SĐT", key: "PatientName", sortable: false, align: "center" },
+        { title: "Hạng KH", key: "Ranking", sortable: false, align: "center" },
+        { title: "Điểm", key: "Point", sortable: false, align: "center" },
+        {
+          title: "HT C.sóc",
+          key: "EmployCare",
+          sortable: false,
+          align: "center",
+        },
+        {
+          title: "Điểm tăng",
+          key: "PointUp",
+          sortable: false,
+          align: "center",
+        },
+        {
+          title: "Trạng thái",
+          key: "Status",
+          sortable: false,
+          align: "center",
+        },
+        {
+          title: "TG chăm sóc",
+          key: "TimeCare",
+          sortable: false,
+          align: "center",
+        },
+        {
+          title: "NV chăm sóc",
+          key: "EmployCare",
+          sortable: false,
+          align: "center",
+        },
+        {
+          title: "ĐK thành viên",
+          key: "DebtNow",
+          sortable: false,
+          align: "center",
+        },
       ],
       desserts: [],
       pageNumber: 1,
       rowspPage: 10,
       search: "",
       date: null,
-      menu2: false,
       placeName: "",
-      totalLength: 0,
+      dataLength: 0,
       placeLst: [],
+      typePlaceLst: typePlaceLst,
+      typePlace: "",
+      statusLst: [
+        { value: 2, label: "Đã duyệt" },
+        { value: 1, label: "Chờ xử lý" },
+        { value: 0, label: "Tất cả" },
+      ],
+      statusCustomer: 0,
+      rankLst: rankLst,
+      rankCustomer: 0,
+      timeStart: null,
+      timeEnd: null,
+      searchCustomer: "",
+      productName: "",
     };
   },
   watch: {
-    placeName() {
-      this.getCRMLstByCity();
+    placeName(newValue) {
+      setPlaceName(newValue);
+      this.fetchData();
     },
-    pageNumber() {
-      this.getCRMLstByCity();
+    typePlace(newValue) {
+      setTypePlace(newValue);
+      this.fetchData();
     },
-    rowspPage() {
-      this.getCRMLstByCity();
+    pageNumber(newValue) {
+      setPageNumber(newValue);
+      this.fetchData();
+    },
+    rowspPage(newValue) {
+      setRowspPage(newValue);
+      this.fetchData();
     },
     search(newValue) {
       if (newValue.length > 4 || newValue.length == 0) {
-        this.getCRMLstByCity();
+        this.fetchData();
       }
     },
   },
@@ -327,11 +365,25 @@ export default {
         this.placeLst = res.Data;
       });
     },
+    fetchData() {
+      if (!this.placeName) {
+        notify({
+          type: "error",
+          title: "Lỗi",
+          text: "Chưa chọn địa bàn",
+        });
+        return;
+      }
+      if (this.rankCustomer == 0) {
+        this.getCRMLstByCity();
+      }
+    },
     getCRMLstByCity() {
+      this.loadding = true;
       GetCRMLstByCity({
         City: this.placeName,
-        PageNumber: this.currentPage,
-        RowspPage: this.pageSize,
+        PageNumber: this.pageNumber,
+        RowspPage: this.rowspPage,
         Search: "",
         PlaceType: this.placeType,
         Product: this.productName,
@@ -343,10 +395,24 @@ export default {
           };
         });
         this.dataLength = res.TotalRows;
+        this.loadding = false;
       });
     },
   },
   created() {
+    if (getPlaceName()) {
+      this.placeName = getPlaceName();
+    }
+    if (getTypePlace()) {
+      this.placeType = getTypePlace();
+    }
+
+    if (getRowspPage()) {
+      this.rowspPage = parseInt(getRowspPage());
+    }
+    if (getPageNumber()) {
+      this.pageNumber = parseInt(getPageNumber());
+    }
     this.getPlaceLstByID();
   },
 };
