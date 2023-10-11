@@ -1,6 +1,7 @@
 
 .v-field__outline {
   color: rgb(var(--v-theme-inputBorder),0.5);
+  border-radius: 8px !important;
 }
 .inputWithbg {
   .v-field--variant-outlined {

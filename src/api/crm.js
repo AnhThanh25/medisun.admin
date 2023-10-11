@@ -22,3 +22,58 @@ export function GetCRMLstByLevel(data) {
   });
 }
 
+export function GetPlaceLstByCity(data) {
+  return request({
+    url: "DairyCRM/GetPlaceLstByCity",
+    method: "post",
+    data: data,
+  });
+}
+
+export function GetPlaceLstByLevel(data) {
+  return request({
+    url: "DairyCRM/GetPlaceLstByLevel",
+    method: "post",
+    data: data,
+  });
+}
+
+export function GetPlaceByID(data) {
+  return request({
+    url: "DairyCRM/GetPlaceByID",
+    method: "post",
+    data: data,
+  });
+}
+
+export function UpdatePlaceByID(data) {
+  return request({
+    url: "DairyCRM/UpdatePlaceByID",
+    method: "post",
+    data: data,
+  });
+}
+
+export function CreateCRM(data) {
+  return request({
+    url: "DairyCRM/CreateCRM",
+    method: "post",
+    data: data,
+  });
+}
+
+export function SearchHistoryUser(data) {
+  return request({
+    url: "DairyCRM/SearchHistoryUser",
+    method: "post",
+    data: data,
+  });
+}
+
+export function SearchHistoryUser2(data) {
+  return request({
+    url: "DairyCRM/SearchHistoryUser2",
+    method: "post",
+    data: data,
+  });
+}

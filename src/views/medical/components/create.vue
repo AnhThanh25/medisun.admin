@@ -173,9 +173,10 @@
               </swiper>
             </v-row>
 
-            <v-data-table-server :items-length="totalLength"
-      @update:itemsPerPage="btRow"
-      @update:page="btPage"
+            <v-data-table-server
+              :items-length="totalLength"
+              @update:itemsPerPage="btRow"
+              @update:page="btPage"
               no-data-text="Không có dữ liệu"
               :headers="headers"
               :items="medicalInfo.TipMedicalLst"
@@ -216,7 +217,7 @@
                   <v-tooltip text="Xóa"> </v-tooltip>
                 </v-icon>
               </template>
-             </v-data-table-server>
+            </v-data-table-server>
           </div>
           <div v-else>
             <v-row v-if="productLst.Odd">
@@ -271,9 +272,10 @@
               </swiper>
             </v-row>
 
-            <v-data-table-server :items-length="totalLength"
-      @update:itemsPerPage="btRow"
-      @update:page="btPage"
+            <v-data-table-server
+              :items-length="totalLength"
+              @update:itemsPerPage="btRow"
+              @update:page="btPage"
               no-data-text="Không có dữ liệu"
               :headers="productHeaders"
               :items="medicalInfo.PrescriptionLst"
@@ -303,7 +305,7 @@
                   <v-tooltip text="Xóa"> </v-tooltip>
                 </v-icon>
               </template>
-             </v-data-table-server>
+            </v-data-table-server>
           </div>
         </v-card-text>
       </v-card>

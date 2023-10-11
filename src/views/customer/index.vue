@@ -23,7 +23,7 @@
             <v-card width="300" style="padding-top: 20px !important">
               <v-card-text>
                 <v-text-field
-                  v-model="searchCustomer"
+                  v-model="dataSearchPhone"
                   label="Số điện thoại / Mã tổ chức"
                   prepend-inner-icon="mdi-magnify"
                   hide-details
@@ -31,7 +31,13 @@
                   color="primary"
                 />
 
-                <v-btn class="mt-2" variant="tonal" color="primary" block>
+                <v-btn
+                  class="mt-2"
+                  variant="tonal"
+                  color="primary"
+                  block
+                  @click="searchHistoryUser"
+                >
                   Tìm kiếm</v-btn
                 >
               </v-card-text>
@@ -125,7 +131,7 @@
               label="Trạng thái"
               item-title="label"
               item-value="value"
-              style="width: 130px !important"
+              style="width: 140px !important"
               hide-details
             ></v-select>
           </span>
@@ -146,6 +152,7 @@
               activator="parent"
               transition="slide-y-transition"
               :close-on-content-click="false"
+     
             >
               <template v-slot:activator="{ props }">
                 <v-btn
@@ -178,6 +185,7 @@
                         append-inner-icon="mdi-calendar"
                         hide-details
                         size="small"
+                        clearable
                       />
                     </template>
                   </VDatePicker2>
@@ -198,16 +206,22 @@
                         append-inner-icon="mdi-calendar"
                         hide-details
                         size="small"
+                        clearable
                       />
                     </template>
                   </VDatePicker2>
-                  <v-btn class="mt-2" variant="tonal" color="blue" block>
-                    Tìm kiếm</v-btn
-                  >
+                  
                 </v-card-text>
               </v-card>
             </v-menu>
           </span>
+          <v-btn
+            color="info"
+            variant="tonal"
+            icon="mdi-magnify"
+            style="height: 42px"
+            @click="fetchData"
+          ></v-btn>
         </div>
       </template>
       <template v-slot:item.Key="{ item }">
@@ -223,25 +237,47 @@
           color="primary"
           size="small"
           class="me-2"
-          @click="btShowUpdate(item.raw)"
+          @click="btShowCare(item.raw)"
           >mdi-face-agent
         </v-icon>
+      </template>
+      <template v-slot:item.Ranking="{ item }">
+        {{ getRank(item.raw.Ranking) }}
+      </template>
+      <template v-slot:item.Point="{ item }">
+        {{ new Intl.NumberFormat().format(item.raw.Point) }}
+      </template>
+      <template v-slot:item.Register="{ item }">
+        <v-icon v-if="item.raw.StatusCare == 4" color="success"
+          >mdi-check-circle</v-icon
+        >
+        <v-icon v-else color="more">mdi-close-circle</v-icon>
+      </template>
+      <template v-slot:item.StatusCare="{ item }">
+        <v-chip :color="getStatus(item.raw.StatusCare).color">
+          {{ getStatus(item.raw.StatusCare).text }}</v-chip
+        >
       </template>
     </v-data-table-server>
   </v-card>
 
+  <v-dialog v-model="isShowUpdatePlace" persistent width="800"
+    ><Update :placeID="placeID" @btClose="btClose" />
+  </v-dialog>
+  <v-dialog v-model="isShowCare" persistent width="700"
+    ><Care :placeID="placeID" @btClose="btClose" />
+  </v-dialog>
   <notifications />
 </template>
 
 <script>
-import { GetCRMLstByCity, GetCRMLstByLevel, GetPlaceLstByID } from "@/api/crm";
-import { formatDate } from "@/helpers/getTime";
 import {
-  GetCity,
-  GetDistrictByCity,
-  GetCommuneByCityAndDistrict,
-} from "@/api/default";
-import { getRoleText, roleLst } from "@/utils/role";
+  GetPlaceLstByCity,
+  GetPlaceLstByLevel,
+  GetPlaceLstByID,
+  SearchHistoryUser2,
+} from "@/api/crm";
+
 import { typePlaceLst, rankLst } from "@/utils/variable";
 import {
   getPlaceName,
@@ -252,56 +288,66 @@ import {
   setPageNumber,
   setRowspPage,
   getRowspPage,
+  setStatusCustomer,
+  setRankCustomer,
+  getStatusCustomer,
+  getRankCustomer,
 } from "@/utils/auth";
+import { formatDateDisplay } from "@/helpers/getTime";
+import Update from "./components/update.vue";
+import Care from "./components/care.vue";
 export default {
+  components: {
+    Update,
+    Care,
+  },
   data() {
     return {
       isMenuSearch: false,
       isMenuCare: false,
       isMenuTime: false,
-      isShowCreateCustomer: false,
-      isShowUpdateCustomer: false,
+      isShowCare: false,
+      isShowUpdatePlace: false,
       loadding: false,
       headers: [
-        { title: "STT", sortable: false, key: "Key" },
-
+        { title: "STT", sortable: false, key: "Key", width: 90 },
         { title: "Tổ chức", key: "PlaceName", sortable: false },
-        { title: "SĐT", key: "PatientName", sortable: false, align: "center" },
+        { title: "SĐT", key: "Phone", sortable: false, align: "center" },
         { title: "Hạng KH", key: "Ranking", sortable: false, align: "center" },
         { title: "Điểm", key: "Point", sortable: false, align: "center" },
         {
           title: "HT C.sóc",
-          key: "EmployCare",
+          key: "TypeCare",
           sortable: false,
           align: "center",
         },
         {
-          title: "Điểm tăng",
-          key: "PointUp",
+          title: "KQ C.Sóc",
+          key: "Resuilt",
           sortable: false,
           align: "center",
         },
         {
           title: "Trạng thái",
-          key: "Status",
+          key: "StatusCare",
           sortable: false,
           align: "center",
         },
         {
           title: "TG chăm sóc",
-          key: "TimeCare",
+          key: "DateCare",
           sortable: false,
           align: "center",
         },
         {
           title: "NV chăm sóc",
-          key: "EmployCare",
+          key: "CrmName",
           sortable: false,
           align: "center",
         },
         {
           title: "ĐK thành viên",
-          key: "DebtNow",
+          key: "Register",
           sortable: false,
           align: "center",
         },
@@ -317,17 +363,18 @@ export default {
       typePlaceLst: typePlaceLst,
       typePlace: "",
       statusLst: [
-        { value: 2, label: "Đã duyệt" },
-        { value: 1, label: "Chờ xử lý" },
-        { value: 0, label: "Tất cả" },
+        { value: 4, label: "Đăng ký TV" },
+        { value: 1, label: "Chưa ĐKTV" },
       ],
-      statusCustomer: 0,
+      statusCustomer: 1,
       rankLst: rankLst,
       rankCustomer: 0,
       timeStart: null,
       timeEnd: null,
       searchCustomer: "",
       productName: "",
+      placeID: "",
+      dataSearchPhone: "",
     };
   },
   watch: {
@@ -352,8 +399,28 @@ export default {
         this.fetchData();
       }
     },
+    statusCustomer(newValue) {
+      setStatusCustomer(newValue);
+      this.fetchData();
+    },
+    rankCustomer(newValue) {
+      setRankCustomer(newValue);
+      this.fetchData();
+    },
   },
   methods: {
+    btShowCare(data) {
+      this.placeID = data.PlaceID;
+      this.isShowCare = true;
+    },
+    btClose() {
+      this.isShowUpdatePlace = false;
+      this.isShowCare = false;
+    },
+    btShowUpdate(data) {
+      this.placeID = data.PlaceID;
+      this.isShowUpdatePlace = true;
+    },
     btPage(data) {
       this.pageNumber = data;
     },
@@ -365,6 +432,54 @@ export default {
         this.placeLst = res.Data;
       });
     },
+    searchHistoryUser() {
+      if (this.isPhoneNumber(this.dataSearchPhone)) {
+        this.loading = true;
+        SearchHistoryUser2({
+          Phone: this.dataSearchPhone,
+          PlaceID: null,
+        }).then((res) => {
+          this.desserts = res.Data.map((item, index) => {
+            return {
+              ...item,
+              Key: index + 1,
+              DateCare: formatDateDisplay(item.DateCare),
+            };
+          });
+          this.dataLength = res.TotalRows;
+          this.loadding = false;
+        });
+      } else {
+        this.loading = true;
+        SearchHistoryUser2({
+          Phone: null,
+          PlaceID: this.dataSearchPhone,
+        }).then((res) => {
+          this.desserts = res.Data.map((item, index) => {
+            return {
+              ...item,
+              Key: index + 1,
+              DateCare: formatDateDisplay(item.DateCare),
+            };
+          });
+          this.dataLength = res.TotalRows;
+          this.loadding = false;
+        });
+      }
+    },
+    isPhoneNumber(input) {
+      // Kiểm tra bằng biểu thức chính quy
+      var pattern = /^[0-9]{10,15}$/;
+      if (pattern.test(input)) {
+        return true; // Chuỗi là số điện thoại
+      }
+      // Kiểm tra bằng phương pháp parseInt và isNaN
+      var number = parseInt(input);
+      if (!isNaN(number)) {
+        return true; // Chuỗi có thể chuyển thành số
+      }
+      return false; // Chuỗi không phải là số điện thoại
+    },
     fetchData() {
       if (!this.placeName) {
         notify({
@@ -375,28 +490,89 @@ export default {
         return;
       }
       if (this.rankCustomer == 0) {
-        this.getCRMLstByCity();
+        this.getPlaceLstByCity();
+      } else {
+        this.getPlaceLstByLevel(this.rankCustomer);
       }
     },
-    getCRMLstByCity() {
+    getPlaceLstByLevel(type) {
       this.loadding = true;
-      GetCRMLstByCity({
+      GetPlaceLstByLevel({
         City: this.placeName,
         PageNumber: this.pageNumber,
         RowspPage: this.rowspPage,
         Search: "",
-        PlaceType: this.placeType,
-        Product: this.productName,
+        PlaceType: this.typePlace,
+        Status: this.statusCustomer,
+        TimeStart: this.timeStart,
+        TimeEnd: this.timeEnd,
+        Level: type,
+        LevelChange: 100,
       }).then((res) => {
+        var num = (this.pageNumber - 1) * this.rowspPage;
         this.desserts = res.Data.map((item, index) => {
           return {
             ...item,
-            Key: index + 1,
+            Key: index + 1 + num,
+            DateCare: formatDateDisplay(item.DateCare),
           };
         });
         this.dataLength = res.TotalRows;
         this.loadding = false;
       });
+    },
+    getPlaceLstByCity() {
+      this.loadding = true;
+      GetPlaceLstByCity({
+        City: this.placeName,
+        PageNumber: this.pageNumber,
+        RowspPage: this.rowspPage,
+        Search: "",
+        PlaceType: this.typePlace,
+        Status: this.statusCustomer,
+        TimeStart: this.timeStart,
+        TimeEnd: this.timeEnd,
+      }).then((res) => {
+        var num = (this.pageNumber - 1) * this.rowspPage;
+
+        this.desserts = res.Data.map((item, index) => {
+          return {
+            ...item,
+            Key: index + 1 + num,
+            DateCare: formatDateDisplay(item.DateCare),
+          };
+        });
+        this.dataLength = res.TotalRows;
+        this.loadding = false;
+      });
+    },
+    getRank(status) {
+      if (status == 0) {
+        return "No rank";
+      }
+      if (status == 1) {
+        return "Silver";
+      }
+      if (status == 2) {
+        return "Titan";
+      }
+      if (status == 3) {
+        return "Gold";
+      }
+      if (status == 4) {
+        return "Platium";
+      }
+    },
+    getStatus(status) {
+      if (status == 0) {
+        return { text: "Chờ xử lý", color: "more" };
+      }
+      if (status == 1 || status == 2) {
+        return { text: "Đã cập nhật", color: "secondary" };
+      }
+      if (status == 3 || status == 4) {
+        return { text: "Đã duyệt", color: "success" };
+      }
     },
   },
   created() {
@@ -405,6 +581,12 @@ export default {
     }
     if (getTypePlace()) {
       this.placeType = getTypePlace();
+    }
+    if (getStatusCustomer()) {
+      this.statusCustomer = parseInt(getStatusCustomer());
+    }
+    if (getRankCustomer()) {
+      this.rankCustomer = parseInt(getRankCustomer());
     }
 
     if (getRowspPage()) {

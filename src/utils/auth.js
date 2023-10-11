@@ -10,6 +10,8 @@ const PlaceName = "PlaceNameCRM";
 const TypePlace = "TypePlaceCRM";
 const PageNumber = "PageNumberCRM";
 const RowspPage = "RowspPageCRM";
+const StatusCustomer = "StatusCustomerCRM";
+const RankCustomer = "RankCustomerCRM";
 
 export function setToken(token) {
   return Cookies.set(TokenKey, token, { expires: 356 });
@@ -99,4 +101,24 @@ export function getRowspPage() {
 }
 export function removeRowspPage() {
   return Cookies.remove(RowspPage);
+}
+
+export function setStatusCustomer(name) {
+  return Cookies.set(StatusCustomer, name);
+}
+export function getStatusCustomer() {
+  return Cookies.get(StatusCustomer);
+}
+export function removeStatusCustomer() {
+  return Cookies.remove(StatusCustomer);
+}
+
+export function setRankCustomer(name) {
+  return Cookies.set(RankCustomer, name);
+}
+export function getRankCustomer() {
+  return Cookies.get(RankCustomer);
+}
+export function removeRankCustomer() {
+  return Cookies.remove(RankCustomer);
 }

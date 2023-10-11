@@ -11,7 +11,7 @@ const Lighttheme: ThemeDefinition = {
   variables: {},
   colors: {
     primary: "#ee8a6a",
-    info: "#03c9d7",
+    info: "#2a9d8f",
     success: "#05b187",
     accent: "#fc4b6c",
     warning: "#fec90f",
