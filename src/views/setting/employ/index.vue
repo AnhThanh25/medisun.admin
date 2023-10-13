@@ -180,7 +180,7 @@
         >
           Đóng
         </v-btn>
-        <v-btn @click="addAccountClinic"> Lưu thông tin </v-btn>
+        <v-btn> Lưu thông tin </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -293,7 +293,7 @@
         >
           Đóng
         </v-btn>
-        <v-btn @click="updateAccount"> Lưu thông tin </v-btn>
+        <v-btn> Lưu thông tin </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -301,7 +301,6 @@
 </template>
 
 <script>
-import { GetEmployLst, UpdateAccount, AddAccountClinic } from "@/api/user";
 import { formatDate, formatDateDisplayDDMMYY } from "@/helpers/getTime";
 import { getRoleText, roleLst } from "@/utils/role";
 export default {
@@ -340,14 +339,11 @@ export default {
   },
   watch: {
     pageNumber() {
-      this.getEmployLst();
     },
     rowspPage() {
-      this.getEmployLst();
     },
     search(newValue) {
       if (newValue.length > 4 || newValue.length == 0) {
-        this.getEmployLst();
       }
     },
   },
@@ -361,199 +357,8 @@ export default {
       const [year, month, day] = formatDate(date).split(" ")[0].split("-");
       return `${day}-${month}-${year}`;
     },
-    getEmployLst() {
-      GetEmployLst({
-        PageNumber: this.pageNumber,
-        RowspPage: this.rowspPage,
-        Search: this.search,
-      }).then((res) => {
-        if (res) {
-          this.desserts = res.Data.map((item, index) => {
-            return {
-              ...item,
-              Key: index + 1,
-              BirthdayShow: formatDateDisplayDDMMYY(item.DateOfBirth),
-              RoleText: getRoleText(item.Role),
-            };
-          });
-          this.totalLength = res.TotalRows;
-        }
-      });
-    },
-    addAccountClinic() {
-      if (!this.employInfo.Address) {
-        notify({
-          type: "error",
-          title: "Lỗi",
-          text: "Vui nhập địa chỉ",
-        });
-        return;
-      }
-      if (!this.employInfo.FullName) {
-        notify({
-          type: "error",
-          title: "Lỗi",
-          text: "Vui nhập tên nhân sự",
-        });
-        return;
-      }
-      if (!this.employInfo.PhoneNumber) {
-        notify({
-          type: "error",
-          title: "Lỗi",
-          text: "Vui nhập số điện thoại",
-        });
-        return;
-      } else {
-        if (this.isPhoneNumber(this.employInfo.PhoneNumber)) {
-        } else {
-          notify({
-            type: "error",
-            title: "Lỗi",
-            text: "Số điện thoại không hợp lệ",
-          });
-          return;
-        }
-      }
-      if (!this.employInfo.Email) {
-        notify({
-          type: "error",
-          title: "Lỗi",
-          text: "Vui nhập Email",
-        });
-        return;
-      } else {
-        if (this.isEmail(this.employInfo.Email)) {
-        } else {
-          notify({
-            type: "error",
-            title: "Lỗi",
-            text: "Email không hợp lệ",
-          });
-          return;
-        }
-      }
-      if (!this.employInfo.DateOfBirth) {
-        notify({
-          type: "error",
-          title: "Lỗi",
-          text: "Vui chọn ngày sinh",
-        });
-        return;
-      }
-      if (!this.employInfo.Password || !this.employInfo.PasswordConfirm) {
-        notify({
-          type: "error",
-          title: "Lỗi",
-          text: "Vui lòng nhập mật khẩu",
-        });
-        return;
-      } else {
-        if (this.employInfo.Password === this.employInfo.PasswordConfirm) {
-        } else {
-          notify({
-            type: "error",
-            title: "Lỗi",
-            text: "Xác nhận mật khẩu không chính xác",
-          });
-          return;
-        }
-      }
-      AddAccountClinic({
-        UserInfo: {
-          ...this.employInfo,
-          DateOfBirth: formatDate(this.employInfo.DateOfBirth),
-        },
-      }).then((res) => {
-        if (res) {
-          this.isShowCreateEmploy = false;
-          this.getEmployLst();
-          notify({
-            type: "success",
-            title: "Thành công",
-            text: "Thêm mới nhân sự thành công",
-          });
-        }
-      });
-    },
-    updateAccount() {
-      if (!this.employUpdate.Address) {
-        notify({
-          type: "error",
-          title: "Lỗi",
-          text: "Vui nhập địa chỉ",
-        });
-        return;
-      }
-      if (!this.employUpdate.FullName) {
-        notify({
-          type: "error",
-          title: "Lỗi",
-          text: "Vui nhập tên nhân sự",
-        });
-        return;
-      }
-      if (!this.employUpdate.PhoneNumber) {
-        notify({
-          type: "error",
-          title: "Lỗi",
-          text: "Vui nhập số điện thoại",
-        });
-        return;
-      } else {
-        if (this.isPhoneNumber(this.employUpdate.PhoneNumber)) {
-        } else {
-          notify({
-            type: "error",
-            title: "Lỗi",
-            text: "Số điện thoại không hợp lệ",
-          });
-          return;
-        }
-      }
-      if (!this.employUpdate.Email) {
-        notify({
-          type: "error",
-          title: "Lỗi",
-          text: "Vui nhập Email",
-        });
-        return;
-      } else {
-        if (this.isEmail(this.employUpdate.Email)) {
-        } else {
-          notify({
-            type: "error",
-            title: "Lỗi",
-            text: "Email không hợp lệ",
-          });
-          return;
-        }
-      }
-      if (!this.employUpdate.DateOfBirth) {
-        notify({
-          type: "error",
-          title: "Lỗi",
-          text: "Vui chọn ngày sinh",
-        });
-        return;
-      }
-      UpdateAccount({
-        Data: {
-          ...this.employUpdate,
-          DateOfBirth: formatDate(this.employUpdate.DateOfBirth),
-        },
-      }).then((res) => {
-        if (res) {
-          this.isShowUpdateEmploy = false;
-          this.getEmployLst();
-          notify({
-            type: "success",
-            title: "Thành công",
-            text: "Cập nhật thông tin nhân sự thành công",
-          });
-        }
-      });
-    },
+  
+
     isPhoneNumber(input) {
       const phoneRegex = /^0[0-9]{9}$/;
       return phoneRegex.test(input);
@@ -565,7 +370,7 @@ export default {
     },
   },
   created() {
-    this.getEmployLst();
+    
   },
 };
 </script>

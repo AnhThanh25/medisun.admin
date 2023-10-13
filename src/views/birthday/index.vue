@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title>
       <div class="d-flex" style="justify-content: space-between">
-        <h6 class="text-h6 py-2">Khách hàng</h6>
+        <h6 class="text-h6 py-2">Sinh nhật</h6>
         <div>
           <v-btn
             color="success"
@@ -145,7 +145,7 @@
               label="Trạng thái"
               item-title="label"
               item-value="value"
-              style="width: 140px !important"
+              style="width: 160px !important"
               hide-details
             ></v-select>
           </span>
@@ -161,71 +161,15 @@
             ></v-select>
           </span>
           <span>
-            <v-menu
-              v-model="isMenuTime"
-              activator="parent"
-              transition="slide-y-transition"
-              :close-on-content-click="false"
-            >
-              <template v-slot:activator="{ props }">
-                <v-btn
-                  color="blue"
-                  variant="tonal"
-                  icon="mdi-clock-plus"
-                  style="height: 42px"
-                  v-bind="props"
-                ></v-btn>
-              </template>
-              <v-card
-                width="300"
-                height="400"
-                style="padding-top: 20px !important"
-              >
-                <v-card-text>
-                  <VDatePicker2
-                    locale="vi"
-                    v-model="timeStart"
-                    mode="date"
-                    :masks="masks"
-                  >
-                    <template #default="{ inputValue, inputEvents }">
-                      <v-text-field
-                        v-model="timeStart"
-                        :value="inputValue"
-                        v-on="inputEvents"
-                        label="Bắt đầu"
-                        color="blue"
-                        append-inner-icon="mdi-calendar"
-                        hide-details
-                        size="small"
-                        clearable
-                      />
-                    </template>
-                  </VDatePicker2>
-                  <VDatePicker2
-                    locale="vi"
-                    v-model="timeEnd"
-                    mode="date"
-                    :masks="masks"
-                  >
-                    <template #default="{ inputValue, inputEvents }">
-                      <v-text-field
-                        v-model="timeEnd"
-                        :value="inputValue"
-                        v-on="inputEvents"
-                        label="Kết thúc"
-                        class="mt-2"
-                        color="blue"
-                        append-inner-icon="mdi-calendar"
-                        hide-details
-                        size="small"
-                        clearable
-                      />
-                    </template>
-                  </VDatePicker2>
-                </v-card-text>
-              </v-card>
-            </v-menu>
+            <v-select
+              v-model="monthNow"
+              :items="monthLst"
+              label="Tháng"
+              item-title="text"
+              item-value="value"
+              style="width: 150px !important"
+              hide-details
+            ></v-select>
           </span>
           <v-btn
             color="info"
@@ -284,10 +228,9 @@
 
 <script>
 import {
-  GetPlaceLstByCity,
-  GetPlaceLstByLevel,
   GetPlaceLstByID,
   SearchHistoryUser2,
+  GetPlaceLstByBirthday,
 } from "@/api/crm";
 
 import { typePlaceLst, rankLst } from "@/utils/variable";
@@ -309,6 +252,7 @@ import { formatDateDisplay, formatDateUpload } from "@/helpers/getTime";
 import Update from "./components/update.vue";
 import Care from "./components/care.vue";
 import { exportExcel } from "./function";
+import { monthLst } from "@/utils/variable";
 export default {
   components: {
     Update,
@@ -326,28 +270,29 @@ export default {
         { title: "STT", sortable: false, key: "Key", width: 90 },
         { title: "Tổ chức", key: "PlaceName", sortable: false },
         { title: "SĐT", key: "Phone", sortable: false, align: "center" },
+        {
+          title: "Sinh nhật",
+          key: "Birthday",
+          sortable: false,
+          align: "center",
+        },
         { title: "Hạng KH", key: "Ranking", sortable: false, align: "center" },
         { title: "Điểm", key: "Point", sortable: false, align: "center" },
         {
-          title: "HT C.sóc",
+          title: "Điểm lên hạng",
           key: "TypeCare",
           sortable: false,
           align: "center",
         },
         {
-          title: "KQ C.Sóc",
+          title: "Tiền lên hạng",
           key: "Resuilt",
           sortable: false,
           align: "center",
         },
+
         {
-          title: "Trạng thái",
-          key: "StatusCare",
-          sortable: false,
-          align: "center",
-        },
-        {
-          title: "TG chăm sóc",
+          title: "NV KD",
           key: "DateCareShow",
           sortable: false,
           align: "center",
@@ -376,18 +321,21 @@ export default {
       typePlaceLst: typePlaceLst,
       typePlace: "",
       statusLst: [
-        { value: 4, label: "Đăng ký TV" },
-        { value: 1, label: "Chưa ĐKTV" },
+        { value: 0, label: "Hủy tặng quà" },
+        { value: 1, label: "Chưa tặng quà" },
+        { value: 2, label: "Đã gửi quà" },
+        { value: 3, label: "XN thông tin" },
+        { value: 4, label: "Đã nhận quà" },
       ],
       statusCustomer: 1,
       rankLst: rankLst,
-      rankCustomer: 0,
-      timeStart: null,
-      timeEnd: null,
+      rankCustomer: 1,
       searchCustomer: "",
       productName: "",
       placeID: "",
       dataSearchPhone: "",
+      monthNow: new Date().getMonth() + 1,
+      monthLst: monthLst,
     };
   },
   watch: {
@@ -427,7 +375,7 @@ export default {
     },
     btSearchCustomerCare() {
       this.loadding = true;
-      GetPlaceLstByLevel({
+      getPlaceLstByBirthday({
         City: "",
         PageNumber: 1,
         RowspPage: 100000,
@@ -559,29 +507,19 @@ export default {
         });
         return;
       }
-      if (this.rankCustomer == 0) {
-        this.getPlaceLstByCity();
-      } else {
-        this.getPlaceLstByLevel(this.rankCustomer);
-      }
+      this.getPlaceLstByBirthday();
     },
-    getPlaceLstByLevel(type) {
+    getPlaceLstByBirthday() {
       this.loadding = true;
-      GetPlaceLstByLevel({
+      GetPlaceLstByBirthday({
         City: this.placeName,
         PageNumber: this.pageNumber,
         RowspPage: this.rowspPage,
         Search: "",
         PlaceType: this.typePlace,
         Status: this.statusCustomer,
-        TimeStart: this.timeStart
-          ? formatDateUpload(this.timeStart) + " 00:00:00"
-          : null,
-        TimeEnd: this.timeEnd
-          ? formatDateUpload(this.timeEnd) + " 23:59:00"
-          : null,
-        Level: type,
-        LevelChange: 100,
+        Month: this.monthNow,
+        Ranking: this.ranking,
       }).then((res) => {
         var num = (this.pageNumber - 1) * this.rowspPage;
         this.desserts = res.Data.map((item, index) => {
@@ -597,33 +535,7 @@ export default {
         this.loadding = false;
       });
     },
-    getPlaceLstByCity() {
-      this.loadding = true;
-      GetPlaceLstByCity({
-        City: this.placeName,
-        PageNumber: this.pageNumber,
-        RowspPage: this.rowspPage,
-        Search: "",
-        PlaceType: this.typePlace,
-        Status: this.statusCustomer,
-        TimeStart: this.timeStart,
-        TimeEnd: this.timeEnd,
-      }).then((res) => {
-        var num = (this.pageNumber - 1) * this.rowspPage;
 
-        this.desserts = res.Data.map((item, index) => {
-          return {
-            ...item,
-            Key: index + 1 + num,
-            DateCareShow: formatDateDisplay(item.DateCare),
-            StatusCareShow: this.getStatus2(item.StatusCare),
-            RankingShow: this.getRank(item.Ranking),
-          };
-        });
-        this.dataLength = res.TotalRows;
-        this.loadding = false;
-      });
-    },
     getRank(status) {
       if (status == 0) {
         return "No rank";

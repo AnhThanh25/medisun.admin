@@ -56,7 +56,7 @@ export const constantRoutes = [
       {
         name: "Sinh nhật",
         path: "/sinh-nhat",
-        component: () => import("@/views/appointment/index.vue"),
+        component: () => import("@/views/birthday/index.vue"),
         meta: { title: "Sinh nhật", icon: "mdi-card-outline" },
         role: 1,
       },

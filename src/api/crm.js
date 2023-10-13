@@ -77,3 +77,11 @@ export function SearchHistoryUser2(data) {
     data: data,
   });
 }
+
+export function GetPlaceLstByBirthday(data) {
+  return request({
+    url: "DairyCRM/GetPlaceLstByBirthday",
+    method: "post",
+    data: data,
+  });
+}
