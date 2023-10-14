@@ -160,6 +160,37 @@ export const careTypeLst = [
       { text: "KH đồng ý chăm sóc qua OA" },
     ],
   },
+  {
+    text: "Tặng quà sinh nhật",
+    options: [
+      {
+        text: "Đã xác nhận",
+      },
+      {
+        text: "Chưa xác nhận",
+      },
+    ],
+    resuilts: [
+      { text: "Sai số" },
+      { text: "Liên hệ sau" },
+      { text: "Không liên hệ được" },
+      { text: "Đã liên hệ" },
+    ],
+    gifts: [
+      { text: "Chuột không dây" },
+      { text: "Loa Bluetooth" },
+      { text: "Cân điện tử" },
+      { text: "Bộ chăn gối" },
+      { text: "Đế tản nhiệt" },
+      { text: "Máy đo huyết áp" },
+      { text: "Nhiệt kế" },
+    ],
+    typeResuilts: [
+      { text: "KH đã nhận quà" },
+      { text: "Đã gửi quà" },
+      { text: "Hủy tặng quà" },
+    ],
+  },
 ];
 
 import { getUserName, getToken } from "@/utils/auth";

@@ -252,6 +252,13 @@
           @click="btShowCare(item.raw)"
           >mdi-face-agent
         </v-icon>
+        <v-icon
+          color="primary"
+          size="small"
+          class="me-2"
+          @click="btShowRank(item.raw)"
+          >mdi-chart-box-outline
+        </v-icon>
       </template>
       <template v-slot:item.Ranking="{ item }">
         {{ getRank(item.raw.Ranking) }}
@@ -278,6 +285,9 @@
   </v-dialog>
   <v-dialog v-model="isShowCare" persistent width="700"
     ><Care :placeID="placeID" @btClose="btClose" />
+  </v-dialog>
+  <v-dialog v-model="isShowRank" persistent width="700"
+    ><Rank :placeID="placeID" @btClose="btClose" />
   </v-dialog>
   <notifications />
 </template>
@@ -307,12 +317,15 @@ import {
 } from "@/utils/auth";
 import { formatDateDisplay, formatDateUpload } from "@/helpers/getTime";
 import Update from "./components/update.vue";
-import Care from "./components/care.vue";
+import Care from "@/views/components/care.vue";
 import { exportExcel } from "./function";
+import Rank from "@/views/components/rank.vue";
+
 export default {
   components: {
     Update,
     Care,
+    Rank,
   },
   data() {
     return {
@@ -322,8 +335,9 @@ export default {
       isShowCare: false,
       isShowUpdatePlace: false,
       loadding: false,
+      isShowRank: false,
       headers: [
-        { title: "STT", sortable: false, key: "Key", width: 90 },
+        { title: "STT", sortable: false, key: "Key", width: 110 },
         { title: "Tổ chức", key: "PlaceName", sortable: false },
         { title: "SĐT", key: "Phone", sortable: false, align: "center" },
         { title: "Hạng KH", key: "Ranking", sortable: false, align: "center" },
@@ -422,6 +436,10 @@ export default {
     },
   },
   methods: {
+    btShowRank(data) {
+      this.placeID = data;
+      this.isShowRank = true;
+    },
     btExportExcel() {
       exportExcel(this.desserts);
     },
@@ -482,6 +500,7 @@ export default {
     btClose() {
       this.isShowUpdatePlace = false;
       this.isShowCare = false;
+      this.isShowRank = false;
     },
     btShowUpdate(data) {
       this.placeID = data.PlaceID;

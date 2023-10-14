@@ -85,3 +85,12 @@ export function GetPlaceLstByBirthday(data) {
     data: data,
   });
 }
+
+export function GetRankInfoLst(data) {
+  return request({
+    url: "DairyCRM/GetRankInfoLst",
+    method: "post",
+    data: data,
+  });
+}
+

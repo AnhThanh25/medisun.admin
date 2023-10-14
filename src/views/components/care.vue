@@ -102,6 +102,7 @@
               v-if="careInfo.Resuilt == 'Không phát sinh đơn'"
             ></v-autocomplete>
           </div>
+
           <v-text-field label="Ghi chú" v-model="careInfo.Note"></v-text-field>
         </v-col>
       </v-row>
@@ -114,7 +115,7 @@
       <v-btn @click="createCRM"> Lưu thông tin </v-btn>
     </v-card-actions>
   </v-card>
-  <v-dialog v-model="isShowCustomer" persistent width="500">
+  <!-- <v-dialog v-model="isShowCustomer" persistent width="500">
     <v-card height="400">
       <v-card-title>
         <h6 class="text-h6 px-3 py-2">Cập nhật khách hàng cá nhân</h6>
@@ -176,14 +177,14 @@
         <v-btn @click="addInfoCus"> Lưu thông tin </v-btn>
       </v-card-actions>
     </v-card>
-  </v-dialog>
+  </v-dialog> -->
   <!-- <notifications /> -->
 </template>
 
 <script>
-import { GetPlaceByID, UpdatePlaceByID, CreateCRM } from "@/api/crm";
+import { GetPlaceByID, CreateCRM } from "@/api/crm";
 import { careTypeLst, urlUploadImageCare } from "@/utils/variable";
-import { formatDateDisplayDDMMYY, formatDateUpload } from "@/helpers/getTime";
+import { formatDateUpload } from "@/helpers/getTime";
 export default {
   props: {
     placeID: String,
@@ -199,6 +200,7 @@ export default {
       resuiltLst: [],
       typeResuiltLst: [],
       imageCare: null,
+      status: 0,
     };
   },
   emits: ["btClose"],
@@ -224,6 +226,25 @@ export default {
           { text: "Tư vấn chương trình" },
           { text: "Pass thông tin KD" },
         ];
+      }
+    },
+    "careInfo.TypeResuilt"(newValue) {
+      if (newValue == "KH đã nhận quà") {
+        this.status = 4;
+      }
+      if (newValue == "Đã gửi quà") {
+        this.status = 3;
+      }
+      if (newValue == "Hủy tặng quà") {
+        this.status = 0;
+      }
+    },
+    "careInfo.Content"(newValue) {
+      if (newValue == "Đã xác nhận") {
+        this.status = 2;
+      }
+      if (newValue == "Chưa xác nhận") {
+        this.status = 1;
       }
     },
   },
@@ -280,6 +301,7 @@ export default {
         NoteRes: this.careInfo.NoteRes,
         TypeResuilt: this.careInfo.TypeResuilt,
         Resuilt: this.careInfo.Resuilt,
+        StatusGift: this.status,
       };
 
       CreateCRM({ CRMInfo: req }).then((res) => {

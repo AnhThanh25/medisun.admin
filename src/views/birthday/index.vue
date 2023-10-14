@@ -12,46 +12,7 @@
             class="mr-1"
             @click="btExportExcel"
           ></v-btn>
-          <span>
-            <v-menu
-              v-model="isMenuSearch"
-              activator="parent"
-              transition="slide-y-transition"
-              :close-on-content-click="false"
-            >
-              <template v-slot:activator="{ props }">
-                <v-btn
-                  color="primary"
-                  variant="tonal"
-                  icon="mdi-account-search"
-                  style="height: 42px"
-                  class="mr-1"
-                  v-bind="props"
-                ></v-btn>
-              </template>
-              <v-card width="300" style="padding-top: 20px !important">
-                <v-card-text>
-                  <v-text-field
-                    v-model="dataSearchPhone"
-                    label="Số điện thoại / Mã tổ chức"
-                    prepend-inner-icon="mdi-magnify"
-                    hide-details
-                    color="primary"
-                  />
 
-                  <v-btn
-                    class="mt-2"
-                    variant="tonal"
-                    color="primary"
-                    block
-                    @click="searchHistoryUser"
-                  >
-                    Tìm kiếm</v-btn
-                  >
-                </v-card-text>
-              </v-card>
-            </v-menu>
-          </span>
           <span>
             <v-menu
               v-model="isMenuCare"
@@ -186,15 +147,15 @@
           color="primary"
           size="small"
           class="me-2"
-          @click="btShowUpdate(item.raw)"
-          >mdi-pencil
+          @click="btShowCare(item.raw)"
+          >mdi-face-agent
         </v-icon>
         <v-icon
           color="primary"
           size="small"
           class="me-2"
-          @click="btShowCare(item.raw)"
-          >mdi-face-agent
+          @click="btShowRank(item.raw)"
+          >mdi-chart-box-outline
         </v-icon>
       </template>
       <template v-slot:item.Ranking="{ item }">
@@ -223,15 +184,14 @@
   <v-dialog v-model="isShowCare" persistent width="700"
     ><Care :placeID="placeID" @btClose="btClose" />
   </v-dialog>
+  <v-dialog v-model="isShowRank" persistent width="700"
+    ><Rank :placeID="placeID" @btClose="btClose" />
+  </v-dialog>
   <notifications />
 </template>
 
 <script>
-import {
-  GetPlaceLstByID,
-  SearchHistoryUser2,
-  GetPlaceLstByBirthday,
-} from "@/api/crm";
+import { GetPlaceLstByID, GetPlaceLstByBirthday } from "@/api/crm";
 
 import { typePlaceLst, rankLst } from "@/utils/variable";
 import {
@@ -248,15 +208,21 @@ import {
   getStatusCustomer,
   getRankCustomer,
 } from "@/utils/auth";
-import { formatDateDisplay, formatDateUpload } from "@/helpers/getTime";
+import {
+  formatDateDisplay,
+  formatDateUpload,
+  formatDateDisplayDDMMYY,
+} from "@/helpers/getTime";
 import Update from "./components/update.vue";
-import Care from "./components/care.vue";
+import Care from "@/views/components/care.vue";
+import Rank from "@/views/components/rank.vue";
 import { exportExcel } from "./function";
 import { monthLst } from "@/utils/variable";
 export default {
   components: {
     Update,
     Care,
+    Rank,
   },
   data() {
     return {
@@ -266,13 +232,14 @@ export default {
       isShowCare: false,
       isShowUpdatePlace: false,
       loadding: false,
+      isShowRank: false,
       headers: [
         { title: "STT", sortable: false, key: "Key", width: 90 },
         { title: "Tổ chức", key: "PlaceName", sortable: false },
         { title: "SĐT", key: "Phone", sortable: false, align: "center" },
         {
           title: "Sinh nhật",
-          key: "Birthday",
+          key: "BirthdayShow",
           sortable: false,
           align: "center",
         },
@@ -370,6 +337,10 @@ export default {
     },
   },
   methods: {
+    btShowRank(data) {
+      this.placeID = data;
+      this.isShowRank = true;
+    },
     btExportExcel() {
       exportExcel(this.desserts);
     },
@@ -399,6 +370,7 @@ export default {
             DateCareShow: formatDateDisplay(item.DateCare),
             StatusCareShow: this.getStatus2(item.StatusCare),
             RankingShow: this.getRank(item.Ranking),
+            BirthdayShow: formatDateDisplayDDMMYY(item.Birthday),
           };
         });
         this.dataLength = res.TotalRows;
@@ -430,6 +402,7 @@ export default {
     btClose() {
       this.isShowUpdatePlace = false;
       this.isShowCare = false;
+      this.isShowRank = false;
     },
     btShowUpdate(data) {
       this.placeID = data.PlaceID;
@@ -446,45 +419,7 @@ export default {
         this.placeLst = res.Data;
       });
     },
-    searchHistoryUser() {
-      if (this.isPhoneNumber(this.dataSearchPhone)) {
-        this.loading = true;
-        SearchHistoryUser2({
-          Phone: this.dataSearchPhone,
-          PlaceID: null,
-        }).then((res) => {
-          this.desserts = res.Data.map((item, index) => {
-            return {
-              ...item,
-              Key: index + 1,
-              DateCareShow: formatDateDisplay(item.DateCare),
-              RankingShow: this.getRank(item.Ranking),
-              StatusCareShow: this.getStatus2(item.StatusCare),
-            };
-          });
-          this.dataLength = res.TotalRows;
-          this.loadding = false;
-        });
-      } else {
-        this.loading = true;
-        SearchHistoryUser2({
-          Phone: null,
-          PlaceID: this.dataSearchPhone,
-        }).then((res) => {
-          this.desserts = res.Data.map((item, index) => {
-            return {
-              ...item,
-              Key: index + 1,
-              DateCareShow: formatDateDisplay(item.DateCare),
-              StatusCareShow: this.getStatus2(item.StatusCare),
-              RankingShow: this.getRank(item.Ranking),
-            };
-          });
-          this.dataLength = res.TotalRows;
-          this.loadding = false;
-        });
-      }
-    },
+
     isPhoneNumber(input) {
       // Kiểm tra bằng biểu thức chính quy
       var pattern = /^[0-9]{10,15}$/;
@@ -519,7 +454,7 @@ export default {
         PlaceType: this.typePlace,
         Status: this.statusCustomer,
         Month: this.monthNow,
-        Ranking: this.ranking,
+        Ranking: this.rankCustomer,
       }).then((res) => {
         var num = (this.pageNumber - 1) * this.rowspPage;
         this.desserts = res.Data.map((item, index) => {
@@ -529,6 +464,7 @@ export default {
             DateCareShow: formatDateDisplay(item.DateCare),
             StatusCareShow: this.getStatus2(item.StatusCare),
             RankingShow: this.getRank(item.Ranking),
+            BirthdayShow: formatDateDisplayDDMMYY(item.Birthday),
           };
         });
         this.dataLength = res.TotalRows;
