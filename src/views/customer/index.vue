@@ -523,6 +523,8 @@ export default {
         SearchHistoryUser2({
           Phone: this.dataSearchPhone,
           PlaceID: null,
+          PageNumber: 1,
+          RowspPage: 1000,
         }).then((res) => {
           this.desserts = res.Data.map((item, index) => {
             return {
@@ -541,6 +543,8 @@ export default {
         SearchHistoryUser2({
           Phone: null,
           PlaceID: this.dataSearchPhone,
+          PageNumber: 1,
+          RowspPage: 1000,
         }).then((res) => {
           this.desserts = res.Data.map((item, index) => {
             return {

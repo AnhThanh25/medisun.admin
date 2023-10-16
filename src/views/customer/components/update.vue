@@ -352,6 +352,8 @@ export default {
             return {
               ...item,
               Key: index + 1,
+              BirthdayShow: formatDateDisplayDDMMYY(item.Birthday),
+              Birthday: formatDateUpload(item.Birthday) + " 00:00:00",
             };
           }
         );

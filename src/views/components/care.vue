@@ -115,76 +115,13 @@
       <v-btn @click="createCRM"> Lưu thông tin </v-btn>
     </v-card-actions>
   </v-card>
-  <!-- <v-dialog v-model="isShowCustomer" persistent width="500">
-    <v-card height="400">
-      <v-card-title>
-        <h6 class="text-h6 px-3 py-2">Cập nhật khách hàng cá nhân</h6>
-      </v-card-title>
-      <v-card-text>
-        <v-row>
-          <v-col cols="12" lg="6">
-            <v-text-field
-              v-model="customerInfo.CustomerName"
-              label="Tên khách hàng"
-              hide-details
-              required
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" lg="6">
-            <VDatePicker2
-              locale="vi"
-              v-model="customerInfo.Birthday"
-              mode="date"
-              :masks="masks"
-            >
-              <template #default="{ inputValue, inputEvents }">
-                <v-text-field
-                  v-model="customerInfo.Birthday"
-                  :value="inputValue"
-                  v-on="inputEvents"
-                  label="Sinh nhật"
-                  append-inner-icon="mdi-calendar"
-                  hide-details
-                />
-              </template>
-            </VDatePicker2>
-          </v-col>
-          <v-col cols="12" lg="6">
-            <v-text-field
-              label="Số điện thoại"
-              v-model="customerInfo.CustomerContact"
-              hide-details
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" lg="6">
-            <v-text-field
-              label="Vị trí"
-              v-model="customerInfo.Position"
-              hide-details
-            ></v-text-field>
-          </v-col>
-        </v-row>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          color="blue-darken-1"
-          variant="text"
-          @click="isShowCustomer = false"
-        >
-          Đóng
-        </v-btn>
-        <v-btn @click="addInfoCus"> Lưu thông tin </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog> -->
-  <!-- <notifications /> -->
 </template>
 
 <script>
 import { GetPlaceByID, CreateCRM } from "@/api/crm";
 import { careTypeLst, urlUploadImageCare } from "@/utils/variable";
-import { formatDateUpload } from "@/helpers/getTime";
+import { formatDateUpload, formatDate } from "@/helpers/getTime";
+import { getFullName, getEmployCode } from "@/utils/auth";
 export default {
   props: {
     placeID: String,
@@ -282,9 +219,9 @@ export default {
       var req = {
         PlaceID: this.placeID,
         TypeCare: this.careInfo.TypeCare,
-        CrmName: this.careInfo.CrmName,
-        CrmID: this.careInfo.CrmID,
-        DateCare: this.careInfo.DateCare,
+        CrmName: getFullName(),
+        CrmID: getEmployCode(),
+        DateCare: formatDate(this.careInfo.DateCare),
         Content: this.careInfo.Content,
         CustomerID: this.careInfo.CustomerLst.find(
           (p) => p.CustomerContact == this.careInfo.CustomerContact
