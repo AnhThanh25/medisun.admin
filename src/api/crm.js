@@ -94,3 +94,25 @@ export function GetRankInfoLst(data) {
   });
 }
 
+export function UpdateLocalByID(data) {
+  return request({
+    url: "DairyCRM/UpdateLocalByID",
+    method: "post",
+    data: data,
+  });
+}
+export function AddPlaceByID(data) {
+  return request({
+    url: "DairyCRM/AddPlaceByID",
+    method: "post",
+    data: data,
+  });
+}
+export function GetPlaceLst(data) {
+  return request({
+    url: "DairyCRM/GetPlaceLst",
+    method: "post",
+    data: data,
+  });
+}
+

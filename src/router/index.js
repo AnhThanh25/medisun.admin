@@ -77,22 +77,22 @@ export const constantRoutes = [
   //     },
   //   ],
   // },
-  // {
-  //   path: "/dia-ban",
-  //   component: () => import("@/layouts/full/FullLayout.vue"),
-  //   role: 10,
-  //   meta: { title: "Địa bàn", icon: "mdi-map-check" },
-  //   children: [
-  //     {
-  //       name: "Nhân sự",
-  //       path: "/dia-ban/nhan-su",
-  //       component: () => import("@/views/setting/employ/index.vue"),
-  //       meta: { title: "Nhân sự", icon: "mdi-card-outline" },
-  //       role: 1,
-  //     },
+  {
+    path: "/dia-ban",
+    component: () => import("@/layouts/full/FullLayout.vue"),
+    role: 10,
+    meta: { title: "Địa bàn", icon: "mdi-map-check" },
+    children: [
+      {
+        name: "Địa bàn",
+        path: "/dia-ban",
+        component: () => import("@/views/local/index.vue"),
+        meta: { title: "Địa bàn", icon: "mdi-card-outline" },
+        role: 1,
+      },
     
-  //   ],
-  // },
+    ],
+  },
   // { path: "*", redirect: "/404", hidden: true, role: 1 },
   // {
   //   path: "/404",

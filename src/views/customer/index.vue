@@ -338,6 +338,7 @@ export default {
       isShowRank: false,
       headers: [
         { title: "STT", sortable: false, key: "Key", width: 110 },
+        { title: "Mã TC", key: "PlaceID", sortable: false },
         { title: "Tổ chức", key: "PlaceName", sortable: false },
         { title: "SĐT", key: "Phone", sortable: false, align: "center" },
         { title: "Hạng KH", key: "Ranking", sortable: false, align: "center" },

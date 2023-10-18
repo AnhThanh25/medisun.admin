@@ -235,6 +235,7 @@ export default {
       isShowRank: false,
       headers: [
         { title: "STT", sortable: false, key: "Key", width: 90 },
+        { title: "Mã TC", key: "PlaceID", sortable: false },
         { title: "Tổ chức", key: "PlaceName", sortable: false },
         { title: "SĐT", key: "Phone", sortable: false, align: "center" },
         {
@@ -285,7 +286,7 @@ export default {
       placeName: "",
       dataLength: 0,
       placeLst: [],
-      typePlaceLst: typePlaceLst,
+      typePlaceLst: typePlaceLst.push({ text: "Tất cả", value: null }),
       typePlace: "",
       statusLst: [
         { value: 0, label: "Hủy tặng quà" },
