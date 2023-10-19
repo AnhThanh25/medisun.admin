@@ -248,13 +248,13 @@ export default {
         { title: "Điểm", key: "Point", sortable: false, align: "center" },
         {
           title: "Điểm lên hạng",
-          key: "TypeCare",
+          key: "PointUpRank",
           sortable: false,
           align: "center",
         },
         {
           title: "Tiền lên hạng",
-          key: "Resuilt",
+          key: "MoneyUpRank",
           sortable: false,
           align: "center",
         },
@@ -466,6 +466,23 @@ export default {
             StatusCareShow: this.getStatus2(item.StatusCare),
             RankingShow: this.getRank(item.Ranking),
             BirthdayShow: formatDateDisplayDDMMYY(item.Birthday),
+            PointUpRank:
+              item.Ranking == 4
+                ? 0
+                : item.Ranking == 3
+                ? 490 - item.Point
+                : item.Ranking == 2
+                ? 100 - item.Point
+                : item.Ranking == 1
+                ? 10 - item.Point
+                : item.Ranking == 0
+                ? 10 - item.Point
+                : 0,
+          };
+        }).map((item) => {
+          return {
+            ...item,
+            MoneyUpRank: Intl.NumberFormat().format(item.PointUpRank * 50000),
           };
         });
         this.dataLength = res.TotalRows;
