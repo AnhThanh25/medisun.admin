@@ -82,6 +82,10 @@ export const rankLst = [
     label: "Platium",
     value: 4,
   },
+  {
+    label: "Tất cả",
+    value: null,
+  },
 ];
 
 export const areaLst = ["Miền Bắc", "Miền Trung", "Miền Nam"];

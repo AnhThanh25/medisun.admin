@@ -286,7 +286,7 @@ export default {
       placeName: "",
       dataLength: 0,
       placeLst: [],
-      typePlaceLst: typePlaceLst.push({ text: "Tất cả", value: null }),
+      typePlaceLst: typePlaceLst,
       typePlace: "",
       statusLst: [
         { value: 0, label: "Hủy tặng quà" },
@@ -503,6 +503,8 @@ export default {
     },
   },
   created() {
+    setPageNumber(1);
+
     if (getPlaceName()) {
       this.placeName = getPlaceName();
     }
