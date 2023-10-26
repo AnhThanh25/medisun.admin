@@ -62,6 +62,21 @@ export const constantRoutes = [
       },
     ],
   },
+  {
+    path: "/chuan-hoa",
+    component: () => import("@/layouts/full/FullLayout.vue"),
+    role: 1,
+    meta: { title: "Chuẩn hóa", icon: "mdi-group" },
+    children: [
+      {
+        name: "Chuẩn hóa",
+        path: "/chuan-hoa",
+        component: () => import("@/views/standard/index.vue"),
+        meta: { title: "Chuẩn hóa", icon: "mdi-card-outline" },
+        role: 1,
+      },
+    ],
+  },
   // {
   //   path: "/cham-soc",
   //   component: () => import("@/layouts/full/FullLayout.vue"),

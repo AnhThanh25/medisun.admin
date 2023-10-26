@@ -115,4 +115,32 @@ export function GetPlaceLst(data) {
     data: data,
   });
 }
+export function GetPlaceStandardLst(data) {
+  return request({
+    url: "DairyCRM/GetPlaceStandardLst",
+    method: "post",
+    data: data,
+  });
+}
+export function GetSearchPlaceLst(data) {
+  return request({
+    url: "DairyCRM/GetSearchPlaceLst",
+    method: "post",
+    data: data,
+  });
+}
+export function CreatePlaceStandard(data) {
+  return request({
+    url: "DairyCRM/CreatePlaceStandard",
+    method: "post",
+    data: data,
+  });
+}
+export function DelPlaceStandard(data) {
+  return request({
+    url: "DairyCRM/DelPlaceStandard",
+    method: "post",
+    data: data,
+  });
+}
 
