@@ -16,6 +16,10 @@ export function exportExcel(dataCRM) {
     "KH tổ chức",
     "Điện thoại",
     "Tỉnh",
+    "Quận/Huyện",
+    "Phường/Xã",
+    "Địa chỉ",
+    "Tọa độ",
     "Loại tổ chức",
     "Trạng thái",
     "Hạng",
@@ -33,6 +37,10 @@ export function exportExcel(dataCRM) {
     "PlaceName",
     "Phone",
     "City",
+    "District",
+    "Commune",
+    "Address",
+    "Coordinate",
     "PlaceType",
     "StatusCareShow",
     "RankingShow",
@@ -41,8 +49,8 @@ export function exportExcel(dataCRM) {
     "Resuilt",
     "Note",
     "DateCare",
-    "CrmID",
-    "CrmName",
+    "EmployCode",
+    "EmployName",
   ];
   var dataLst = [];
   dataLst = dataCRM;

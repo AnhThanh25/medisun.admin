@@ -470,6 +470,10 @@ export default {
             DateCareShow: formatDateDisplay(item.DateCare),
             StatusCareShow: this.getStatus2(item.StatusCare),
             RankingShow: this.getRank(item.Ranking),
+            Coordinate:
+              item.Latitude != 0
+                ? `http://maps.google.com/maps?q=loc:${item.Latitude},${item.Longitude}`
+                : "Không có",
           };
         });
         this.dataLength = res.TotalRows;
@@ -534,6 +538,10 @@ export default {
               DateCareShow: formatDateDisplay(item.DateCare),
               RankingShow: this.getRank(item.Ranking),
               StatusCareShow: this.getStatus2(item.StatusCare),
+              Coordinate:
+                item.Latitude != 0
+                  ? `http://maps.google.com/maps?q=loc:${item.Latitude},${item.Longitude}`
+                  : "Không có",
             };
           });
           this.dataLength = res.TotalRows;
@@ -554,6 +562,10 @@ export default {
               DateCareShow: formatDateDisplay(item.DateCare),
               StatusCareShow: this.getStatus2(item.StatusCare),
               RankingShow: this.getRank(item.Ranking),
+              Coordinate:
+                item.Latitude != 0
+                  ? `http://maps.google.com/maps?q=loc:${item.Latitude},${item.Longitude}`
+                  : "Không có",
             };
           });
           this.dataLength = res.TotalRows;
@@ -615,6 +627,10 @@ export default {
             DateCareShow: formatDateDisplay(item.DateCare),
             StatusCareShow: this.getStatus2(item.StatusCare),
             RankingShow: this.getRank(item.Ranking),
+            Coordinate:
+              item.Latitude != 0
+                ? `http://maps.google.com/maps?q=loc:${item.Latitude},${item.Longitude}`
+                : "Không có",
           };
         });
         this.dataLength = res.TotalRows;
@@ -642,6 +658,10 @@ export default {
             DateCareShow: formatDateDisplay(item.DateCare),
             StatusCareShow: this.getStatus2(item.StatusCare),
             RankingShow: this.getRank(item.Ranking),
+            Coordinate:
+              item.Latitude != 0
+                ? `http://maps.google.com/maps?q=loc:${item.Latitude},${item.Longitude}`
+                : "Không có",
           };
         });
         this.dataLength = res.TotalRows;
