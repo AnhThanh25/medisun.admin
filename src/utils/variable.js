@@ -216,3 +216,13 @@ export const monthLst = [
   { text: "Tháng 11", value: 11 },
   { text: "Tháng 12", value: 12 },
 ];
+export const regionLst = [
+  { text: "Miền Bắc", value: "MB" },
+  { text: "Miền Trung", value: "MT" },
+  { text: "Miền Nam", value: "MN" },
+];
+
+export const yearLst = [
+  { text: "Năm 2023", value: 2023 },
+  { text: "Năm 2024", value: 2024 },
+];

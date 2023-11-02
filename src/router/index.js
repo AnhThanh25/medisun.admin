@@ -77,21 +77,21 @@ export const constantRoutes = [
       },
     ],
   },
-  // {
-  //   path: "/cham-soc",
-  //   component: () => import("@/layouts/full/FullLayout.vue"),
-  //   role: 1,
-  //   meta: { title: "Chăm sóc", icon: "mdi-account-heart" },
-  //   children: [
-  //     {
-  //       name: "Chăm sóc",
-  //       path: "/cham-soc",
-  //       component: () => import("@/views/material/index.vue"),
-  //       meta: { title: "Chăm sóc", icon: "mdi-card-outline" },
-  //       role: 1,
-  //     },
-  //   ],
-  // },
+  {
+    path: "/call-dia-ban",
+    component: () => import("@/layouts/full/FullLayout.vue"),
+    role: 1,
+    meta: { title: "Call địa bàn", icon: "mdi-map-marker-radius" },
+    children: [
+      {
+        name: "Call địa bàn",
+        path: "/call-dia-ban",
+        component: () => import("@/views/callLocal/index.vue"),
+        meta: { title: "Call địa bàn", icon: "mdi-card-outline" },
+        role: 1,
+      },
+    ],
+  },
   {
     path: "/dia-ban",
     component: () => import("@/layouts/full/FullLayout.vue"),
