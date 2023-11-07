@@ -62,6 +62,7 @@
           <v-text-field label="Ghi chú" v-model="placeInfo.Note"></v-text-field>
         </v-col>
       </v-row>
+      <v-btn size="small" @click="btShowAddCus">Thêm</v-btn>
       <v-data-table-server
         no-data-text="Không có dữ liệu"
         :headers="headers"
@@ -229,6 +230,10 @@ export default {
     },
   },
   methods: {
+    btShowAddCus() {
+      this.isShowCustomer = true;
+      this.customerInfo = {};
+    },
     isPhoneNumber(input) {
       const phoneRegex = /^0[0-9]{9}$/;
       return phoneRegex.test(input);
@@ -300,6 +305,9 @@ export default {
       );
       this.customerInfo.Birthday =
         formatDateUpload(this.customerInfo.Birthday) + " 00:00:00";
+      if (this.placeInfo.CustomerLst.length == 0) {
+        this.placeInfo.CustomerLst.push(this.customerInfo);
+      }
     },
     btShowInfoCustomer(data) {
       this.customerInfo = data;
@@ -347,6 +355,7 @@ export default {
         UserCode: "",
       }).then((res) => {
         this.placeInfo = res.Data;
+
         this.placeInfo.CustomerLst = this.placeInfo.CustomerLst.map(
           (item, index) => {
             return {
