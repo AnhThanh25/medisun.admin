@@ -372,6 +372,8 @@ export default {
             StatusCareShow: this.getStatus2(item.StatusCare),
             RankingShow: this.getRank(item.Ranking),
             BirthdayShow: formatDateDisplayDDMMYY(item.Birthday),
+            TextRegister:
+              item.StatusCare == 4 ? "Đã đăng ký thành viên" : "Chưa đăng ký",
           };
         });
         this.dataLength = res.TotalRows;
@@ -478,6 +480,8 @@ export default {
                 : item.Ranking == 0
                 ? 10 - item.Point
                 : 0,
+            TextRegister:
+              item.StatusCare == 4 ? "Đã đăng ký thành viên" : "Chưa đăng ký",
           };
         }).map((item) => {
           return {

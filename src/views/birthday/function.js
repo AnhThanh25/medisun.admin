@@ -27,6 +27,8 @@ export function exportExcel(dataCRM) {
     "TG chăm sóc",
     "Mã NV",
     "Nhân viên",
+    'Call Cuối',
+    "ĐKTV"
   ];
   const filterHeader = [
     "Key",
@@ -35,7 +37,7 @@ export function exportExcel(dataCRM) {
     "Phone",
     "City",
     "PlaceType",
-    "DateCareShow",
+    "BirthdayShow",
     "StatusCareShow",
     "RankingShow",
     "Point",
@@ -45,6 +47,8 @@ export function exportExcel(dataCRM) {
     "DateCare",
     "CrmID",
     "CrmName",
+    'LastCall',
+    'TextRegister'
   ];
   var dataLst = [];
   dataLst = dataCRM;

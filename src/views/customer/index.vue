@@ -44,6 +44,7 @@
                     variant="tonal"
                     color="primary"
                     block
+                    :loading="loadding"
                     @click="searchHistoryUser"
                   >
                     Tìm kiếm</v-btn
@@ -474,6 +475,8 @@ export default {
               item.Latitude != 0
                 ? `http://maps.google.com/maps?q=loc:${item.Latitude},${item.Longitude}`
                 : "Không có",
+            TextRegister:
+              item.StatusCare == 4 ? "Đã đăng ký thành viên" : "Chưa đăng ký",
           };
         });
         this.dataLength = res.TotalRows;
@@ -542,6 +545,8 @@ export default {
                 item.Latitude != 0
                   ? `http://maps.google.com/maps?q=loc:${item.Latitude},${item.Longitude}`
                   : "Không có",
+              TextRegister:
+                item.StatusCare == 4 ? "Đã đăng ký thành viên" : "Chưa đăng ký",
             };
           });
           this.dataLength = res.TotalRows;
@@ -566,6 +571,8 @@ export default {
                 item.Latitude != 0
                   ? `http://maps.google.com/maps?q=loc:${item.Latitude},${item.Longitude}`
                   : "Không có",
+              TextRegister:
+                item.StatusCare == 4 ? "Đã đăng ký thành viên" : "Chưa đăng ký",
             };
           });
           this.dataLength = res.TotalRows;
@@ -631,6 +638,8 @@ export default {
               item.Latitude != 0
                 ? `http://maps.google.com/maps?q=loc:${item.Latitude},${item.Longitude}`
                 : "Không có",
+            TextRegister:
+              item.StatusCare == 4 ? "Đã đăng ký thành viên" : "Chưa đăng ký",
           };
         });
         this.dataLength = res.TotalRows;
@@ -662,6 +671,8 @@ export default {
               item.Latitude != 0
                 ? `http://maps.google.com/maps?q=loc:${item.Latitude},${item.Longitude}`
                 : "Không có",
+            TextRegister:
+              item.StatusCare == 4 ? "Đã đăng ký thành viên" : "Chưa đăng ký",
           };
         });
         this.dataLength = res.TotalRows;
