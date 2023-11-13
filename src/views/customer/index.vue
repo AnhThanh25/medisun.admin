@@ -527,7 +527,7 @@ export default {
     },
     searchHistoryUser() {
       if (this.isPhoneNumber(this.dataSearchPhone)) {
-        this.loading = true;
+        this.loadding = true;
         SearchHistoryUser2({
           Phone: this.dataSearchPhone,
           PlaceID: null,
@@ -553,7 +553,7 @@ export default {
           this.loadding = false;
         });
       } else {
-        this.loading = true;
+        this.loadding = true;
         SearchHistoryUser2({
           Phone: null,
           PlaceID: this.dataSearchPhone,
