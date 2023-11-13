@@ -13,7 +13,7 @@
                 variant="text"
                 icon="mdi-pencil"
                 size="x-small"
-                @click="isShowUpdatePlace = true"
+                @click="btShowUpdate(placeInfoBFO.PlaceID)"
                 v-if="placeInfoBFO.PlaceID"
               ></v-btn>
               <!-- <v-btn
@@ -159,14 +159,22 @@
               @click="btCreate(item.raw)"
               >mdi-check-circle
             </v-icon>
+            <v-icon
+              color="primary"
+              size="small"
+              class="me-2"
+              @click="btShowUpdate(item.raw.PlaceID)"
+              >mdi-pencil
+            </v-icon>
           </template>
         </v-data-table-server>
       </v-card>
     </v-col>
   </v-row>
   <v-dialog v-model="isShowUpdatePlace" persistent width="800"
-    ><Update :placeID="placeInfoBFO.PlaceID" @btClose="btClose" />
+    ><Update :placeID="placeID" @btClose="btClose" />
   </v-dialog>
+
   <notifications />
 </template>
 
@@ -206,9 +214,14 @@ export default {
       dataGroups: [],
       placeInfoBFO: {},
       isShowUpdatePlace: false,
+      placeID: "",
     };
   },
   methods: {
+    btShowUpdate(data) {
+      this.placeID = data;
+      this.isShowUpdatePlace = true;
+    },
     btClose() {
       this.isShowUpdatePlace = false;
     },
