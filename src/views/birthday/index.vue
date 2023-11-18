@@ -260,7 +260,7 @@ export default {
         },
 
         {
-          title: "NV KD",
+          title: "TG Chăm sóc",
           key: "DateCareShow",
           sortable: false,
           align: "center",
