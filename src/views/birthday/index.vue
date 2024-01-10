@@ -491,7 +491,7 @@ export default {
         this.desserts = res.Data.map((item, index) => {
           var point = 0;
           if ((item.Region = "MB")) {
-            point =
+            var pointRam =
               item.Ranking == 4
                 ? 0
                 : item.Ranking == 3
@@ -501,6 +501,7 @@ export default {
                 : item.Ranking == 1
                 ? 65 - item.Point
                 : 0;
+            point = this.roundUpToNearest10(pointRam);
           } else {
             point =
               item.Ranking == 4
@@ -525,14 +526,25 @@ export default {
             PointUpRank: point,
             TextRegister:
               item.StatusCare == 4 ? "Đã đăng ký thành viên" : "Chưa đăng ký",
-            MoneyUpRank: Intl.NumberFormat().format(point * 50000),
+            MoneyUpRank:
+              item.Region == "MB"
+                ? Intl.NumberFormat().format(point * 100000)
+                : Intl.NumberFormat().format(point * 50000),
           };
         });
         this.dataLength = res.TotalRows;
         this.loadding = false;
       });
     },
+    roundUpToNearest10(number) {
+      // Kiểm tra xem số có chia hết cho 10 không
+      if (number % 10 !== 0) {
+        // Nếu không chia hết, làm tròn lên số chia hết cho 10 gần nhất
+        number = Math.ceil(number / 10) * 10;
+      }
 
+      return number;
+    },
     getRank(status) {
       if (status == 0) {
         return "No rank";
