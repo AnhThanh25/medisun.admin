@@ -21,14 +21,16 @@ export function exportExcel(dataCRM) {
     "Trạng thái",
     "Hạng",
     "Điểm",
+    "Điểm lên hạng",
+    "Tiền lên hạng",
     "HT chăm sóc",
     "KQ chăm sóc",
     "Ghi chú",
     "TG chăm sóc",
     "Mã NV",
     "Nhân viên",
-    'Call Cuối',
-    "ĐKTV"
+    "Call Cuối",
+    "ĐKTV",
   ];
   const filterHeader = [
     "Key",
@@ -41,14 +43,16 @@ export function exportExcel(dataCRM) {
     "StatusCareShow",
     "RankingShow",
     "Point",
+    "PointUpRank",
+    "MoneyUpRank",
     "TypeCare",
     "Resuilt",
     "Note",
     "DateCare",
     "CrmID",
     "CrmName",
-    'LastCall',
-    'TextRegister'
+    "LastCall",
+    "TextRegister",
   ];
   var dataLst = [];
   dataLst = dataCRM;

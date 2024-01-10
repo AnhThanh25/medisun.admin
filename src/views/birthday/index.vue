@@ -365,6 +365,32 @@ export default {
       }).then((res) => {
         var num = (this.pageNumber - 1) * this.rowspPage;
         this.desserts = res.Data.map((item, index) => {
+          var point = 0;
+          if ((item.Region = "MB")) {
+            point =
+              item.Ranking == 4
+                ? 0
+                : item.Ranking == 3
+                ? 610 - item.Point
+                : item.Ranking == 2
+                ? 220 - item.Point
+                : item.Ranking == 1
+                ? 65 - item.Point
+                : 0;
+          } else {
+            point =
+              item.Ranking == 4
+                ? 0
+                : item.Ranking == 3
+                ? 490 - item.Point
+                : item.Ranking == 2
+                ? 100 - item.Point
+                : item.Ranking == 1
+                ? 10 - item.Point
+                : item.Ranking == 0
+                ? 10 - item.Point
+                : 0;
+          }
           return {
             ...item,
             Key: index + 1 + num,
@@ -372,8 +398,10 @@ export default {
             StatusCareShow: this.getStatus2(item.StatusCare),
             RankingShow: this.getRank(item.Ranking),
             BirthdayShow: formatDateDisplayDDMMYY(item.Birthday),
+            PointUpRank: point,
             TextRegister:
               item.StatusCare == 4 ? "Đã đăng ký thành viên" : "Chưa đăng ký",
+            MoneyUpRank: Intl.NumberFormat().format(point * 50000),
           };
         });
         this.dataLength = res.TotalRows;
@@ -461,14 +489,20 @@ export default {
       }).then((res) => {
         var num = (this.pageNumber - 1) * this.rowspPage;
         this.desserts = res.Data.map((item, index) => {
-          return {
-            ...item,
-            Key: index + 1 + num,
-            DateCareShow: formatDateDisplay(item.DateCare),
-            StatusCareShow: this.getStatus2(item.StatusCare),
-            RankingShow: this.getRank(item.Ranking),
-            BirthdayShow: formatDateDisplayDDMMYY(item.Birthday),
-            PointUpRank:
+          var point = 0;
+          if ((item.Region = "MB")) {
+            point =
+              item.Ranking == 4
+                ? 0
+                : item.Ranking == 3
+                ? 610 - item.Point
+                : item.Ranking == 2
+                ? 220 - item.Point
+                : item.Ranking == 1
+                ? 65 - item.Point
+                : 0;
+          } else {
+            point =
               item.Ranking == 4
                 ? 0
                 : item.Ranking == 3
@@ -479,14 +513,19 @@ export default {
                 ? 10 - item.Point
                 : item.Ranking == 0
                 ? 10 - item.Point
-                : 0,
-            TextRegister:
-              item.StatusCare == 4 ? "Đã đăng ký thành viên" : "Chưa đăng ký",
-          };
-        }).map((item) => {
+                : 0;
+          }
           return {
             ...item,
-            MoneyUpRank: Intl.NumberFormat().format(item.PointUpRank * 50000),
+            Key: index + 1 + num,
+            DateCareShow: formatDateDisplay(item.DateCare),
+            StatusCareShow: this.getStatus2(item.StatusCare),
+            RankingShow: this.getRank(item.Ranking),
+            BirthdayShow: formatDateDisplayDDMMYY(item.Birthday),
+            PointUpRank: point,
+            TextRegister:
+              item.StatusCare == 4 ? "Đã đăng ký thành viên" : "Chưa đăng ký",
+            MoneyUpRank: Intl.NumberFormat().format(point * 50000),
           };
         });
         this.dataLength = res.TotalRows;
