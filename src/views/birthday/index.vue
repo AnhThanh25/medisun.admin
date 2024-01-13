@@ -157,6 +157,13 @@
           @click="btShowRank(item.raw)"
           >mdi-chart-box-outline
         </v-icon>
+        <v-icon
+          color="primary"
+          size="small"
+          class="me-2"
+          @click="btShowProductSales(item.raw)"
+          >mdi-pill
+        </v-icon>
       </template>
       <template v-slot:item.Ranking="{ item }">
         {{ getRank(item.raw.Ranking) }}
@@ -187,6 +194,9 @@
   <v-dialog v-model="isShowRank" persistent width="700"
     ><Rank :placeID="placeID" @btClose="btClose" />
   </v-dialog>
+  <v-dialog v-model="isShowProductSales" persistent width="1000"
+    ><ProductSales :placeID="placeID" @btClose="btClose" />
+  </v-dialog>
   <notifications />
 </template>
 
@@ -216,6 +226,7 @@ import {
 import Update from "./components/update.vue";
 import Care from "@/views/components/care.vue";
 import Rank from "@/views/components/rank.vue";
+import ProductSales from "@/views/components/productSales.vue";
 import { exportExcel } from "./function";
 import { monthLst } from "@/utils/variable";
 export default {
@@ -223,9 +234,11 @@ export default {
     Update,
     Care,
     Rank,
+    ProductSales,
   },
   data() {
     return {
+      isShowProductSales: false,
       isMenuSearch: false,
       isMenuCare: false,
       isMenuTime: false,
@@ -234,7 +247,7 @@ export default {
       loadding: false,
       isShowRank: false,
       headers: [
-        { title: "STT", sortable: false, key: "Key", width: 90 },
+        { title: "STT", sortable: false, key: "Key", width: 110 },
         { title: "Mã TC", key: "PlaceID", sortable: false },
         { title: "Tổ chức", key: "PlaceName", sortable: false },
         { title: "SĐT", key: "Phone", sortable: false, align: "center" },
@@ -338,6 +351,10 @@ export default {
     },
   },
   methods: {
+    btShowProductSales(data) {
+      this.placeID = data;
+      this.isShowProductSales = true;
+    },
     btShowRank(data) {
       this.placeID = data;
       this.isShowRank = true;
@@ -434,6 +451,7 @@ export default {
       this.isShowUpdatePlace = false;
       this.isShowCare = false;
       this.isShowRank = false;
+      this.isShowProductSales = false;
     },
     btShowUpdate(data) {
       this.placeID = data.PlaceID;
@@ -491,7 +509,7 @@ export default {
         this.desserts = res.Data.map((item, index) => {
           var point = 0;
           if ((item.Region = "MB")) {
-            var pointRam =
+            point =
               item.Ranking == 4
                 ? 0
                 : item.Ranking == 3
@@ -501,7 +519,7 @@ export default {
                 : item.Ranking == 1
                 ? 65 - item.Point
                 : 0;
-            point = this.roundUpToNearest10(pointRam);
+            // point = this.roundUpToNearest10(pointRam);
           } else {
             point =
               item.Ranking == 4
@@ -528,7 +546,9 @@ export default {
               item.StatusCare == 4 ? "Đã đăng ký thành viên" : "Chưa đăng ký",
             MoneyUpRank:
               item.Region == "MB"
-                ? Intl.NumberFormat().format(point * 100000)
+                ? Intl.NumberFormat().format(
+                    this.roundUpToNearest10(point) * 100000
+                  )
                 : Intl.NumberFormat().format(point * 50000),
           };
         });

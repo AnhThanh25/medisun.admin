@@ -260,6 +260,13 @@
           @click="btShowRank(item.raw)"
           >mdi-chart-box-outline
         </v-icon>
+        <v-icon
+          color="primary"
+          size="small"
+          class="me-2"
+          @click="btShowProductSales(item.raw)"
+          >mdi-pill
+        </v-icon>
       </template>
       <template v-slot:item.Ranking="{ item }">
         {{ getRank(item.raw.Ranking) }}
@@ -289,6 +296,9 @@
   </v-dialog>
   <v-dialog v-model="isShowRank" persistent width="700"
     ><Rank :placeID="placeID" @btClose="btClose" />
+  </v-dialog>
+  <v-dialog v-model="isShowProductSales" persistent width="1000"
+    ><ProduceSales :placeID="placeID" @btClose="btClose" />
   </v-dialog>
   <notifications />
 </template>
@@ -321,15 +331,18 @@ import Update from "./components/update.vue";
 import Care from "@/views/components/care.vue";
 import { exportExcel } from "./function";
 import Rank from "@/views/components/rank.vue";
+import ProduceSales from "@/views/components/productSales.vue";
 
 export default {
   components: {
     Update,
     Care,
     Rank,
+    ProduceSales,
   },
   data() {
     return {
+      isShowProductSales: false,
       isMenuSearch: false,
       isMenuCare: false,
       isMenuTime: false,
@@ -338,7 +351,7 @@ export default {
       loadding: false,
       isShowRank: false,
       headers: [
-        { title: "STT", sortable: false, key: "Key", width: 110 },
+        { title: "STT", sortable: false, key: "Key", width: 130 },
         { title: "Mã TC", key: "PlaceID", sortable: false },
         { title: "Tổ chức", key: "PlaceName", sortable: false },
         { title: "SĐT", key: "Phone", sortable: false, align: "center" },
@@ -438,6 +451,11 @@ export default {
     },
   },
   methods: {
+    btShowProductSales(data) {
+      console.log("124", data);
+      this.placeID = data;
+      this.isShowProductSales = true;
+    },
     btShowRank(data) {
       this.placeID = data;
       this.isShowRank = true;
@@ -509,6 +527,7 @@ export default {
       this.isShowUpdatePlace = false;
       this.isShowCare = false;
       this.isShowRank = false;
+      this.isShowProductSales = false;
     },
     btShowUpdate(data) {
       this.placeID = data.PlaceID;
@@ -626,24 +645,26 @@ export default {
         Level: type,
         LevelChange: 100,
       }).then((res) => {
-        var num = (this.pageNumber - 1) * this.rowspPage;
-        this.desserts = res.Data.map((item, index) => {
-          return {
-            ...item,
-            Key: index + 1 + num,
-            DateCareShow: formatDateDisplay(item.DateCare),
-            StatusCareShow: this.getStatus2(item.StatusCare),
-            RankingShow: this.getRank(item.Ranking),
-            Coordinate:
-              item.Latitude != 0
-                ? `http://maps.google.com/maps?q=loc:${item.Latitude},${item.Longitude}`
-                : "Không có",
-            TextRegister:
-              item.StatusCare == 4 ? "Đã đăng ký thành viên" : "Chưa đăng ký",
-          };
-        });
-        this.dataLength = res.TotalRows;
-        this.loadding = false;
+        if (res.RespCode == 0) {
+          var num = (this.pageNumber - 1) * this.rowspPage;
+          this.desserts = res.Data.map((item, index) => {
+            return {
+              ...item,
+              Key: index + 1 + num,
+              DateCareShow: formatDateDisplay(item.DateCare),
+              StatusCareShow: this.getStatus2(item.StatusCare),
+              RankingShow: this.getRank(item.Ranking),
+              Coordinate:
+                item.Latitude != 0
+                  ? `http://maps.google.com/maps?q=loc:${item.Latitude},${item.Longitude}`
+                  : "Không có",
+              TextRegister:
+                item.StatusCare == 4 ? "Đã đăng ký thành viên" : "Chưa đăng ký",
+            };
+          });
+          this.dataLength = res.TotalRows;
+          this.loadding = false;
+        }
       });
     },
     getPlaceLstByCity() {

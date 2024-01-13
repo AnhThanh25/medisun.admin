@@ -144,3 +144,11 @@ export function DelPlaceStandard(data) {
   });
 }
 
+export function GetProductSalesByPlaceID(data) {
+  return request({
+    url: "DairyCRM/GetProductSalesByPlaceID",
+    method: "post",
+    data: data,
+  });
+}
+
