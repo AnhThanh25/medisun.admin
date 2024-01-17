@@ -14,7 +14,7 @@
           :key="index"
         >
           <template v-slot:opposite>
-            <strong>Tháng {{ item.Month }}</strong>
+            <strong>Tháng {{ item.Month }} - {{ item.Year }}</strong>
           </template>
           <div class="d-flex">
             <strong class="me-4">{{ item.Point }} Điểm</strong>

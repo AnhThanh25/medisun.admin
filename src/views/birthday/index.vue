@@ -508,7 +508,7 @@ export default {
         var num = (this.pageNumber - 1) * this.rowspPage;
         this.desserts = res.Data.map((item, index) => {
           var point = 0;
-          if ((item.Region = "MB")) {
+          if ((item.Region == "MB")) {
             point =
               item.Ranking == 4
                 ? 0
