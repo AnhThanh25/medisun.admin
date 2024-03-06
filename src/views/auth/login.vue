@@ -17,12 +17,15 @@ import LoginForm from "@/components/auth/LoginForm.vue";
               <div class="d-flex justify-center py-4">
                 <div class="logo">
                   <RouterLink to="/">
-                    <img src="@/assets/images/logos/cpc1hn-logo.png" />
+                    <img src="@/assets/images/logos/logotanthinh.png" />
                   </RouterLink>
                 </div>
               </div>
-              <div class="text-center title" >
-                Chăm sóc khách hàng
+              <div
+                class="text-center title"
+                style="color: rgb(var(--v-theme-secondary)); font-weight:600"
+              >
+                Dược Phẩm Tân Thịnh
               </div>
               <LoginForm />
             </v-card-item>

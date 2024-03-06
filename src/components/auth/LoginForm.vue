@@ -7,7 +7,7 @@
       <v-text-field
         v-model="userName"
         hide-details
-        color="primary"
+        color="secondary"
       ></v-text-field>
     </v-col>
     <v-col cols="12">
@@ -17,7 +17,7 @@
       <v-text-field
         v-model="password"
         hide-details
-        color="primary"
+        color="secondary"
         :type="show1 ? 'text' : 'password'"
         :append-inner-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
         @click:append-inner="show1 = !show1"
@@ -25,7 +25,7 @@
     </v-col>
 
     <v-col cols="12" class="pt-8">
-      <v-btn to="/" size="large" block flat @click="login">Đăng nhập</v-btn>
+      <v-btn to="/" color="secondary" size="large" block flat @click="login">Đăng nhập</v-btn>
     </v-col>
   </v-row>
   <notifications />
@@ -50,15 +50,15 @@ export default {
   methods: {
     login() {
       Login({
-        idEmployee: this.userName,
-        password: this.password,
+        UserName: this.userName,
+        Password: this.password,
       }).then((res) => {
         if (res) {
           setToken(res.Token);
-          setUserName(res.Data.idEmployee);
-          setFullName(res.Data.nameEmployee);
-          setPhoneNumber(res.Data.idEmployee);
-          setEmployCode(res.Data.employeeCode);
+          setUserName(res.Data.UserName);
+          setFullName(res.Data.FullName);
+          setPhoneNumber(res.Data.UserName);
+          setEmployCode(res.Data.UserName);
 
           this.$router.push("/");
         }

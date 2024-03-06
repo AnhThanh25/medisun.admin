@@ -2,7 +2,7 @@
   <v-card height="420px">
     <v-card-title>
       <h6 class="text-h6 px-2 py-2">
-        Chăm sóc khách hàng - {{ placeID }} - {{ careInfo.PlaceName }}
+        Tân Thịnh - {{ placeID }} - {{ careInfo.PlaceName }}
       </h6>
       <v-chip class="mx-2 mb-2" color="success" v-if="careInfo.Status == 4"
         >Đã đăng ký thành viên</v-chip

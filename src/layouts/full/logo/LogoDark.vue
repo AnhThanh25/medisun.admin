@@ -1,9 +1,9 @@
 <template>
   <div class="logo">
     <RouterLink to="/">
-        <img src="@/assets/images/logos/cpc1hn-logo.png" />
+        <img src="@/assets/images/logos/logotanthinh.png" />
     </RouterLink>
-    <div class="title">Chăm sóc khách hàng</div>
+    <div class="title">Tân Thịnh</div>
   </div>
 </template>
 <script setup lang="ts">

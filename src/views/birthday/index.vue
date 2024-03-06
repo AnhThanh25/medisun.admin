@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title>
       <div class="d-flex" style="justify-content: space-between">
-        <h6 class="text-h6 py-2">Sinh nhật</h6>
+        <h6 class="text-h6 py-2">Danh sách hóa đơn</h6>
         <div>
           <v-btn
             color="success"

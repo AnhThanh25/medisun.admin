@@ -1,8 +1,7 @@
 import request from "@/utils/request";
-import requestC from "@/utils/request-cpc1hn";
 
 export function GetCity(data) {
-  return requestC({
+  return request({
     url: "Default/GetCity",
     method: "post",
     data: data,
@@ -10,7 +9,7 @@ export function GetCity(data) {
 }
 
 export function GetDistrictByCity(data) {
-  return requestC({
+  return request({
     url: "Default/GetDistrictByCity",
     method: "post",
     data: data,
@@ -18,7 +17,7 @@ export function GetDistrictByCity(data) {
 }
 
 export function GetCommuneByCityAndDistrict(data) {
-  return requestC({
+  return request({
     url: "Default/GetCommuneByCityAndDistrict",
     method: "post",
     data: data,

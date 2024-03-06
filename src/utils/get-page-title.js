@@ -1,5 +1,5 @@
 
-const title = 'Chăm sóc khách hàng' || 'CPC1HN'
+const title = 'Tân Thịnh' || 'CPC1HN'
 
 export default function getPageTitle(pageTitle) {
   if (pageTitle) {
