@@ -9,59 +9,43 @@ export function formatJson(filterVal, jsonData) {
     })
   );
 }
-export function exportExcel(dataCRM) {
+export function exportExcel() {
   const tHeader = [
     "STT",
-    "Mã KH",
-    "KH tổ chức",
-    "Điện thoại",
-    "Tỉnh",
-    "Loại tổ chức",
-    "Ngày sinh",
-    "Trạng thái",
-    "Hạng",
-    "Điểm",
-    "Điểm lên hạng",
-    "Tiền lên hạng",
-    "HT chăm sóc",
-    "KQ chăm sóc",
+    "Mã hóa đơn",
+    "Mã khách hàng",
+    "Tên khách hàng",
+    "Địa chỉ khách hàng",
+    "Ngày nhập",
     "Ghi chú",
-    "TG chăm sóc",
-    "Mã NV",
-    "Nhân viên",
-    "Call Cuối",
-    "ĐKTV",
   ];
   const filterHeader = [
     "Key",
-    "PlaceID",
-    "PlaceName",
-    "Phone",
-    "City",
-    "PlaceType",
-    "BirthdayShow",
-    "StatusCareShow",
-    "RankingShow",
-    "Point",
-    "PointUpRank",
-    "MoneyUpRank",
-    "TypeCare",
-    "Resuilt",
+    "DocumentID",
+    "CustomerID",
+    "CustomerName",
+    "CustomerAddress",
+    "PostingDate",
     "Note",
-    "DateCare",
-    "CrmID",
-    "CrmName",
-    "LastCall",
-    "TextRegister",
   ];
-  var dataLst = [];
-  dataLst = dataCRM;
+  var dataLst = [
+    {
+      Key: 1,
+      DocumentID: "HD00001",
+      CustomerID: "KD00001",
+      CustomerName: "Nguyễn Văn A",
+      CustomerAddress: "365A Giải Phóng - Phương Liệt - Thanh Xuân - Hà Nội",
+      PostingDate: "2024-03-07 00:00:00",
+      Note: "Nhập ghi chú hóa đơn",
+    },
+  ];
+  // dataLst = dataCRM;
   import("@/vendor/Export2Excel").then((excel) => {
     const data = formatJson(filterHeader, dataLst);
     excel.export_json_to_excel({
       header: tHeader,
       data: data,
-      filename: "Danh sách khách hàng",
+      filename: "Danh sách hóa đơn mẫu",
       autoWidth: true,
       bookType: "xlsx",
     });

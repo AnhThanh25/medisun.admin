@@ -2,6 +2,7 @@
   <v-card>
     <v-card-title>
       <h6 class="text-h6 px-3 py-2">Thêm phiếu nhập kho</h6>
+      
     </v-card-title>
     <v-card-text>
       <v-text-field
@@ -118,7 +119,6 @@ export default {
         var checkExist = this.dataStampLst.findIndex(
           (p) => p.StampID == res.Data.StampID
         );
-        console.log("check", checkExist);
         if (checkExist == -1) {
           this.dataStampLst.push({
             ...res.Data,

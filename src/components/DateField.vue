@@ -20,7 +20,7 @@
       />
     </template>
 
-    <VDatePicker2 v-model="selectedDate" expanded mode="date" />
+    <VDatePicker2 v-model="selectedDate" expanded mode="date" locale="vi" />
   </VMenu>
 </template>
 

@@ -62,7 +62,6 @@
 <script>
 import { formatDateDisplayDDMMYY, formatDateUpload } from "@/helpers/getTime";
 import { GetStampExportByID, UpdateLocalStoreOutLst } from "@/api/export";
-import { GetInvoiceInfo } from "@/api/invoice";
 export default {
   props: {
     billInfo: Object,
@@ -169,15 +168,7 @@ export default {
       this.$emit("btClose");
     },
   },
-  created() {
-    this.exportLst = this.billInfo.StampLst.map((item, index) => {
-      return {
-        ...item,
-        Key: index + 1,
-        DateExpiredShow: formatDateDisplayDDMMYY(item.DateExpired),
-      };
-    });
-  },
+  created() {},
 };
 </script>
 

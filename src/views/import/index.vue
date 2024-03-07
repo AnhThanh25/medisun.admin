@@ -88,6 +88,9 @@
           {{ getStatus(item.raw.Status).text }}</v-chip
         >
       </template>
+      <template v-slot:item.ItemLength="{ item }">
+        <v-chip color="secondary"> {{ item.raw.ItemLength }} Hộp</v-chip>
+      </template>
     </v-data-table-server>
   </v-card>
 
@@ -129,7 +132,11 @@ import {
   getStatusCustomer,
   getRankCustomer,
 } from "@/utils/auth";
-import { formatDateDisplay, formatDateUpload } from "@/helpers/getTime";
+import {
+  formatDateDisplay,
+  formatDateDisplayDDMMYY,
+  formatDateUpload,
+} from "@/helpers/getTime";
 import Update from "./components/update.vue";
 import Create from "./components/create.vue";
 import Care from "@/views/components/care.vue";
@@ -175,13 +182,13 @@ export default {
         },
         {
           title: "Hạn dùng",
-          key: "DateExpired",
+          key: "DateExpiredShow",
           sortable: false,
           align: "center",
         },
         {
           title: "Ngày nhập",
-          key: "TimeCreate",
+          key: "TimeCreateShow",
           sortable: false,
           align: "center",
         },
@@ -193,8 +200,8 @@ export default {
         },
 
         {
-          title: "Ghi chú",
-          key: "Note",
+          title: "Hộp",
+          key: "ItemLength",
           sortable: false,
           align: "center",
         },
@@ -226,34 +233,24 @@ export default {
     };
   },
   watch: {
-    placeName(newValue) {
-      setPlaceName(newValue);
-      this.fetchData();
+    timeStart(newValue) {
+      this.getLocalStoreInLst();
     },
-    typePlace(newValue) {
-      setTypePlace(newValue);
-      this.fetchData();
+    timeEnd(newValue) {
+      this.getLocalStoreInLst();
     },
     pageNumber(newValue) {
       setPageNumber(newValue);
-      this.fetchData();
+      this.getLocalStoreInLst();
     },
     rowspPage(newValue) {
       setRowspPage(newValue);
-      this.fetchData();
+      this.getLocalStoreInLst();
     },
     search(newValue) {
       if (newValue.length > 4 || newValue.length == 0) {
-        this.fetchData();
+        this.getLocalStoreInLst();
       }
-    },
-    statusCustomer(newValue) {
-      setStatusCustomer(newValue);
-      this.fetchData();
-    },
-    rankCustomer(newValue) {
-      setRankCustomer(newValue);
-      this.fetchData();
     },
   },
   methods: {
@@ -276,6 +273,9 @@ export default {
           return {
             ...item,
             Key: index + 1,
+            ItemLength: item.ItemLst.split(";").length - 1,
+            DateExpiredShow: formatDateDisplayDDMMYY(item.DateExpired),
+            TimeCreateShow: formatDateDisplayDDMMYY(item.TimeCreate),
           };
         });
         this.dataLength = res.TotalRows;

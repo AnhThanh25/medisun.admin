@@ -67,12 +67,16 @@ service.interceptors.response.use(
         removeEmployCode();
         store.dispatch("user/resetToken").then(() => {});
       } else {
-        notification.notify({
-          type: "error",
-          title: "Lỗi",
-          text: res.RespText,
-        });
-        return null;
+        if (res.RespCode != 402) {
+          notification.notify({
+            type: "error",
+            title: "Lỗi",
+            text: res.RespText,
+          });
+          return;
+        } else {
+          return res;
+        }
       }
     } else {
       return res;

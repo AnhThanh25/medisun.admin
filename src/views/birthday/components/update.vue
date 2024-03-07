@@ -1,71 +1,44 @@
 <template>
   <v-card>
     <v-card-title>
-      <h6 class="text-h6 px-3 py-2">Thông tin khách hàng - {{ placeID }}</h6>
+      <h6 class="text-h6 px-3 py-2">
+        Câp nhật thông tin hóa đơn - {{ billDocumentID }}
+      </h6>
     </v-card-title>
     <v-card-text>
-      <v-text-field
-        label="Khách hàng"
-        v-model="placeInfo.PlaceName"
-      ></v-text-field>
       <v-row>
-        <v-col cols="4">
+        <v-col cols="6">
           <v-text-field
-            label="Người đại diện"
-            v-model="placeInfo.Delegate"
+            label="Mã hóa đơn"
+            v-model="billInfo.DocumentID"
           ></v-text-field>
-          <v-autocomplete
-            v-model="placeInfo.Area"
-            label="Vùng"
-            :items="areaLst"
-          ></v-autocomplete>
-          <v-autocomplete
-            v-model="placeInfo.Commune"
-            label="Phường/Xã"
-            :items="communeLst"
-            item-title="Commune"
-            item-value="Commune"
-          ></v-autocomplete>
-        </v-col>
-        <v-col cols="4">
           <v-text-field
-            label="Số điện thoại"
-            v-model="placeInfo.Phone"
+            label="Mã khách hàng"
+            v-model="billInfo.CustomerID"
           ></v-text-field>
-          <v-autocomplete
-            v-model="placeInfo.City"
-            label="Tỉnh"
-            :items="cityLst"
-            item-title="City"
-            item-value="City"
-          ></v-autocomplete>
           <v-text-field
             label="Địa chỉ"
-            v-model="placeInfo.Address"
+            v-model="billInfo.CustomerAddress"
           ></v-text-field>
         </v-col>
-        <v-col cols="4">
-          <v-autocomplete
-            v-model="placeInfo.PlaceType"
-            label="Loại"
-            :items="typePlaceLst"
-            item-title="label"
-            item-value="value"
-          ></v-autocomplete>
-          <v-autocomplete
-            v-model="placeInfo.District"
-            label="Quận/huyện"
-            :items="districtLst"
-            item-title="District"
-            item-value="District"
-          ></v-autocomplete>
-          <v-text-field label="Ghi chú" v-model="placeInfo.Note"></v-text-field>
+        <v-col cols="6">
+          <v-date-field
+            v-model:modelValue="billInfo.PostingDate"
+            label="Ngày nhập"
+            width="100%"
+          ></v-date-field>
+          <v-text-field
+            label="Tên khách hàng"
+            v-model="billInfo.CustomerName"
+          ></v-text-field>
+
+          <v-text-field label="Ghi chú" v-model="billInfo.Note"></v-text-field>
         </v-col>
       </v-row>
       <v-data-table-server
         no-data-text="Không có dữ liệu"
         :headers="headers"
-        :items="placeInfo.CustomerLst"
+        :items="billInfo.StampLst"
         sort-asc-icon="mdi-menu-up"
         sort-desc-icon="mdi-menu-down"
         :hide-default-footer="true"
@@ -73,6 +46,7 @@
         :items-per-page="-1"
         class="table-pres"
         style="border: none"
+        :items-length="0"
       >
         <template v-slot:item.Key="{ item }">
           {{ item.raw.Key }}
@@ -100,10 +74,10 @@
       <v-btn color="blue-darken-1" variant="text" @click="btClose">
         Đóng
       </v-btn>
-      <v-btn @click="updatePlaceByID"> Lưu thông tin </v-btn>
+      <v-btn @click="updateInvoiceInfo"> Lưu thông tin </v-btn>
     </v-card-actions>
   </v-card>
-  <v-dialog v-model="isShowCustomer" persistent width="500">
+  <!-- <v-dialog v-model="isShowCustomer" persistent width="500">
     <v-card height="400">
       <v-card-title>
         <h6 class="text-h6 px-3 py-2">Cập nhật khách hàng cá nhân</h6>
@@ -165,202 +139,97 @@
         <v-btn @click="addInfoCus"> Lưu thông tin </v-btn>
       </v-card-actions>
     </v-card>
-  </v-dialog>
+  </v-dialog> -->
 </template>
 
 <script>
-import { GetPlaceByID, UpdatePlaceByID } from "@/api/crm";
-import {
-  GetCity,
-  GetDistrictByCity,
-  GetCommuneByCityAndDistrict,
-} from "@/api/default";
-import { getToken } from "@/utils/auth";
-import { typePlaceLst, areaLst } from "@/utils/variable";
-import { formatDateDisplayDDMMYY, formatDateUpload } from "@/helpers/getTime";
+import { GetInvoiceInfo, UpdateInvoiceInfo } from "@/api/invoice";
+
 export default {
   props: {
-    placeID: String,
+    billDocumentID: String,
   },
   data() {
     return {
-      placeInfo: {},
-      cityLst: [],
       headers: [
-        { title: "STT", sortable: false, key: "Key", width: 90 },
-        { title: "Khách hàng", key: "CustomerName", sortable: false },
+        { title: "STT", sortable: false, key: "Key", width: 50 },
+
+        { title: "Mã tem", key: "StampID", sortable: false },
+        { title: "Sản phẩm", key: "ProductName", sortable: false },
+        { title: "Số lô", key: "LotCode", sortable: false, align: "center" },
         {
-          title: "SĐT",
-          key: "CustomerContact",
+          title: "Số lượng",
+          key: "Quantity",
           sortable: false,
           align: "center",
         },
-        { title: "Chức vụ", key: "Position", sortable: false, align: "center" },
         {
-          title: "Sinh nhật",
-          key: "BirthdayShow",
+          title: "Hạn dùng",
+          key: "DateExpiredShow",
           sortable: false,
           align: "center",
         },
-        { title: "", key: "Action", sortable: false, align: "center" },
+        {
+          title: "Ngày nhập",
+          key: "TimeCreateShow",
+          sortable: false,
+          align: "center",
+        },
+        {
+          title: "Người tạo",
+          key: "Creater",
+          sortable: false,
+          align: "center",
+        },
+
+        {
+          title: "Hộp",
+          key: "ItemLength",
+          sortable: false,
+          align: "center",
+        },
       ],
-      communeLst: [],
-      districtLst: [],
-      cityLst: [],
-      typePlaceLst: typePlaceLst.filter((p) => p.value != ""),
-      areaLst: areaLst,
-      customerInfo: {},
-      isShowCustomer: false,
-      masks: {
-        input: "DD-MM-YYYY",
-      },
+      billInfo: {},
     };
   },
   emits: ["btClose"],
   watch: {
-    placeID() {
-      this.getPlaceByID();
-    },
-    "placeInfo.City"() {
-      this.getDistrictNow();
-    },
-    "placeInfo.District"() {
-      this.getCommuneNow();
+    billDocumentID(value) {
+      this.getInvoiceInfo();
     },
   },
   methods: {
-    isPhoneNumber(input) {
-      const phoneRegex = /^0[0-9]{9}$/;
-      return phoneRegex.test(input);
-    },
-    updatePlaceByID() {
-      if (
-        this.placeInfo.Area &&
-        this.placeInfo.Commune &&
-        this.placeInfo.City &&
-        this.placeInfo.PlaceType &&
-        this.placeInfo.District
-      ) {
-      } else {
-        notify({
-          type: "error",
-          title: "Lỗi",
-          text: "Chưa nhập đầy đủ thông tin",
-        });
-        return;
-      }
-      if (!this.placeInfo.Delegate) {
-        notify({
-          type: "error",
-          title: "Lỗi",
-          text: "Chưa nhập tên người đại diện",
-        });
-        return;
-      }
-      if (!this.placeInfo.Phone) {
-        notify({
-          type: "error",
-          title: "Lỗi",
-          text: "Chưa nhập số điện thoại",
-        });
-        return;
-      } else {
-        if (this.isPhoneNumber(this.placeInfo.Phone)) {
-        } else {
-          notify({
-            type: "error",
-            title: "Lỗi",
-            text: "Số điện thoại không hợp lệ",
-          });
-          return;
-        }
-      }
-
-      UpdatePlaceByID({ Data: this.placeInfo }).then((res) => {
-        if (res.RespCode == 0) {
-          notify({
-            type: "success",
-            title: "Thành công",
-            text: "Chỉnh sửa tổ chức thành công",
-          });
-          this.btClose();
-        } else {
-          notify({
-            type: "success",
-            title: "Thành công",
-            text: res.RespText,
-          });
-        }
-      });
-    },
-    addInfoCus() {
-      this.isShowCustomer = false;
-      this.customerInfo.BirthdayShow = formatDateDisplayDDMMYY(
-        this.customerInfo.Birthday
-      );
-      this.customerInfo.Birthday =
-        formatDateUpload(this.customerInfo.Birthday) + " 00:00:00";
-    },
-    btShowInfoCustomer(data) {
-      this.customerInfo = data;
-      this.isShowCustomer = true;
-    },
-    removeCustomer(data) {
-      this.placeInfo.CustomerLst = this.placeInfo.CustomerLst.filter(
-        (p) => p.Key != data.Key
-      );
-    },
-    getCommuneNow() {
-      if (this.placeInfo.City && this.placeInfo.District) {
-        GetCommuneByCityAndDistrict({
-          City: this.placeInfo.City,
-          District: this.placeInfo.District,
-          token: getToken(),
-        }).then((res) => {
-          this.communeLst = res.Data;
-        });
-      }
-    },
-    getDistrictNow() {
-      if (this.placeInfo.City) {
-        GetDistrictByCity({
-          token: getToken(),
-          City: this.placeInfo.City,
-        }).then((res) => {
-          this.districtLst = res.Data;
-        });
-      }
-    },
-    getCityNow() {
-      GetCity({ token: getToken() }).then((res) => {
-        if (res.ResCode == 0) {
-          this.cityLst = res.Data;
-        }
-      });
-    },
     btClose() {
       this.$emit("btClose");
     },
-    getPlaceByID() {
-      GetPlaceByID({
-        PlaceId: this.placeID,
-        UserCode: "",
+    updateInvoiceInfo() {
+      UpdateInvoiceInfo({
+        Data: this.billInfo,
       }).then((res) => {
-        this.placeInfo = res.Data;
-        this.placeInfo.CustomerLst = this.placeInfo.CustomerLst.map(
-          (item, index) => {
-            return {
-              ...item,
-              Key: index + 1,
-            };
-          }
-        );
+        if (res) {
+          notify({
+            type: "success",
+            title: "Thành công",
+            text: "Cập nhật hóa đơn thành công",
+          });
+          this.billInfo = {};
+          this.btClose();
+        }
+      });
+    },
+    getInvoiceInfo() {
+      GetInvoiceInfo({
+        ID: this.billDocumentID,
+      }).then((res) => {
+        if(res){
+        this.billInfo = res.Data;
+
+        }
       });
     },
   },
   created() {
-    this.getPlaceByID();
-    this.getCityNow();
+    this.getInvoiceInfo();
   },
 };
 </script>

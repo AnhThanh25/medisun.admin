@@ -12,7 +12,7 @@ export const constantRoutes = [
     redirect: "/nhap-hang",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Nhập hàng", icon: "mdi-home-cirle-outline" },
+    meta: { title: "Nhập hàng", icon: "mdi-home-import-outline" },
     hidden: true,
   },
   {
@@ -20,13 +20,13 @@ export const constantRoutes = [
     redirect: "/nhap-hang",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Nhập hàng", icon: "mdi-home" },
+    meta: { title: "Nhập hàng", icon: "mdi-home-import-outline" },
     children: [
       {
         name: "Nhập hàng",
         path: "/nhap-hang",
         component: () => import("@/views/import/index.vue"),
-        meta: { title: "Nhập hàng", icon: "mdi-view-dashboard-outline" },
+        meta: { title: "Nhập hàng", icon: "mdi-home-import-outline" },
         role: 1,
       },
     ],
@@ -36,7 +36,7 @@ export const constantRoutes = [
     path: "/xuat-hang",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Xuất hàng", icon: "mdi-library" },
+    meta: { title: "Xuất hàng", icon: "mdi-home-export-outline" },
     children: [
       {
         name: "Xuất hàng",
@@ -51,7 +51,7 @@ export const constantRoutes = [
     path: "/hoa-don",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Hóa Đơn", icon: "mdi-cake" },
+    meta: { title: "Hóa Đơn", icon: "mdi-cellphone-text" },
     children: [
       {
         name: "Hóa Đơn",
@@ -66,7 +66,7 @@ export const constantRoutes = [
     path: "/kiem-kho",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Kiểm kho", icon: "mdi-group" },
+    meta: { title: "Kiểm kho", icon: "mdi-warehouse" },
     children: [
       {
         name: "Kiểm kho",
@@ -81,7 +81,7 @@ export const constantRoutes = [
     path: "/truy-xuat",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Truy xuất", icon: "mdi-map-marker-radius" },
+    meta: { title: "Truy xuất", icon: "mdi-file-search" },
     children: [
       {
         name: "Truy xuất",

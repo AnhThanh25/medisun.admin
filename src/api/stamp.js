@@ -1,8 +1,8 @@
 import request from "@/utils/request";
 
-export function GetCallLocalLst(data) {
+export function GetStampLst(data) {
   return request({
-    url: "Call/GetCallLocalLst",
+    url: "DTStamp/GetStampLst",
     method: "post",
     data: data,
   });

@@ -4,49 +4,43 @@
       <div class="d-flex" style="justify-content: space-between">
         <h6 class="text-h6 py-2">Danh sách hóa đơn</h6>
         <div>
-          <v-btn
-            color="success"
-            variant="tonal"
-            icon="mdi-microsoft-excel"
-            style="height: 42px"
-            class="mr-1"
-            @click="btExportExcel"
-          ></v-btn>
-
           <span>
             <v-menu
-              v-model="isMenuCare"
+              v-model="isMenuSearch"
               activator="parent"
               transition="slide-y-transition"
               :close-on-content-click="false"
             >
               <template v-slot:activator="{ props }">
                 <v-btn
-                  color="error"
+                  color="success"
                   variant="tonal"
-                  icon="mdi-face-agent"
+                  icon="mdi-microsoft-excel"
                   style="height: 42px"
+                  class="mr-1"
                   v-bind="props"
                 ></v-btn>
               </template>
               <v-card width="300" style="padding-top: 20px !important">
                 <v-card-text>
-                  <v-text-field
-                    v-model="searchCustomer"
-                    label="Nhân viên chăm sóc"
-                    prepend-inner-icon="mdi-magnify"
-                    hide-details
-                    color="error"
-                  />
-
                   <v-btn
                     class="mt-2"
                     variant="tonal"
-                    color="error"
+                    color="secondary"
                     block
-                    @click="btSearchCustomerCare"
+                    @click="exportExcel"
                   >
-                    Tìm kiếm</v-btn
+                    Excel mẫu
+                  </v-btn>
+                  <v-btn
+                    class="mt-2"
+                    variant="tonal"
+                    color="blue"
+                    block
+                    :loading="loadding"
+                    @click="searchHistoryUser"
+                  >
+                    Nhập excel</v-btn
                   >
                 </v-card-text>
               </v-card>
@@ -77,67 +71,37 @@
       <template v-slot:top>
         <div class="d-flex flex-wrap gap-2">
           <span>
-            <v-select
-              v-model="placeName"
-              :items="placeLst"
-              label="Địa bàn"
-              item-title="City"
-              item-value="City"
-              class="ml-1"
-              style="width: 220px !important"
-              hide-details
-            ></v-select>
+            <VDateField
+              v-model:modelValue="timeStart"
+              label="Bắt đầu"
+            ></VDateField>
           </span>
           <span>
-            <v-select
-              v-model="typePlace"
-              :items="typePlaceLst"
-              label="Loại tổ chức"
-              item-title="label"
-              item-value="value"
-              style="width: 200px !important"
-              hide-details
-            ></v-select>
+            <VDateField
+              v-model:modelValue="timeEnd"
+              label="Kết thúc"
+            ></VDateField>
           </span>
           <span>
-            <v-select
-              v-model="statusCustomer"
-              :items="statusLst"
-              label="Trạng thái"
-              item-title="label"
-              item-value="value"
-              style="width: 160px !important"
-              hide-details
-            ></v-select>
-          </span>
-          <span>
-            <v-select
-              v-model="rankCustomer"
-              :items="rankLst"
-              label="Hạng KH"
-              item-title="label"
-              item-value="value"
-              style="width: 150px !important"
-              hide-details
-            ></v-select>
-          </span>
-          <span>
-            <v-select
-              v-model="monthNow"
-              :items="monthLst"
-              label="Tháng"
-              item-title="text"
-              item-value="value"
-              style="width: 150px !important"
-              hide-details
-            ></v-select>
+            <v-text-field
+              v-model="search"
+              style="width: 180px"
+              placeholder="Tìm kiếm"
+            ></v-text-field>
           </span>
           <v-btn
-            color="info"
+            color="secondary"
             variant="tonal"
             icon="mdi-magnify"
             style="height: 42px"
-            @click="fetchData"
+            @click="getInvoiceLst"
+          ></v-btn>
+          <v-btn
+            color="success"
+            variant="tonal"
+            icon="mdi-plus"
+            style="height: 42px"
+            @click="btShowCreate"
           ></v-btn>
         </div>
       </template>
@@ -147,26 +111,18 @@
           color="primary"
           size="small"
           class="me-2"
-          @click="btShowCare(item.raw)"
-          >mdi-face-agent
-        </v-icon>
-        <v-icon
-          color="primary"
-          size="small"
-          class="me-2"
-          @click="btShowRank(item.raw)"
-          >mdi-chart-box-outline
-        </v-icon>
-        <v-icon
-          color="primary"
-          size="small"
-          class="me-2"
-          @click="btShowProductSales(item.raw)"
-          >mdi-pill
+          @click="btShowUpdate(item.raw)"
+          >mdi-pencil
         </v-icon>
       </template>
-      <template v-slot:item.Ranking="{ item }">
-        {{ getRank(item.raw.Ranking) }}
+      <template v-slot:item.Action="{ item }">
+        <v-icon
+          color="error"
+          size="small"
+          class="me-2"
+          @click="btShowDel(item.raw)"
+          >mdi-delete
+        </v-icon>
       </template>
       <template v-slot:item.Point="{ item }">
         {{ new Intl.NumberFormat().format(item.raw.Point) }}
@@ -177,26 +133,45 @@
         >
         <v-icon v-else color="more">mdi-close-circle</v-icon>
       </template>
-      <template v-slot:item.StatusCare="{ item }">
+      <!-- <template v-slot:item.StatusCare="{ item }">
         <v-chip :color="getStatus(item.raw.StatusCare).color">
           {{ getStatus(item.raw.StatusCare).text }}</v-chip
         >
-      </template>
+      </template> -->
     </v-data-table-server>
   </v-card>
 
-  <v-dialog v-model="isShowUpdatePlace" persistent width="800"
-    ><Update :placeID="placeID" @btClose="btClose" />
+  <v-dialog v-model="isShowCreate" persistent width="600"
+    ><Create @btClose="btClose" />
   </v-dialog>
-  <v-dialog v-model="isShowCare" persistent width="700"
-    ><Care :placeID="placeID" @btClose="btClose" />
+  <v-dialog v-model="isShowUpdate" persistent width="800"
+    ><Update :billDocumentID="billUpdate" @btClose="btClose" />
   </v-dialog>
-  <v-dialog v-model="isShowRank" persistent width="700"
+  <v-dialog v-model="isShowDel" persistent width="400">
+    <v-card>
+      <v-card-title>
+        <h6 class="text-h6 px-3 py-2">
+          Xóa hóa đơn - {{ delInfo.DocumentID }}
+        </h6>
+      </v-card-title>
+      <v-card-text>
+        <div class="px-2">Có chắc bạn muốn xóa hóa đơn này không?</div>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="blue-darken-1" variant="text" @click="btClose">
+          Đóng
+        </v-btn>
+        <v-btn @click="delInvoiceInfo"> Xác nhận </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <!-- <v-dialog v-model="isShowRank" persistent width="700"
     ><Rank :placeID="placeID" @btClose="btClose" />
   </v-dialog>
   <v-dialog v-model="isShowProductSales" persistent width="1000"
     ><ProductSales :placeID="placeID" @btClose="btClose" />
-  </v-dialog>
+  </v-dialog> -->
   <notifications />
 </template>
 
@@ -224,238 +199,159 @@ import {
   formatDateDisplayDDMMYY,
 } from "@/helpers/getTime";
 import Update from "./components/update.vue";
-import Care from "@/views/components/care.vue";
-import Rank from "@/views/components/rank.vue";
-import ProductSales from "@/views/components/productSales.vue";
-import { exportExcel } from "./function";
+import Create from "./components/create.vue";
+// import Care from "@/views/components/care.vue";
+// import Rank from "@/views/components/rank.vue";
+// import ProductSales from "@/views/components/productSales.vue";
+
 import { monthLst } from "@/utils/variable";
+import { GetInvoiceLst, DelInvoiceInfo } from "@/api/invoice";
+import { exportExcel } from "./function";
+import XLSX from "xlsx";
+
 export default {
   components: {
     Update,
-    Care,
-    Rank,
-    ProductSales,
+    Create,
   },
   data() {
     return {
-      isShowProductSales: false,
-      isMenuSearch: false,
-      isMenuCare: false,
-      isMenuTime: false,
-      isShowCare: false,
-      isShowUpdatePlace: false,
       loadding: false,
-      isShowRank: false,
       headers: [
-        { title: "STT", sortable: false, key: "Key", width: 110 },
-        { title: "Mã TC", key: "PlaceID", sortable: false },
-        { title: "Tổ chức", key: "PlaceName", sortable: false },
-        { title: "SĐT", key: "Phone", sortable: false, align: "center" },
+        { title: "STT", sortable: false, key: "Key", width: 50 },
         {
-          title: "Sinh nhật",
-          key: "BirthdayShow",
-          sortable: false,
-          align: "center",
-        },
-        { title: "Hạng KH", key: "Ranking", sortable: false, align: "center" },
-        { title: "Điểm", key: "Point", sortable: false, align: "center" },
-        {
-          title: "Điểm lên hạng",
-          key: "PointUpRank",
+          title: "Mã hóa đơn",
+          key: "DocumentID",
           sortable: false,
           align: "center",
         },
         {
-          title: "Tiền lên hạng",
-          key: "MoneyUpRank",
-          sortable: false,
-          align: "center",
-        },
-
-        {
-          title: "TG Chăm sóc",
-          key: "DateCareShow",
+          title: "Mã khách hàng",
+          key: "CustomerID",
           sortable: false,
           align: "center",
         },
         {
-          title: "NV chăm sóc",
-          key: "CrmName",
+          title: "Khách hàng",
+          key: "CustomerName",
           sortable: false,
-          align: "center",
         },
         {
-          title: "ĐK thành viên",
-          key: "Register",
+          title: "Địa chỉ",
+          key: "CustomerAddress",
+          sortable: false,
+        },
+        {
+          title: "Ngày nhập",
+          key: "PostingDateShow",
           sortable: false,
           align: "center",
         },
+        { title: "Ghi chú", key: "Note", sortable: false, align: "center" },
+        { title: "", key: "Action", sortable: false, align: "center" },
       ],
       desserts: [],
       pageNumber: 1,
       rowspPage: 10,
       search: "",
-      date: null,
-      placeName: "",
       dataLength: 0,
-      placeLst: [],
-      typePlaceLst: typePlaceLst,
-      typePlace: "",
-      statusLst: [
-        { value: 0, label: "Hủy tặng quà" },
-        { value: 1, label: "Chưa tặng quà" },
-        { value: 2, label: "Đã gửi quà" },
-        { value: 3, label: "XN thông tin" },
-        { value: 4, label: "Đã nhận quà" },
-      ],
-      statusCustomer: 1,
-      rankLst: rankLst,
-      rankCustomer: 1,
-      searchCustomer: "",
-      productName: "",
-      placeID: "",
-      dataSearchPhone: "",
-      monthNow: new Date().getMonth() + 1,
-      monthLst: monthLst,
+
+      timeStart: new Date(),
+      timeEnd: new Date(),
+      isShowCreate: false,
+      isShowUpdate: false,
+      isMenuSearch: false,
+      billUpdate: {},
+      isShowDel: false,
+      delInfo: {},
+      invoiceLst: {},
     };
   },
   watch: {
-    placeName(newValue) {
-      setPlaceName(newValue);
-      this.fetchData();
-    },
-    typePlace(newValue) {
-      setTypePlace(newValue);
-      this.fetchData();
-    },
     pageNumber(newValue) {
       setPageNumber(newValue);
-      this.fetchData();
+      this.getInvoiceLst();
     },
     rowspPage(newValue) {
       setRowspPage(newValue);
-      this.fetchData();
+      this.getInvoiceLst();
     },
     search(newValue) {
       if (newValue.length > 4 || newValue.length == 0) {
-        this.fetchData();
+        this.getInvoiceLst();
       }
-    },
-    statusCustomer(newValue) {
-      setStatusCustomer(newValue);
-      this.fetchData();
-    },
-    rankCustomer(newValue) {
-      setRankCustomer(newValue);
-      this.fetchData();
     },
   },
   methods: {
-    btShowProductSales(data) {
-      this.placeID = data;
-      this.isShowProductSales = true;
+    fileUpload() {
+      if (this.basic) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const bstr = e.target.result;
+          const wb = XLSX.read(bstr, { type: "binary" });
+          const wsname = wb.SheetNames[0];
+          const ws = wb.Sheets[wsname];
+          const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+          this.invoiceLst = this.convertToReq(data).map((item, index) => {
+            return {
+              ...item,
+              Key: index + 1,
+            };
+          });
+        };
+        reader.readAsBinaryString(this.basic);
+      }
     },
-    btShowRank(data) {
-      this.placeID = data;
-      this.isShowRank = true;
-    },
-    btExportExcel() {
-      exportExcel(this.desserts);
-    },
-    btSearchCustomerCare() {
-      this.loadding = true;
-      getPlaceLstByBirthday({
-        City: "",
-        PageNumber: 1,
-        RowspPage: 100000,
-        Search: this.searchCustomer,
-        PlaceType: "",
-        Status: 0,
-        TimeStart: this.timeStart
-          ? formatDateUpload(this.timeStart) + " 00:00:00"
-          : null,
-        TimeEnd: this.timeEnd
-          ? formatDateUpload(this.timeEnd) + " 23:59:00"
-          : null,
-        Level: null,
-        LevelChange: 2,
-      }).then((res) => {
-        var num = (this.pageNumber - 1) * this.rowspPage;
-        this.desserts = res.Data.map((item, index) => {
-          var point = 0;
-          if ((item.Region = "MB")) {
-            point =
-              item.Ranking == 4
-                ? 0
-                : item.Ranking == 3
-                ? 610 - item.Point
-                : item.Ranking == 2
-                ? 220 - item.Point
-                : item.Ranking == 1
-                ? 65 - item.Point
-                : 0;
-          } else {
-            point =
-              item.Ranking == 4
-                ? 0
-                : item.Ranking == 3
-                ? 490 - item.Point
-                : item.Ranking == 2
-                ? 100 - item.Point
-                : item.Ranking == 1
-                ? 10 - item.Point
-                : item.Ranking == 0
-                ? 10 - item.Point
-                : 0;
-          }
-          return {
-            ...item,
-            Key: index + 1 + num,
-            DateCareShow: formatDateDisplay(item.DateCare),
-            StatusCareShow: this.getStatus2(item.StatusCare),
-            RankingShow: this.getRank(item.Ranking),
-            BirthdayShow: formatDateDisplayDDMMYY(item.Birthday),
-            PointUpRank: point,
-            TextRegister:
-              item.StatusCare == 4 ? "Đã đăng ký thành viên" : "Chưa đăng ký",
-            MoneyUpRank: Intl.NumberFormat().format(point * 50000),
+    convertToReq(data) {
+      var lstReq = [];
+      for (var i = 1; i < data.length; i++) {
+        if (data[i][1]) {
+          var req = {
+            DocumentID: data[i][1],
+            CustomerID: data[i][2],
+            CustomerName: data[i][3],
+            CustomerAddress: data[i][4],
+            PostingDate: formatDate(excelDateToJSDate(data[i][5])),
+            Note: data[i][6],
           };
-        });
-        this.dataLength = res.TotalRows;
-        this.loadding = false;
+          lstReq.push(req);
+        }
+      }
+      return lstReq;
+    },
+    delInvoiceInfo() {
+      DelInvoiceInfo({
+        ID: delInfo.RowID,
+      }).then((res) => {
+        if (res) {
+          notify({
+            type: "success",
+            title: "Thành công",
+            text: "Xóa hóa đơn thành công",
+          });
+          this.delInfo = {};
+          this.btClose();
+        }
       });
     },
-    getStatus2(status) {
-      if (status == 0) {
-        return "Chờ xử lý";
-      }
-      if (status == 1) {
-        return "Đã cập nhật";
-      }
-      if (status == 2) {
-        return "Đã cập nhật";
-      }
-      if (status == 3) {
-        return "Đã duyệt";
-      }
-      if (status == 4) {
-        return "Đã đăng ký thành viên";
-      }
-      return "Anh thành";
-    },
-    btShowCare(data) {
-      this.placeID = data.PlaceID;
-      this.isShowCare = true;
-    },
-    btClose() {
-      this.isShowUpdatePlace = false;
-      this.isShowCare = false;
-      this.isShowRank = false;
-      this.isShowProductSales = false;
+    btShowDel(data) {
+      this.isShowDel = true;
+      this.delInfo = data;
     },
     btShowUpdate(data) {
-      this.placeID = data.PlaceID;
-      this.isShowUpdatePlace = true;
+      this.isShowUpdate = true;
+      this.billUpdate = data.DocumentID;
+    },
+    exportExcel() {
+      exportExcel();
+    },
+    btShowCreate() {
+      this.isShowCreate = true;
+    },
+    btClose() {
+      this.isShowCreate = false;
+      this.isShowUpdate = false;
+      this.isShowDel = false;
     },
     btPage(data) {
       this.pageNumber = data;
@@ -463,160 +359,37 @@ export default {
     btRow(data) {
       this.rowspPage = data;
     },
-    getPlaceLstByID() {
-      GetPlaceLstByID({}).then((res) => {
-        this.placeLst = res.Data;
-      });
-    },
-
-    isPhoneNumber(input) {
-      // Kiểm tra bằng biểu thức chính quy
-      var pattern = /^[0-9]{10,15}$/;
-      if (pattern.test(input)) {
-        return true; // Chuỗi là số điện thoại
-      }
-      // Kiểm tra bằng phương pháp parseInt và isNaN
-      var number = parseInt(input);
-      if (!isNaN(number)) {
-        return true; // Chuỗi có thể chuyển thành số
-      }
-      return false; // Chuỗi không phải là số điện thoại
-    },
-    fetchData() {
-      if (!this.placeName) {
-        notify({
-          type: "error",
-          title: "Lỗi",
-          text: "Chưa chọn địa bàn",
-        });
-        return;
-      }
-      this.getPlaceLstByBirthday();
-    },
-    getPlaceLstByBirthday() {
-      this.loadding = true;
-      GetPlaceLstByBirthday({
-        City: this.placeName,
+    getInvoiceLst() {
+      GetInvoiceLst({
+        TimeStart: this.timeStart
+          ? formatDateUpload(this.timeStart) + " 00:00:00"
+          : null,
+        TimeEnd: this.timeEnd
+          ? formatDateUpload(this.timeEnd) + " 23:59:00"
+          : null,
         PageNumber: this.pageNumber,
         RowspPage: this.rowspPage,
-        Search: "",
-        PlaceType: this.typePlace,
-        Status: this.statusCustomer,
-        Month: this.monthNow,
-        Ranking: this.rankCustomer,
+        Search: this.search,
       }).then((res) => {
-        var num = (this.pageNumber - 1) * this.rowspPage;
         this.desserts = res.Data.map((item, index) => {
-          var point = 0;
-          if ((item.Region == "MB")) {
-            point =
-              item.Ranking == 4
-                ? 0
-                : item.Ranking == 3
-                ? 610 - item.Point
-                : item.Ranking == 2
-                ? 220 - item.Point
-                : item.Ranking == 1
-                ? 65 - item.Point
-                : 0;
-            // point = this.roundUpToNearest10(pointRam);
-          } else {
-            point =
-              item.Ranking == 4
-                ? 0
-                : item.Ranking == 3
-                ? 490 - item.Point
-                : item.Ranking == 2
-                ? 100 - item.Point
-                : item.Ranking == 1
-                ? 10 - item.Point
-                : item.Ranking == 0
-                ? 10 - item.Point
-                : 0;
-          }
           return {
             ...item,
-            Key: index + 1 + num,
-            DateCareShow: formatDateDisplay(item.DateCare),
-            StatusCareShow: this.getStatus2(item.StatusCare),
-            RankingShow: this.getRank(item.Ranking),
-            BirthdayShow: formatDateDisplayDDMMYY(item.Birthday),
-            PointUpRank: point,
-            TextRegister:
-              item.StatusCare == 4 ? "Đã đăng ký thành viên" : "Chưa đăng ký",
-            MoneyUpRank:
-              item.Region == "MB"
-                ? Intl.NumberFormat().format(
-                    this.roundUpToNearest10(point) * 100000
-                  )
-                : Intl.NumberFormat().format(point * 50000),
+            Key: index + 1,
+            PostingDateShow: formatDateDisplayDDMMYY(item.PostingDate),
           };
         });
         this.dataLength = res.TotalRows;
-        this.loadding = false;
       });
-    },
-    roundUpToNearest10(number) {
-      // Kiểm tra xem số có chia hết cho 10 không
-      if (number % 10 !== 0) {
-        // Nếu không chia hết, làm tròn lên số chia hết cho 10 gần nhất
-        number = Math.ceil(number / 10) * 10;
-      }
-
-      return number;
-    },
-    getRank(status) {
-      if (status == 0) {
-        return "No rank";
-      }
-      if (status == 1) {
-        return "Silver";
-      }
-      if (status == 2) {
-        return "Titan";
-      }
-      if (status == 3) {
-        return "Gold";
-      }
-      if (status == 4) {
-        return "Platium";
-      }
-    },
-    getStatus(status) {
-      if (status == 0) {
-        return { text: "Chờ xử lý", color: "more" };
-      }
-      if (status == 1 || status == 2) {
-        return { text: "Đã cập nhật", color: "secondary" };
-      }
-      if (status == 3 || status == 4) {
-        return { text: "Đã duyệt", color: "success" };
-      }
     },
   },
   created() {
-    setPageNumber(1);
-
-    if (getPlaceName()) {
-      this.placeName = getPlaceName();
-    }
-    if (getTypePlace()) {
-      this.placeType = getTypePlace();
-    }
-    if (getStatusCustomer()) {
-      this.statusCustomer = parseInt(getStatusCustomer());
-    }
-    if (getRankCustomer()) {
-      this.rankCustomer = parseInt(getRankCustomer());
-    }
-
     if (getRowspPage()) {
       this.rowspPage = parseInt(getRowspPage());
     }
     if (getPageNumber()) {
       this.pageNumber = parseInt(getPageNumber());
     }
-    this.getPlaceLstByID();
+    this.getInvoiceLst();
   },
 };
 </script>

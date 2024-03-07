@@ -1,229 +1,252 @@
 <template>
-  <!-- <h3>Chuẩn khách hàng</h3> -->
-
-  <v-row>
-    <v-col cols="4">
-      <v-card height="calc(100vh - 64px)">
-        <v-card-title>
-          <div class="d-flex" style="justify-content: space-between">
-            <h6 class="text-h6 py-1">Chuẩn hóa khách hàng</h6>
-            <div>
-              <v-btn
-                color="primary"
-                variant="text"
-                icon="mdi-pencil"
-                size="x-small"
-                @click="btShowUpdate(placeInfoBFO.PlaceID)"
-                v-if="placeInfoBFO.PlaceID"
-              ></v-btn>
-              <!-- <v-btn
-                color="primary"
-                variant="text"
-                icon="mdi-lock-open-check"
-                size="x-small"
-              ></v-btn> -->
-            </div>
-          </div>
-        </v-card-title>
-        <v-card-text>
-          <v-card color="success" v-if="placeInfoBFO.PlaceName">
-            <v-card-title class="text-h6">
-              <div class="d-flex" style="justify-content: space-between">
-                <h6 class="text-h6">{{ placeInfoBFO.PlaceName }}</h6>
-              </div>
-            </v-card-title>
-
-            <v-card-text class="text-h7 pb-2" color="#000"
-              >Mã chuẩn hóa: {{ placeInfoBFO.PlaceID }}</v-card-text
-            >
-          </v-card>
-          <h6 class="text-h6 py-2" v-if="dataGroups.length > 0">Nhóm</h6>
-          <div class="groups">
-            <v-card
-              color="primary"
-              v-for="(item, index) in dataGroups"
-              :key="index"
-              variant="outlined"
-              class="mb-2"
-            >
-              <v-card-title class="text-h6">
-                <div class="d-flex" style="justify-content: space-between">
-                  <h6 class="text-h6">{{ item.PlaceName }}</h6>
-                  <v-btn
-                    color="primary"
-                    variant="text"
-                    icon="mdi-close"
-                    size="x-small"
-                    class="mr-0"
-                    @click="delPlaceStandard(item)"
-                  ></v-btn>
-                </div>
-              </v-card-title>
-
-              <v-card-text class="text-h7 pl-4 pt-2 pb-2" color="#000"
-                >Mã KH: {{ item.PlaceID }}</v-card-text
-              >
-            </v-card>
-          </div>
-        </v-card-text>
-      </v-card>
-    </v-col>
-    <v-col cols="8">
-      <v-card>
-        <v-card-title>
-          <div class="d-flex" style="justify-content: space-between">
-            <h6 class="text-h6 py-2">Chuẩn hóa khách hàng</h6>
-            <span>
-              <v-menu
-                v-model="isMenuSearch"
-                activator="parent"
-                transition="slide-y-transition"
-                :close-on-content-click="false"
-              >
-                <template v-slot:activator="{ props }">
-                  <v-btn
-                    color="primary"
-                    variant="tonal"
-                    icon="mdi-account-search"
-                    style="height: 42px"
-                    class="mr-1"
-                    v-bind="props"
-                  ></v-btn>
-                </template>
-                <v-card width="300" style="padding-top: 20px !important">
-                  <v-card-text>
-                    <v-text-field
-                      v-model="searchPhone"
-                      label="Số điện thoại"
-                      prepend-inner-icon="mdi-magnify"
-                      hide-details
-                      color="primary"
-                      class="mb-2"
-                    />
-                    <v-text-field
-                      v-model="searchPlaceName"
-                      label="Tên tổ chức"
-                      prepend-inner-icon="mdi-magnify"
-                      hide-details
-                      color="primary"
-                      class="mb-2"
-                    />
-                    <v-text-field
-                      v-model="searchCity"
-                      label="Tỉnh"
-                      prepend-inner-icon="mdi-magnify"
-                      hide-details
-                      color="primary"
-                    />
-                    <v-btn
-                      class="mt-2"
-                      variant="tonal"
-                      color="primary"
-                      block
-                      @click="getSearchPlaceLst"
-                      :loading="loadding"
-                    >
-                      Tìm kiếm
-                    </v-btn>
-                  </v-card-text>
-                </v-card>
-              </v-menu>
-            </span>
-          </div>
-        </v-card-title>
-        <v-data-table-server
-          no-data-text="Không có dữ liệu"
-          :headers="headers"
-          :items="desserts"
-          items-per-page-text=""
-          sort-asc-icon="mdi-menu-up"
-          sort-desc-icon="mdi-menu-down"
-          :items-length="dataLength"
-          @update:itemsPerPage="btRow"
-          @update:page="btPage"
-          height="calc(100vh - 170px)"
-          :loading="loadding"
-          :items-per-page-options="[
-            { value: 10, title: '10' },
-            { value: 50, title: '50' },
-            { value: 100, title: '100' },
-            { value: 10000, title: 'All' },
-          ]"
+  <v-card>
+    <v-card-title>
+      <div class="d-flex" style="justify-content: space-between">
+        <h6 class="text-h6 py-2">Kiểm kho</h6>
+      </div>
+    </v-card-title>
+    <v-data-table-server
+      no-data-text="Không có dữ liệu"
+      :headers="headers"
+      :items="desserts"
+      items-per-page-text=""
+      sort-asc-icon="mdi-menu-up"
+      sort-desc-icon="mdi-menu-down"
+      :items-length="dataLength"
+      @update:itemsPerPage="btRow"
+      @update:page="btPage"
+      height="calc(100vh - 210px)"
+      :loading="loadding"
+      :items-per-page-options="[
+        { value: 10, title: '10' },
+        { value: 50, title: '50' },
+        { value: 100, title: '100' },
+        { value: 10000, title: 'All' },
+      ]"
+    >
+      <template v-slot:top>
+        <div class="d-flex flex-wrap gap-2">
+          <span>
+            <VDateField
+              v-model:modelValue="timeStart"
+              label="Bắt đầu"
+            ></VDateField>
+          </span>
+          <span>
+            <VDateField
+              v-model:modelValue="timeEnd"
+              label="Kết thúc"
+            ></VDateField>
+          </span>
+          <span>
+            <v-text-field
+              v-model="search"
+              style="width: 180px"
+              placeholder="Tìm kiếm"
+            ></v-text-field>
+          </span>
+          <v-btn
+            color="secondary"
+            variant="tonal"
+            icon="mdi-magnify"
+            style="height: 42px"
+            @click="getStampLst"
+          ></v-btn>
+          <!-- <v-btn
+            color="success"
+            variant="tonal"
+            icon="mdi-plus"
+            style="height: 42px"
+            @click="btShowCreate"
+          ></v-btn> -->
+        </div>
+      </template>
+      <template v-slot:item.Key="{ item }">
+        {{ item.raw.Key }}
+      </template>
+      <template v-slot:item.Ranking="{ item }">
+        {{ getRank(item.raw.Ranking) }}
+      </template>
+      <template v-slot:item.Point="{ item }">
+        {{ new Intl.NumberFormat().format(item.raw.Point) }}
+      </template>
+      <template v-slot:item.Register="{ item }">
+        <v-icon v-if="item.raw.StatusCare == 4" color="success"
+          >mdi-check-circle</v-icon
         >
-          <template v-slot:item.Key="{ item }">
-            {{ item.raw.Key }}
-            <v-icon
-              color="primary"
-              size="small"
-              class="me-2"
-              @click="btCreate(item.raw)"
-              >mdi-check-circle
-            </v-icon>
-            <v-icon
-              color="primary"
-              size="small"
-              class="me-2"
-              @click="btShowUpdate(item.raw.PlaceID)"
-              >mdi-pencil
-            </v-icon>
-          </template>
-        </v-data-table-server>
-      </v-card>
-    </v-col>
-  </v-row>
-  <v-dialog v-model="isShowUpdatePlace" persistent width="800"
-    ><Update :placeID="placeID" @btClose="btClose" />
-  </v-dialog>
+        <v-icon v-else color="more">mdi-close-circle</v-icon>
+      </template>
+      <template v-slot:item.StatusText="{ item }">
+        <v-chip :color="getStatus(item.raw.Status).color">
+          {{ getStatus(item.raw.Status).text }}</v-chip
+        >
+      </template>
+      <template v-slot:item.ItemLength="{ item }">
+        <v-chip color="secondary"> {{ item.raw.ItemLength }} Hộp</v-chip>
+      </template>
+    </v-data-table-server>
+  </v-card>
 
   <notifications />
 </template>
 
 <script>
 import {
-  GetPlaceStandardLst,
-  GetSearchPlaceLst,
-  CreatePlaceStandard,
-  DelPlaceStandard,
+  GetPlaceLstByCity,
+  GetPlaceLstByLevel,
+  GetPlaceLstByID,
+  SearchHistoryUser2,
 } from "@/api/crm";
-import Update from "@/views/customer/components/update.vue";
+
+import { typePlaceLst, rankLst } from "@/utils/variable";
+import {
+  getPlaceName,
+  setPlaceName,
+  getTypePlace,
+  setTypePlace,
+  getPageNumber,
+  setPageNumber,
+  setRowspPage,
+  getRowspPage,
+  setStatusCustomer,
+  setRankCustomer,
+  getStatusCustomer,
+  getRankCustomer,
+} from "@/utils/auth";
+import {
+  formatDateDisplay,
+  formatDateDisplayDDMMYY,
+  formatDateUpload,
+} from "@/helpers/getTime";
+
+import { GetStampLst } from "@/api/stamp";
 
 export default {
-  components: {
-    Update,
-  },
   data() {
     return {
+      isShowProductSales: false,
       isMenuSearch: false,
+      isMenuCare: false,
+      isMenuTime: false,
+      isShowCare: false,
+      isShowUpdatePlace: false,
+      loadding: false,
+      isShowRank: false,
       headers: [
-        { title: "STT", sortable: false, key: "Key" },
-        { title: "Mã TC", key: "PlaceID", sortable: false },
-        { title: "Tổ chức", key: "PlaceName", sortable: false },
-        { title: "SĐT", key: "Phone", sortable: false, align: "center" },
-        { title: "Tỉnh", key: "City", sortable: false, align: "center" },
-        { title: "", key: "Action", sortable: false, align: "center" },
+        { title: "STT", sortable: false, key: "Key", width: 50 },
+        { title: "Hóa đơn", key: "DocumentID", sortable: false },
+
+        { title: "Mã tem", key: "StampID", sortable: false },
+        { title: "Sản phẩm", key: "ProductName", sortable: false },
+        { title: "Số lô", key: "LotCode", sortable: false, align: "center" },
+        {
+          title: "Số lượng",
+          key: "Quantity",
+          sortable: false,
+          align: "center",
+        },
+        {
+          title: "ĐVT",
+          key: "Unit",
+          sortable: false,
+          align: "center",
+        },
+        {
+          title: "Hạn dùng",
+          key: "DateExpiredShow",
+          sortable: false,
+          align: "center",
+        },
+        {
+          title: "Ngày nhập",
+          key: "TimeCreateShow",
+          sortable: false,
+          align: "center",
+        },
+        {
+          title: "Người tạo",
+          key: "Creater",
+          sortable: false,
+          align: "center",
+        },
       ],
       desserts: [],
       pageNumber: 1,
       rowspPage: 10,
       search: "",
+      date: null,
+      placeName: "",
       dataLength: 0,
-      searchPhone: "",
-      searchPlaceName: "",
-      searchCity: "",
-      loadding: false,
-      dataGroups: [],
-      placeInfoBFO: {},
-      isShowUpdatePlace: false,
+      placeLst: [],
+      typePlaceLst: typePlaceLst,
+      typePlace: "",
+      statusLst: [
+        { value: 4, label: "Đăng ký TV" },
+        { value: 1, label: "Chưa ĐKTV" },
+      ],
+      statusCustomer: 1,
+      rankLst: rankLst,
+      rankCustomer: 0,
+      timeStart: new Date(),
+      timeEnd: new Date(),
+      searchCustomer: "",
+      productName: "",
       placeID: "",
+      dataSearchPhone: "",
+      isShowCreate: false,
     };
   },
+  watch: {
+    timeStart(newValue) {
+      this.getStampLst();
+    },
+    timeEnd(newValue) {
+      this.getStampLst();
+    },
+    pageNumber(newValue) {
+      setPageNumber(newValue);
+      this.getStampLst();
+    },
+    rowspPage(newValue) {
+      setRowspPage(newValue);
+      this.getStampLst();
+    },
+    search(newValue) {
+      if (newValue.length > 4 || newValue.length == 0) {
+        this.getStampLst();
+      }
+    },
+  },
   methods: {
-    btShowUpdate(data) {
-      this.placeID = data;
-      this.isShowUpdatePlace = true;
+    btShowCreate() {
+      this.isShowCreate = true;
+    },
+    getStampLst() {
+      GetStampLst({
+        TimeStart: this.timeStart
+          ? formatDateUpload(this.timeStart) + " 00:00:00"
+          : null,
+        TimeEnd: this.timeEnd
+          ? formatDateUpload(this.timeEnd) + " 23:59:00"
+          : null,
+        PageNumber: this.pageNumber,
+        RowspPage: this.rowspPage,
+        Search: this.search,
+      }).then((res) => {
+        this.desserts = res.Data.map((item, index) => {
+          return {
+            ...item,
+            Key: index + 1,
+            ItemLength: 1,
+            DateExpiredShow: formatDateDisplayDDMMYY(item.DateExpired),
+            TimeCreateShow: formatDateDisplayDDMMYY(item.TimeCreate),
+          };
+        });
+        this.dataLength = res.TotalRows;
+      });
     },
     btClose() {
-      this.isShowUpdatePlace = false;
+      this.isShowCreate = false;
     },
     btPage(data) {
       this.pageNumber = data;
@@ -231,104 +254,31 @@ export default {
     btRow(data) {
       this.rowspPage = data;
     },
-    btCreate(data) {
-      console.log(data);
-      if (data.PlaceID.length < 8) {
-        this.placeInfoBFO = data;
-        this.getPlaceStandardLst(data);
-      } else {
-        if (this.placeInfoBFO.PlaceID) {
-          this.createPlaceStandard(data);
-        } else {
-          notify({
-            type: "error",
-            title: "Lỗi",
-            text: "Bạn cần chọn khách hàng chuẩn hóa trước",
-          });
-        }
+    getStatus(status) {
+      if (status == 0) {
+        return { text: "Đã hủy", color: "error" };
+      }
+      if (status == 1) {
+        return { text: "Mới nhập kho", color: "more" };
+      }
+      if (status == 2) {
+        return { text: "Đã đóng kiện", color: "secondary" };
+      }
+      if (status == 3 || status == 4) {
+        return { text: "Đã bốc hàng", color: "success" };
       }
     },
-    getSearchPlaceLst() {
-      this.loadding = true;
-      GetSearchPlaceLst({
-        PageNumber: this.pageNumber,
-        RowspPage: this.rowspPage,
-        Search: "",
-        SearchPhone: this.searchPhone,
-        SearchCity: this.searchCity,
-        SearchPlaceName: this.searchPlaceName,
-      }).then((res) => {
-        if (res) {
-          this.desserts = res.Data.map((item, index) => {
-            return {
-              ...item,
-              Key: index + 1,
-            };
-          });
-          this.dataLength = res.TotalRows;
-          this.loadding = false;
-        }
-      });
-    },
-    getPlaceStandardLst(data) {
-      GetPlaceStandardLst({
-        PlaceIDBFO: data.PlaceID,
-      }).then((res) => {
-        if (res) {
-          this.dataGroups = res.Data;
-        }
-      });
-    },
-    createPlaceStandard(data) {
-      CreatePlaceStandard({
-        PlaceID: data.PlaceID,
-        PlaceIDBFO: this.placeInfoBFO.PlaceID,
-      }).then((res) => {
-        if (res) {
-          this.getPlaceStandardLst(this.placeInfoBFO);
-          notify({
-            type: "success",
-            title: "Thành công",
-            text: "Thêm khách hàng chuẩn hóa thành công",
-          });
-        }
-      });
-    },
-    delPlaceStandard(data) {
-      DelPlaceStandard({
-        PlaceID: data.PlaceID,
-        PlaceIDBFO: this.placeInfoBFO.PlaceID,
-      }).then((res) => {
-        if (res) {
-          this.getPlaceStandardLst(this.placeInfoBFO);
-          notify({
-            type: "success",
-            title: "Thành công",
-            text: "Xóa khách hàng chuẩn hóa thành công",
-          });
-        }
-      });
-    },
+  },
+  created() {
+    if (getRowspPage()) {
+      this.rowspPage = parseInt(getRowspPage());
+    }
+    if (getPageNumber()) {
+      this.pageNumber = parseInt(getPageNumber());
+    }
+    this.getStampLst();
   },
 };
 </script>
 
-<style lang="scss" scoped>
-.groups {
-  overflow-y: scroll;
-  height: calc(100vh - 250px);
-  padding-right: 2px;
-  &::-webkit-scrollbar-track-piece {
-    background: #ffffff;
-  }
-
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgb(var(--v-theme-primary));
-    border-radius: 20px;
-  }
-}
-</style>
+<style></style>
