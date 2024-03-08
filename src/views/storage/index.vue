@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title>
       <div class="d-flex" style="justify-content: space-between">
-        <h6 class="text-h6 py-2">Kiểm kho</h6>
+        <h6 class="text-h6 py-2">Tồn kho</h6>
       </div>
     </v-card-title>
     <v-data-table-server

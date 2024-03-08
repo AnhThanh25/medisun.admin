@@ -2,7 +2,6 @@
   <v-card>
     <v-card-title>
       <h6 class="text-h6 px-3 py-2">Thêm phiếu nhập kho</h6>
-      
     </v-card-title>
     <v-card-text>
       <v-text-field
@@ -116,26 +115,35 @@ export default {
       }).then((res) => {
         this.loading = false;
 
-        var checkExist = this.dataStampLst.findIndex(
-          (p) => p.StampID == res.Data.StampID
-        );
-        if (checkExist == -1) {
-          this.dataStampLst.push({
-            ...res.Data,
-            DateExpiredShow: formatDateDisplayDDMMYY(res.Data.DateExpired),
-          });
-          this.dataStampLst = this.dataStampLst.map((item, index) => {
-            return {
-              ...item,
-              Key: index + 1,
-            };
-          });
-          this.qrcodeImport = "";
+        if (res.RespCode == 0) {
+          var checkExist = this.dataStampLst.findIndex(
+            (p) => p.StampID == res.Data.StampID
+          );
+          if (checkExist == -1) {
+            this.dataStampLst.push({
+              ...res.Data,
+              DateExpiredShow: formatDateDisplayDDMMYY(res.Data.DateExpired),
+            });
+            this.dataStampLst = this.dataStampLst.map((item, index) => {
+              return {
+                ...item,
+                Key: index + 1,
+              };
+            });
+            this.qrcodeImport = "";
+          } else {
+            notify({
+              type: "warn",
+              title: "Nhắc nhở",
+              text: "Tem đã tồn tại trong phiếu",
+            });
+            this.qrcodeImport = "";
+          }
         } else {
           notify({
             type: "warn",
             title: "Nhắc nhở",
-            text: "Tem đã tồn tại trong phiếu",
+            text: res.RespText,
           });
           this.qrcodeImport = "";
         }
@@ -145,12 +153,14 @@ export default {
       CreateLocalStoreIn({
         Data: this.dataStampLst,
       }).then((res) => {
-        notify({
-          type: "success",
-          title: "Thành công",
-          text: "Tạo phiếu nhập kho thành công",
-        });
-        this.btClose();
+        if (res.RespCode == 0) {
+          notify({
+            type: "success",
+            title: "Thành công",
+            text: "Tạo phiếu nhập kho thành công",
+          });
+          this.btClose();
+        }
       });
     },
     btClose() {

@@ -38,10 +38,16 @@
                     color="blue"
                     block
                     :loading="loadding"
-                    @click="searchHistoryUser"
+                    @click="handleFileImport"
                   >
                     Nhập excel</v-btn
                   >
+                  <input
+                    ref="uploader"
+                    class="d-none"
+                    type="file"
+                    @change="fileUpload"
+                  />
                 </v-card-text>
               </v-card>
             </v-menu>
@@ -166,47 +172,26 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-  <!-- <v-dialog v-model="isShowRank" persistent width="700"
-    ><Rank :placeID="placeID" @btClose="btClose" />
-  </v-dialog>
-  <v-dialog v-model="isShowProductSales" persistent width="1000"
-    ><ProductSales :placeID="placeID" @btClose="btClose" />
-  </v-dialog> -->
   <notifications />
 </template>
 
 <script>
-import { GetPlaceLstByID, GetPlaceLstByBirthday } from "@/api/crm";
-
-import { typePlaceLst, rankLst } from "@/utils/variable";
 import {
-  getPlaceName,
-  setPlaceName,
-  getTypePlace,
-  setTypePlace,
   getPageNumber,
   setPageNumber,
   setRowspPage,
   getRowspPage,
-  setStatusCustomer,
-  setRankCustomer,
-  getStatusCustomer,
-  getRankCustomer,
 } from "@/utils/auth";
 import {
-  formatDateDisplay,
   formatDateUpload,
   formatDateDisplayDDMMYY,
+  formatDate,
 } from "@/helpers/getTime";
 import Update from "./components/update.vue";
 import Create from "./components/create.vue";
-// import Care from "@/views/components/care.vue";
-// import Rank from "@/views/components/rank.vue";
-// import ProductSales from "@/views/components/productSales.vue";
 
-import { monthLst } from "@/utils/variable";
-import { GetInvoiceLst, DelInvoiceInfo } from "@/api/invoice";
-import { exportExcel } from "./function";
+import { GetInvoiceLst, DelInvoiceInfo, UpdateInvoiceLst } from "@/api/invoice";
+import { exportExcel, excelDateToJSDate } from "./function";
 import XLSX from "xlsx";
 
 export default {
@@ -283,24 +268,40 @@ export default {
     },
   },
   methods: {
-    fileUpload() {
-      if (this.basic) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const bstr = e.target.result;
-          const wb = XLSX.read(bstr, { type: "binary" });
-          const wsname = wb.SheetNames[0];
-          const ws = wb.Sheets[wsname];
-          const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
-          this.invoiceLst = this.convertToReq(data).map((item, index) => {
-            return {
-              ...item,
-              Key: index + 1,
-            };
-          });
-        };
-        reader.readAsBinaryString(this.basic);
-      }
+    handleFileImport() {
+      this.loadding = true;
+
+      // After obtaining the focus when closing the FilePicker, return the button state to normal
+      window.addEventListener(
+        "focus",
+        () => {
+          this.loadding = false;
+        },
+        { once: true }
+      );
+
+      // Trigger click on the FileInput
+      this.$refs.uploader.click();
+    },
+    fileUpload(data) {
+      var basic = data.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const bstr = e.target.result;
+        const wb = XLSX.read(bstr, { type: "binary" });
+        const wsname = wb.SheetNames[0];
+        const ws = wb.Sheets[wsname];
+        const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        console.log(data);
+        this.invoiceLst = this.convertToReq(data).map((item, index) => {
+          return {
+            ...item,
+            Key: index + 1,
+          };
+        });
+        this.updateInvoiceLst(this.invoiceLst);
+      };
+      reader.readAsBinaryString(basic);
     },
     convertToReq(data) {
       var lstReq = [];
@@ -311,7 +312,7 @@ export default {
             CustomerID: data[i][2],
             CustomerName: data[i][3],
             CustomerAddress: data[i][4],
-            PostingDate: formatDate(excelDateToJSDate(data[i][5])),
+            PostingDate: formatDate(new Date(data[i][5])),
             Note: data[i][6],
           };
           lstReq.push(req);
@@ -319,11 +320,25 @@ export default {
       }
       return lstReq;
     },
+    updateInvoiceLst(data) {
+      UpdateInvoiceLst({
+        Data: data,
+      }).then((res) => {
+        if (res.RespCode == 0) {
+          notify({
+            type: "success",
+            title: "Thành công",
+            text: "Thêm hóa đơn thành công",
+          });
+          this.getInvoiceLst();
+        }
+      });
+    },
     delInvoiceInfo() {
       DelInvoiceInfo({
         ID: delInfo.RowID,
       }).then((res) => {
-        if (res) {
+        if (res.RespCode == 0) {
           notify({
             type: "success",
             title: "Thành công",
@@ -331,6 +346,7 @@ export default {
           });
           this.delInfo = {};
           this.btClose();
+          this.getInvoiceLst();
         }
       });
     },

@@ -66,13 +66,13 @@ export const constantRoutes = [
     path: "/kiem-kho",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Kiểm kho", icon: "mdi-warehouse" },
+    meta: { title: "Tồn kho", icon: "mdi-warehouse" },
     children: [
       {
-        name: "Kiểm kho",
+        name: "Tồn kho",
         path: "/kiem-kho",
-        component: () => import("@/views/standard/index.vue"),
-        meta: { title: "Kiểm kho", icon: "mdi-card-outline" },
+        component: () => import("@/views/storage/index.vue"),
+        meta: { title: "Tồn kho", icon: "mdi-card-outline" },
         role: 1,
       },
     ],
@@ -86,26 +86,13 @@ export const constantRoutes = [
       {
         name: "Truy xuất",
         path: "/truy-xuat",
-        component: () => import("@/views/callLocal/index.vue"),
+        component: () => import("@/views/find-item/index.vue"),
         meta: { title: "Truy xuất", icon: "mdi-card-outline" },
         role: 1,
       },
     ],
   },
-  // {
-  //   path: "/dia-ban",
-  //   component: () => import("@/layouts/full/FullLayout.vue"),
-  //   role: 10,
-  //   meta: { title: "Địa bàn", icon: "mdi-map-check" },
-  //   children: [
-  //     {
-  //       name: "Địa bàn",
-  //       path: "/dia-ban",
-  //       component: () => import("@/views/local/index.vue"),
-  //       meta: { title: "Địa bàn", icon: "mdi-card-outline" },
-  //       role: 1,
-  //     },
-    
+  
   //   ],
   // },
   // { path: "*", redirect: "/", hidden: true, role: 1 },

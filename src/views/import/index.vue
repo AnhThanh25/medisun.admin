@@ -52,23 +52,23 @@
             style="height: 42px"
             @click="fetchData"
           ></v-btn>
-          <v-btn
+          <!-- <v-btn
             color="success"
             variant="tonal"
             icon="mdi-plus"
             style="height: 42px"
             @click="btShowCreate"
-          ></v-btn>
+          ></v-btn> -->
         </div>
       </template>
       <template v-slot:item.Key="{ item }">
         {{ item.raw.Key }}
         <v-icon
-          color="primary"
+          color="error"
           size="small"
           class="me-2"
-          @click="btShowUpdate(item.raw)"
-          >mdi-pencil
+          @click="btShowDel(item.raw)"
+          >mdi-delete
         </v-icon>
       </template>
       <template v-slot:item.Ranking="{ item }">
@@ -97,72 +97,52 @@
   <v-dialog v-model="isShowCreate" persistent width="1000"
     ><Create @btClose="btClose" />
   </v-dialog>
-  <!-- <v-dialog v-model="isShowCare" persistent width="700"
-    ><Care :placeID="placeID" @btClose="btClose" />
+  <v-dialog v-model="isShowDel" persistent width="400">
+    <v-card>
+      <v-card-title>
+        <h6 class="text-h6 px-3 py-2">
+          Xóa tem nhập hàng - {{ delInfo.StampID }}
+        </h6>
+      </v-card-title>
+      <v-card-text>
+        <div class="px-2">Có chắc bạn muốn xóa tem nhập hàng này không?</div>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="blue-darken-1" variant="text" @click="btClose">
+          Đóng
+        </v-btn>
+        <v-btn @click="delLocalStoreIn"> Xác nhận </v-btn>
+      </v-card-actions>
+    </v-card>
   </v-dialog>
-  <v-dialog v-model="isShowRank" persistent width="700"
-    ><Rank :placeID="placeID" @btClose="btClose" />
-  </v-dialog>
-  <v-dialog v-model="isShowProductSales" persistent width="1000"
-    ><ProduceSales :placeID="placeID" @btClose="btClose" />
-  </v-dialog> -->
   <notifications />
 </template>
 
 <script>
 import {
-  GetPlaceLstByCity,
-  GetPlaceLstByLevel,
-  GetPlaceLstByID,
-  SearchHistoryUser2,
-} from "@/api/crm";
-
-import { typePlaceLst, rankLst } from "@/utils/variable";
-import {
-  getPlaceName,
-  setPlaceName,
-  getTypePlace,
-  setTypePlace,
   getPageNumber,
   setPageNumber,
   setRowspPage,
   getRowspPage,
-  setStatusCustomer,
-  setRankCustomer,
-  getStatusCustomer,
-  getRankCustomer,
 } from "@/utils/auth";
 import {
   formatDateDisplay,
   formatDateDisplayDDMMYY,
   formatDateUpload,
 } from "@/helpers/getTime";
-import Update from "./components/update.vue";
+
 import Create from "./components/create.vue";
-import Care from "@/views/components/care.vue";
-import { exportExcel } from "./function";
-import Rank from "@/views/components/rank.vue";
-import ProduceSales from "@/views/components/productSales.vue";
-import { GetLocalStoreInLst } from "@/api/import";
+
+import { GetLocalStoreInLst, DelLocalStoreIn } from "@/api/import";
 
 export default {
   components: {
-    Update,
-    Care,
-    Rank,
-    ProduceSales,
     Create,
   },
   data() {
     return {
-      isShowProductSales: false,
-      isMenuSearch: false,
-      isMenuCare: false,
-      isMenuTime: false,
-      isShowCare: false,
-      isShowUpdatePlace: false,
       loadding: false,
-      isShowRank: false,
       headers: [
         { title: "STT", sortable: false, key: "Key", width: 50 },
         {
@@ -210,26 +190,12 @@ export default {
       pageNumber: 1,
       rowspPage: 10,
       search: "",
-      date: null,
-      placeName: "",
       dataLength: 0,
-      placeLst: [],
-      typePlaceLst: typePlaceLst,
-      typePlace: "",
-      statusLst: [
-        { value: 4, label: "Đăng ký TV" },
-        { value: 1, label: "Chưa ĐKTV" },
-      ],
-      statusCustomer: 1,
-      rankLst: rankLst,
-      rankCustomer: 0,
       timeStart: new Date(),
       timeEnd: new Date(),
-      searchCustomer: "",
-      productName: "",
-      placeID: "",
-      dataSearchPhone: "",
       isShowCreate: false,
+      isShowDel: false,
+      delInfo: {},
     };
   },
   watch: {
@@ -254,6 +220,24 @@ export default {
     },
   },
   methods: {
+    btShowDel(data) {
+      this.isShowDel = true;
+      this.delInfo = data;
+    },
+    delLocalStoreIn() {
+      DelLocalStoreIn({
+        StampID: this.delInfo.StampID,
+      }).then((res) => {
+        if (res.RespCode == 0) {
+          notify({
+            type: "success",
+            title: "Thành công",
+            text: "Xóa tem nhập hàng thành công",
+          });
+          this.getLocalStoreInLst();
+        }
+      });
+    },
     btShowCreate() {
       this.isShowCreate = true;
     },
@@ -273,7 +257,7 @@ export default {
           return {
             ...item,
             Key: index + 1,
-            ItemLength: item.ItemLst.split(";").length - 1,
+            ItemLength: item.ItemLst ? item.ItemLst.split(";").length - 1 : 0,
             DateExpiredShow: formatDateDisplayDDMMYY(item.DateExpired),
             TimeCreateShow: formatDateDisplayDDMMYY(item.TimeCreate),
           };
@@ -283,6 +267,8 @@ export default {
     },
     btClose() {
       this.isShowCreate = false;
+      this.isShowDel = false;
+      this.getLocalStoreInLst();
     },
     btPage(data) {
       this.pageNumber = data;
