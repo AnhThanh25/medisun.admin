@@ -5,7 +5,7 @@
     </v-card-title>
     <v-card-text>
       <v-text-field
-        label="Quét mã code | kiện hàng"
+        label="Quét / Nhập mã tem"
         v-model="qrcodeImport"
         prepend-inner-icon="mdi-qrcode"
         clearable

@@ -102,13 +102,13 @@
             style="height: 42px"
             @click="getInvoiceLst"
           ></v-btn>
-          <v-btn
+          <!-- <v-btn
             color="success"
             variant="tonal"
             icon="mdi-plus"
             style="height: 42px"
             @click="btShowCreate"
-          ></v-btn>
+          ></v-btn> -->
         </div>
       </template>
       <template v-slot:item.Key="{ item }">
@@ -253,6 +253,12 @@ export default {
     };
   },
   watch: {
+    timeStart() {
+      this.getInvoiceLst();
+    },
+    timeEnd() {
+      this.getInvoiceLst();
+    },
     pageNumber(newValue) {
       setPageNumber(newValue);
       this.getInvoiceLst();
@@ -368,6 +374,7 @@ export default {
       this.isShowCreate = false;
       this.isShowUpdate = false;
       this.isShowDel = false;
+      this.getInvoiceLst();
     },
     btPage(data) {
       this.pageNumber = data;

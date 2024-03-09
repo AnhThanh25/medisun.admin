@@ -107,6 +107,15 @@ export default {
         this.getStampExportByID(value);
       }
     },
+    billInfo(value) {
+      this.exportLst = value.StampLst.map((item, index) => {
+        return {
+          ...item,
+          Key: index + 1,
+          DateExpiredShow: formatDateDisplayDDMMYY(item.DateExpired),
+        };
+      });
+    },
   },
   methods: {
     updateLocalStoreOutLst() {

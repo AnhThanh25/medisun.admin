@@ -52,13 +52,13 @@
             style="height: 42px"
             @click="fetchData"
           ></v-btn>
-          <!-- <v-btn
+          <v-btn
             color="success"
             variant="tonal"
             icon="mdi-plus"
             style="height: 42px"
             @click="btShowCreate"
-          ></v-btn> -->
+          ></v-btn>
         </div>
       </template>
       <template v-slot:item.Key="{ item }">

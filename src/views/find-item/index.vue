@@ -67,57 +67,59 @@
       </v-card>
     </v-col>
 
-    <v-col :cols="12" :lg="4" :sm="12">
+    <v-col :cols="12" :lg="4" :sm="12" v-if="checkLst.length > 0">
       <v-card>
         <v-card-title>Chi tiết xuất nhập hàng hóa</v-card-title>
-        <v-card-item>
-          <v-card
-            :color="
-              item.Type == 1
-                ? 'success'
-                : item.Type == 2
-                ? 'error'
-                : 'secondary'
-            "
-            variant="outlined"
-            class="mx-auto mb-2"
-            max-width="344"
-            v-for="(item, index) in checkLst"
-            :key="index"
-            :title="item.Title"
-          >
-            <template v-slot:prepend>
-              <v-icon
-                :color="
-                  item.Type == 1
-                    ? 'success'
-                    : item.Type == 2
-                    ? 'error'
-                    : 'secondary'
-                "
-                :icon="
-                  item.Type == 1
-                    ? 'mdi-home-import-outline'
-                    : item.Type == 2
-                    ? 'mdi-home-export-outline'
-                    : 'mdi-store-cog'
-                "
-              ></v-icon>
-            </template>
+        <div class="checkLst">
+          <v-card-item>
+            <v-card
+              :color="
+                item.Type == 1
+                  ? 'success'
+                  : item.Type == 2
+                  ? 'error'
+                  : 'secondary'
+              "
+              variant="outlined"
+              class="mx-auto mb-2"
+              max-width="344"
+              v-for="(item, index) in checkLst"
+              :key="index"
+              :title="item.Title"
+            >
+              <template v-slot:prepend>
+                <v-icon
+                  :color="
+                    item.Type == 1
+                      ? 'success'
+                      : item.Type == 2
+                      ? 'error'
+                      : 'secondary'
+                  "
+                  :icon="
+                    item.Type == 1
+                      ? 'mdi-home-export-outline'
+                      : item.Type == 2
+                      ? 'mdi-home-import-outline'
+                      : 'mdi-store-cog'
+                  "
+                ></v-icon>
+              </template>
 
-            <v-card-item style="margin-top: -20px">
-              <div>
-                <div class="text-overline" style="margin-bottom: -5px">
-                  {{ item.Time }}
+              <v-card-item style="margin-top: -20px">
+                <div>
+                  <div class="text-overline" style="margin-bottom: -5px">
+                    {{ item.Time }}
+                  </div>
+                  <div class="text-h6 mb-1">
+                    {{ item.EmployeeName }} - {{ item.Employeecode }}
+                  </div>
+                  <div class="text-caption" v-html="item.Description"></div>
                 </div>
-                <div class="text-h6 mb-1">
-                  {{ item.EmployeeName }} - {{ item.Employeecode }}
-                </div>
-                <div class="text-caption" v-html="item.Description"></div>
-              </div>
-            </v-card-item>
-          </v-card>
-        </v-card-item>
+              </v-card-item>
+            </v-card>
+          </v-card-item>
+        </div>
       </v-card>
     </v-col>
   </v-row>
@@ -170,3 +172,23 @@ export default {
   methods: {},
 };
 </script>
+
+
+<style lang="scss" scoped>
+.checkLst{
+  height: calc(100vh - 106px);
+  overflow-y: scroll;
+  &::-webkit-scrollbar-track-piece {
+      background: #ffffff00;
+    }
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgb(var(--v-theme-secondary));
+      border-radius: 20px;
+    }
+}
+</style>
