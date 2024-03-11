@@ -85,15 +85,7 @@
             >mdi-pencil
           </v-icon>
         </template>
-        <template v-slot:item.Action="{ item }">
-          <v-icon
-            color="error"
-            size="small"
-            class="me-2"
-            @click="removeCustomer(item.raw)"
-            >mdi-delete
-          </v-icon>
-        </template>
+       
       </v-data-table-server>
     </v-card-text>
     <v-card-actions>
@@ -313,11 +305,7 @@ export default {
       this.customerInfo = data;
       this.isShowCustomer = true;
     },
-    removeCustomer(data) {
-      this.placeInfo.CustomerLst = this.placeInfo.CustomerLst.filter(
-        (p) => p.Key != data.Key
-      );
-    },
+
     getCommuneNow() {
       if (this.placeInfo.City && this.placeInfo.District) {
         GetCommuneByCityAndDistrict({

@@ -282,6 +282,7 @@ export default {
       this.isShowCreate = false;
       this.isShowUpdate = false;
       this.isShowScanBox = false;
+      this.getLocalStoreOutLst();
     },
   },
   created() {

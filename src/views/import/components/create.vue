@@ -29,7 +29,7 @@
             color="error"
             size="small"
             class="me-2"
-            @click="removeCustomer(item.raw)"
+            @click="removeStamp(item.raw)"
             >mdi-delete
           </v-icon>
         </template>
@@ -108,6 +108,15 @@ export default {
     },
   },
   methods: {
+    removeStamp(data) {
+      this.dataStampLst = this.dataStampLst.filter((p) => p.Key != data.Key);
+      this.dataStampLst = this.dataStampLst.map((item, index) => {
+        return {
+          ...item,
+          Key: index + 1,
+        };
+      });
+    },
     getStampProduct(data) {
       this.loading = true;
       GetStampProduct({
