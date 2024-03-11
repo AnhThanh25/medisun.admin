@@ -89,7 +89,29 @@
         >
       </template>
       <template v-slot:item.ItemLength="{ item }">
-        <v-chip color="secondary"> {{ item.raw.ItemLength }} Hộp</v-chip>
+        <v-menu
+          v-model="item.raw.Menu"
+          :close-on-content-click="false"
+          location="end"
+        >
+          <template v-slot:activator="{ props }">
+            <v-btn variant="tonal" color="secondary" v-bind="props">
+              {{ item.raw.TotalNumberBox }} Hộp
+            </v-btn>
+          </template>
+
+          <v-card max-width="520">
+            <v-card-item>
+              <v-chip
+                v-for="(stam, index) in item.raw.ItemLength"
+                :key="index"
+                class="mx-1 my-1"
+              >
+                {{ stam }}
+              </v-chip>
+            </v-card-item>
+          </v-card>
+        </v-menu>
       </template>
     </v-data-table-server>
   </v-card>
@@ -186,6 +208,7 @@ export default {
           align: "center",
         },
       ],
+      menu: false,
       desserts: [],
       pageNumber: 1,
       rowspPage: 10,
@@ -205,10 +228,10 @@ export default {
     timeEnd(newValue) {
       this.getLocalStoreInLst();
     },
-    // pageNumber(newValue) {
-    //   setPageNumber(newValue);
-    //   this.getLocalStoreInLst();
-    // },
+    pageNumber(newValue) {
+      // setPageNumber(newValue);
+      this.getLocalStoreInLst();
+    },
     rowspPage(newValue) {
       setRowspPage(newValue);
       this.getLocalStoreInLst();
@@ -257,12 +280,19 @@ export default {
         this.desserts = res.Data.map((item, index) => {
           return {
             ...item,
+            Menu: false,
             Key: index + 1,
-            ItemLength: item.ItemLst ? item.ItemLst.split(";").length - 1 : 0,
+            TotalNumberBox: item.ItemLst
+              ? item.ItemLst.split(";").length - 1
+              : 0,
             DateExpiredShow: formatDateDisplayDDMMYY(item.DateExpired),
             TimeCreateShow: formatDateDisplayDDMMYY(item.TimeCreate),
+            ItemLength: item.ItemLst
+              ? item.ItemLst.split("\u0000;").filter((p) => p != "")
+              : [],
           };
         });
+        console.log("this.dessert", this.desserts);
         this.dataLength = res.TotalRows;
       });
     },

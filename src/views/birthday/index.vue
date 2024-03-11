@@ -259,10 +259,10 @@ export default {
     timeEnd() {
       this.getInvoiceLst();
     },
-    // pageNumber(newValue) {
-    //   setPageNumber(newValue);
-    //   this.getInvoiceLst();
-    // },
+    pageNumber(newValue) {
+      // setPageNumber(newValue);
+      this.getInvoiceLst();
+    },
     rowspPage(newValue) {
       setRowspPage(newValue);
       this.getInvoiceLst();

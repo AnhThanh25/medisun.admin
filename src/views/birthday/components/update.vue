@@ -50,13 +50,13 @@
       >
         <template v-slot:item.Key="{ item }">
           {{ item.raw.Key }}
-          <v-icon
+          <!-- <v-icon
             color="primary"
             size="small"
             class="me-2"
             @click="btShowInfoCustomer(item.raw)"
             >mdi-pencil
-          </v-icon>
+          </v-icon> -->
         </template>
         <template v-slot:item.Action="{ item }">
           <v-icon
@@ -114,7 +114,7 @@ export default {
           align: "center",
         },
         {
-          title: "Ngày nhập",
+          title: "Ngày xuất",
           key: "TimeCreateShow",
           sortable: false,
           align: "center",
@@ -122,6 +122,12 @@ export default {
         {
           title: "Người tạo",
           key: "Creater",
+          sortable: false,
+          align: "center",
+        },
+        {
+          title: "",
+          key: "Action",
           sortable: false,
           align: "center",
         },

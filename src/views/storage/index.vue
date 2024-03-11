@@ -134,17 +134,20 @@ export default {
       isShowRank: false,
       headers: [
         { title: "STT", sortable: false, key: "Key", width: 50 },
-        { title: "Hóa đơn", key: "DocumentID", sortable: false },
 
         { title: "Mã tem", key: "StampID", sortable: false },
         { title: "Sản phẩm", key: "ProductName", sortable: false },
         { title: "Số lô", key: "LotCode", sortable: false, align: "center" },
         {
-          title: "Số lượng",
+          title: "SL Nhập",
           key: "Quantity",
           sortable: false,
           align: "center",
         },
+        { title: "SL Xuất", key: "QuantityGet", sortable: false },
+
+        { title: "Tồn", key: "QuantityRemain", sortable: false },
+
         {
           title: "ĐVT",
           key: "Unit",
@@ -203,10 +206,10 @@ export default {
     timeEnd(newValue) {
       this.getStampLst();
     },
-    // pageNumber(newValue) {
-    //   setPageNumber(newValue);
-    //   this.getStampLst();
-    // },
+    pageNumber(newValue) {
+      // setPageNumber(newValue);
+      this.getStampLst();
+    },
     rowspPage(newValue) {
       setRowspPage(newValue);
       this.getStampLst();

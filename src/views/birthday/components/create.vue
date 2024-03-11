@@ -22,7 +22,7 @@
         <v-col cols="6">
           <v-date-field
             v-model:modelValue="billInfo.PostingDate"
-            label="Ngày nhập"
+            label="Ngày xuất"
             width="100%"
           ></v-date-field>
           <v-text-field

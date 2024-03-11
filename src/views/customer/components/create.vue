@@ -43,8 +43,10 @@
               >mdi-delete
             </v-icon>
           </template>
-          <template v-slot:item.ItemLength="{ item }">
-            <v-chip color="secondary"> {{ item.raw.ItemLength }} Hộp</v-chip>
+          <template v-slot:item.TotalNumberBox="{ item }">
+            <v-chip color="secondary">
+              {{ item.raw.TotalNumberBox }} Hộp</v-chip
+            >
           </template>
         </v-data-table-server>
       </div>
@@ -77,7 +79,7 @@ export default {
         { title: "Số lô", key: "LotCode", sortable: false, align: "center" },
         {
           title: "Số lượng",
-          key: "Quantity",
+          key: "TotalQuantity",
           sortable: false,
           align: "center",
         },
@@ -90,7 +92,7 @@ export default {
 
         {
           title: "Hộp",
-          key: "ItemLength",
+          key: "TotalNumberBox",
           sortable: false,
           align: "center",
         },
@@ -143,7 +145,7 @@ export default {
       GetStampExportByID({
         StampID: data,
       }).then((res) => {
-        if (res) {
+        if (res.RespCode == 0) {
           var checkExist = this.exportLst.findIndex(
             (p) => p.StampID == res.Data.StampID
           );
@@ -160,17 +162,24 @@ export default {
                   ? item.ItemLst.split(";").length - 1
                   : 0,
                 DateExpiredShow: formatDateDisplayDDMMYY(item.DateExpired),
+                TotalNumberBox: item.NumberBox ?? 0,
+                TotalQuantity: item.Quantity ?? 0,
               };
             });
-            console.log("anhthanhf", this.exportLst);
             this.qrcodeScan = "";
           } else {
-            notify({
-              type: "warn",
-              title: "Nhắc nhở",
-              text: "Tem đã tồn tại trong phiếu",
-            });
-            this.qrcodeScan = "";
+            if (res.Data.NumberBox == 1) {
+              this.exportLst[checkExist].TotalNumberBox += res.Data.NumberBox;
+              this.exportLst[checkExist].TotalQuantity += res.Data.Quantity;
+              this.qrcodeScan = "";
+            } else {
+              notify({
+                type: "warn",
+                title: "Nhắc nhở",
+                text: "Tem đã tồn tại trong phiếu",
+              });
+              this.qrcodeScan = "";
+            }
           }
         }
       });

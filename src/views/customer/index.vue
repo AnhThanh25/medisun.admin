@@ -199,10 +199,10 @@ export default {
     timeEnd(newValue) {
       this.getLocalStoreOutLst();
     },
-    // pageNumber(newValue) {
-    //   setPageNumber(newValue);
-    //   this.getLocalStoreOutLst();
-    // },
+    pageNumber(newValue) {
+      // setPageNumber(newValue);
+      this.getLocalStoreOutLst();
+    },
     rowspPage(newValue) {
       setRowspPage(newValue);
       this.getLocalStoreOutLst();
