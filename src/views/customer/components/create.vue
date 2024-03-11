@@ -104,7 +104,7 @@ export default {
   emits: ["btClose"],
   watch: {
     qrcodeScan(value) {
-      if (value && value.length == 12) {
+      if (value && value.length >= 12) {
         this.getStampExportByID(value);
       }
     },
