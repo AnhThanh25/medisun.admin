@@ -203,10 +203,10 @@ export default {
     timeEnd(newValue) {
       this.getStampLst();
     },
-    pageNumber(newValue) {
-      setPageNumber(newValue);
-      this.getStampLst();
-    },
+    // pageNumber(newValue) {
+    //   setPageNumber(newValue);
+    //   this.getStampLst();
+    // },
     rowspPage(newValue) {
       setRowspPage(newValue);
       this.getStampLst();
@@ -273,9 +273,9 @@ export default {
     if (getRowspPage()) {
       this.rowspPage = parseInt(getRowspPage());
     }
-    if (getPageNumber()) {
-      this.pageNumber = parseInt(getPageNumber());
-    }
+    // if (getPageNumber()) {
+    //   this.pageNumber = parseInt(getPageNumber());
+    // }
     this.getStampLst();
   },
 };

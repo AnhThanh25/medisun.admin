@@ -205,10 +205,10 @@ export default {
     timeEnd(newValue) {
       this.getLocalStoreInLst();
     },
-    pageNumber(newValue) {
-      setPageNumber(newValue);
-      this.getLocalStoreInLst();
-    },
+    // pageNumber(newValue) {
+    //   setPageNumber(newValue);
+    //   this.getLocalStoreInLst();
+    // },
     rowspPage(newValue) {
       setRowspPage(newValue);
       this.getLocalStoreInLst();
@@ -296,9 +296,9 @@ export default {
     if (getRowspPage()) {
       this.rowspPage = parseInt(getRowspPage());
     }
-    if (getPageNumber()) {
-      this.pageNumber = parseInt(getPageNumber());
-    }
+    // if (getPageNumber()) {
+    //   this.pageNumber = parseInt(getPageNumber());
+    // }
     this.getLocalStoreInLst();
   },
 };

@@ -259,10 +259,10 @@ export default {
     timeEnd() {
       this.getInvoiceLst();
     },
-    pageNumber(newValue) {
-      setPageNumber(newValue);
-      this.getInvoiceLst();
-    },
+    // pageNumber(newValue) {
+    //   setPageNumber(newValue);
+    //   this.getInvoiceLst();
+    // },
     rowspPage(newValue) {
       setRowspPage(newValue);
       this.getInvoiceLst();
@@ -409,9 +409,9 @@ export default {
     if (getRowspPage()) {
       this.rowspPage = parseInt(getRowspPage());
     }
-    if (getPageNumber()) {
-      this.pageNumber = parseInt(getPageNumber());
-    }
+    // if (getPageNumber()) {
+    //   this.pageNumber = parseInt(getPageNumber());
+    // }
     this.getInvoiceLst();
   },
 };
