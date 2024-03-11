@@ -39,7 +39,7 @@
               color="error"
               size="small"
               class="me-2"
-              @click="removeCustomer(item.raw)"
+              @click="removeStamp(item.raw)"
               >mdi-delete
             </v-icon>
           </template>
@@ -108,6 +108,15 @@ export default {
     },
   },
   methods: {
+    removeStamp(data) {
+      this.exportLst = this.exportLst.filter((p) => p.Key != data.Key);
+      this.exportLst = this.exportLst.map((item, index) => {
+        return {
+          ...item,
+          Key: index + 1,
+        };
+      });
+    },
     updateLocalStoreOutLst() {
       if (this.exportLst.length > 0) {
         UpdateLocalStoreOutLst({
@@ -147,7 +156,9 @@ export default {
               return {
                 ...item,
                 Key: index + 1,
-                ItemLength: item.ItemLst.split(";").length - 1,
+                ItemLength: item.ItemLst
+                  ? item.ItemLst.split(";").length - 1
+                  : 0,
                 DateExpiredShow: formatDateDisplayDDMMYY(item.DateExpired),
               };
             });

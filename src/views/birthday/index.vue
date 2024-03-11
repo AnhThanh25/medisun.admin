@@ -342,7 +342,7 @@ export default {
     },
     delInvoiceInfo() {
       DelInvoiceInfo({
-        ID: delInfo.RowID,
+        ID: this.delInfo.RowID,
       }).then((res) => {
         if (res.RespCode == 0) {
           notify({

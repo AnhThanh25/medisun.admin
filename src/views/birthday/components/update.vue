@@ -144,6 +144,7 @@
 
 <script>
 import { GetInvoiceInfo, UpdateInvoiceInfo } from "@/api/invoice";
+import { formatDateDisplayDDMMYY } from "@/helpers/getTime";
 
 export default {
   props: {
@@ -164,6 +165,12 @@ export default {
           align: "center",
         },
         {
+          title: "ĐVT",
+          key: "Unit",
+          sortable: false,
+          align: "center",
+        },
+        {
           title: "Hạn dùng",
           key: "DateExpiredShow",
           sortable: false,
@@ -178,13 +185,6 @@ export default {
         {
           title: "Người tạo",
           key: "Creater",
-          sortable: false,
-          align: "center",
-        },
-
-        {
-          title: "Hộp",
-          key: "ItemLength",
           sortable: false,
           align: "center",
         },
@@ -221,9 +221,16 @@ export default {
       GetInvoiceInfo({
         ID: this.billDocumentID,
       }).then((res) => {
-        if(res){
-        this.billInfo = res.Data;
-
+        if (res) {
+          this.billInfo = res.Data;
+          this.billInfo.StampLst = this.billInfo.StampLst.map((item, index) => {
+            return {
+              ...item,
+              Key: index + 1,
+              TimeCreateShow: formatDateDisplayDDMMYY(item.TimeCreate),
+              DateExpiredShow: formatDateDisplayDDMMYY(item.DateExpired),
+            };
+          });
         }
       });
     },

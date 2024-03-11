@@ -234,6 +234,7 @@ export default {
             title: "Thành công",
             text: "Xóa tem nhập hàng thành công",
           });
+          this.isShowDel = false;
           this.getLocalStoreInLst();
         }
       });
