@@ -144,9 +144,19 @@ export default {
           sortable: false,
           align: "center",
         },
-        { title: "SL Xuất", key: "QuantityGet", sortable: false },
+        {
+          title: "SL Xuất",
+          key: "QuantityGet",
+          align: "center",
+          sortable: false,
+        },
 
-        { title: "Tồn", key: "QuantityRemain", sortable: false },
+        {
+          title: "Tồn",
+          key: "QuantityRemain",
+          align: "center",
+          sortable: false,
+        },
 
         {
           title: "ĐVT",

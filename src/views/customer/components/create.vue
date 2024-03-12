@@ -63,7 +63,7 @@
 
 <script>
 import { formatDateDisplayDDMMYY, formatDateUpload } from "@/helpers/getTime";
-import { GetStampExportByID, UpdateLocalStoreOutLst } from "@/api/export";
+import { GetStampExportByID, CreateLocalStoreOutLst } from "@/api/export";
 export default {
   props: {
     billInfo: Object,
@@ -121,8 +121,16 @@ export default {
     },
     updateLocalStoreOutLst() {
       if (this.exportLst.length > 0) {
-        UpdateLocalStoreOutLst({
-          Data: this.exportLst,
+        console.log("export", this.exportLst);
+        CreateLocalStoreOutLst({
+          Data: this.exportLst.map((item) => {
+            return {
+              ...item,
+              Quantity: item.TotalQuantity,
+              NumberBox: item.TotalNumberBox,
+              ItemLst: item.ItemLength ? item.ItemLength.join(";") : "",
+            };
+          }),
         }).then((res) => {
           if (res) {
             notify({
@@ -153,25 +161,38 @@ export default {
             this.exportLst.push({
               ...res.Data,
               DocumentID: this.billInfo.DocumentID,
+              ItemLength: [res.Data.ItemLst],
             });
             this.exportLst = this.exportLst.map((item, index) => {
               return {
                 ...item,
                 Key: index + 1,
-                ItemLength: item.ItemLst
-                  ? item.ItemLst.split(";").length - 1
-                  : 0,
                 DateExpiredShow: formatDateDisplayDDMMYY(item.DateExpired),
                 TotalNumberBox: item.NumberBox ?? 0,
                 TotalQuantity: item.Quantity ?? 0,
               };
             });
+        
+
             this.qrcodeScan = "";
           } else {
             if (res.Data.NumberBox == 1) {
-              this.exportLst[checkExist].TotalNumberBox += res.Data.NumberBox;
-              this.exportLst[checkExist].TotalQuantity += res.Data.Quantity;
-              this.qrcodeScan = "";
+              var checkStampExist = this.exportLst[
+                checkExist
+              ].ItemLength.findIndex((p) => p == res.Data.ItemLst);
+              if (checkStampExist == -1) {
+                this.exportLst[checkExist].TotalNumberBox += res.Data.NumberBox;
+                this.exportLst[checkExist].TotalQuantity += res.Data.Quantity;
+                this.exportLst[checkExist].ItemLength.push(res.Data.ItemLst);
+                this.qrcodeScan = "";
+              } else {
+                notify({
+                  type: "warn",
+                  title: "Nhắc nhở",
+                  text: "Tem đã tồn tại trong phiếu",
+                });
+                this.qrcodeScan = "";
+              }
             } else {
               notify({
                 type: "warn",

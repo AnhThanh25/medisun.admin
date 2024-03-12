@@ -1,5 +1,13 @@
 import request from "@/utils/request";
 
+export function CreateLocalStoreOutLst(data) {
+  return request({
+    url: "LocalStoreOut/CreateLocalStoreOutLst",
+    method: "post",
+    data: data,
+  });
+}
+
 export function UpdateLocalStoreOutLst(data) {
   return request({
     url: "LocalStoreOut/UpdateLocalStoreOutLst",

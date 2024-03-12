@@ -150,7 +150,7 @@
   <v-dialog v-model="isShowCreate" persistent width="600"
     ><Create @btClose="btClose" />
   </v-dialog>
-  <v-dialog v-model="isShowUpdate" persistent width="800"
+  <v-dialog v-model="isShowUpdate" persistent width="900"
     ><Update :billDocumentID="billUpdate" @btClose="btClose" />
   </v-dialog>
   <v-dialog v-model="isShowDel" persistent width="400">

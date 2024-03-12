@@ -35,7 +35,7 @@ export function exportExcel() {
       CustomerID: "KD00001",
       CustomerName: "Nguyễn Văn A",
       CustomerAddress: "365A Giải Phóng - Phương Liệt - Thanh Xuân - Hà Nội",
-      PostingDate: "2024-03-07 00:00:00",
+      PostingDate: String("2024-03-07 00:00:00"),
       Note: "Nhập ghi chú hóa đơn",
     },
   ];

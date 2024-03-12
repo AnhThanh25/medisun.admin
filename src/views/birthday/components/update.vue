@@ -58,7 +58,7 @@
             >mdi-pencil
           </v-icon> -->
         </template>
-        <template v-slot:item.Action="{ item }">
+        <!-- <template v-slot:item.Action="{ item }">
           <v-icon
             color="error"
             size="small"
@@ -66,7 +66,7 @@
             @click="removeStamp(item.raw)"
             >mdi-delete
           </v-icon>
-        </template>
+        </template> -->
       </v-data-table-server>
     </v-card-text>
     <v-card-actions>
@@ -125,12 +125,12 @@ export default {
           sortable: false,
           align: "center",
         },
-        {
-          title: "",
-          key: "Action",
-          sortable: false,
-          align: "center",
-        },
+        // {
+        //   title: "",
+        //   key: "Action",
+        //   sortable: false,
+        //   align: "center",
+        // },
       ],
       billInfo: {},
     };
