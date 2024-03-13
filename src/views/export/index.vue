@@ -190,6 +190,7 @@ export default {
       qrScanbox: "",
       title: "",
       billUpdate: {},
+      debounceTimer: null,
     };
   },
   watch: {
@@ -216,6 +217,15 @@ export default {
       if (value.length > 4) {
         this.getInvoiceInfo(value);
       }
+    },
+    qrScanbox(value) {
+      clearTimeout(this.debounceTimer);
+      // Gọi debounce mới với giá trị của mã barcode
+      this.debounceTimer = setTimeout(() => {
+       if (value.length > 4) {
+        this.getInvoiceInfo(value);
+      }
+      }, 300);
     },
   },
   methods: {

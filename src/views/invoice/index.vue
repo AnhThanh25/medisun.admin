@@ -130,20 +130,11 @@
           >mdi-delete
         </v-icon>
       </template>
-      <template v-slot:item.Point="{ item }">
-        {{ new Intl.NumberFormat().format(item.raw.Point) }}
+      <template v-slot:item.Status="{ item }">
+        <v-chip color="more" v-if="item.raw.Status == 1"> Mới tạo </v-chip>
+        <v-chip color="secondary" v-if="item.raw.Status == 2"> Đã sửa </v-chip>
+        <v-chip color="primary" v-if="item.raw.Status == 3"> Đã xuất </v-chip>
       </template>
-      <template v-slot:item.Register="{ item }">
-        <v-icon v-if="item.raw.StatusCare == 4" color="success"
-          >mdi-check-circle</v-icon
-        >
-        <v-icon v-else color="more">mdi-close-circle</v-icon>
-      </template>
-      <!-- <template v-slot:item.StatusCare="{ item }">
-        <v-chip :color="getStatus(item.raw.StatusCare).color">
-          {{ getStatus(item.raw.StatusCare).text }}</v-chip
-        >
-      </template> -->
     </v-data-table-server>
   </v-card>
 
@@ -204,6 +195,13 @@ export default {
       loadding: false,
       headers: [
         { title: "STT", sortable: false, key: "Key", width: 50 },
+        {
+          title: "Trạng thái",
+          sortable: false,
+          key: "Status",
+          width: 100,
+          align: "center",
+        },
         {
           title: "Mã hóa đơn",
           key: "DocumentID",

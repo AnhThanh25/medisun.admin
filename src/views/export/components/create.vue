@@ -63,8 +63,7 @@
 
 <script>
 import { formatDateDisplayDDMMYY, formatDateUpload } from "@/helpers/getTime";
-import { GetStampExportByID, UpdateLocalStoreOutLst } from "@/api/export";
-import { GetInvoiceInfo } from "@/api/invoice";
+import { GetStampExportByID, CreateLocalStoreOutLst } from "@/api/export";
 export default {
   props: {
     billInfo: Object,
@@ -85,12 +84,6 @@ export default {
           align: "center",
         },
         {
-          title: "ĐVT",
-          key: "Unit",
-          sortable: false,
-          align: "center",
-        },
-        {
           title: "Hạn dùng",
           key: "DateExpiredShow",
           sortable: false,
@@ -106,23 +99,20 @@ export default {
       ],
       qrcodeScan: "",
       exportLst: [],
+      debounceTimer: null,
+
     };
   },
   emits: ["btClose"],
   watch: {
     qrcodeScan(value) {
-      if (value && value.length >= 12) {
-        this.getStampExportByID(value);
-      }
-    },
-    billInfo(value) {
-      this.exportLst = value.StampLst.map((item, index) => {
-        return {
-          ...item,
-          Key: index + 1,
-          DateExpiredShow: formatDateDisplayDDMMYY(item.DateExpired),
-        };
-      });
+      clearTimeout(this.debounceTimer);
+      // Gọi debounce mới với giá trị của mã barcode
+      this.debounceTimer = setTimeout(() => {
+        if (value && value.length >= 12) {
+          this.getStampExportByID(value);
+        }
+      }, 300);
     },
   },
   methods: {
@@ -137,7 +127,8 @@ export default {
     },
     updateLocalStoreOutLst() {
       if (this.exportLst.length > 0) {
-        UpdateLocalStoreOutLst({
+        console.log("export", this.exportLst);
+        CreateLocalStoreOutLst({
           Data: this.exportLst.map((item) => {
             return {
               ...item,
@@ -187,6 +178,8 @@ export default {
                 TotalQuantity: item.Quantity ?? 0,
               };
             });
+        
+
             this.qrcodeScan = "";
           } else {
             if (res.Data.NumberBox == 1) {
@@ -222,18 +215,7 @@ export default {
       this.$emit("btClose");
     },
   },
-  created() {
-    this.exportLst = this.billInfo.StampLst.map((item, index) => {
-      return {
-        ...item,
-        Key: index + 1,
-        DateExpiredShow: formatDateDisplayDDMMYY(item.DateExpired),
-        TotalNumberBox: item.NumberBox ?? 0,
-        TotalQuantity: item.Quantity ?? 0,
-        ItemLength: item.ItemLst ? item.ItemLst.split(";") : [],
-      };
-    });
-  },
+  created() {},
 };
 </script>
 

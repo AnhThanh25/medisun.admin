@@ -3,6 +3,13 @@
     <v-card-title>
       <div class="d-flex" style="justify-content: space-between">
         <h6 class="text-h6 py-2">Danh sách nhập hàng</h6>
+        <v-btn
+          color="primary"
+          variant="tonal"
+          icon="mdi-book-plus-multiple"
+          style="height: 42px"
+          @click="btShowCreateOdd"
+        ></v-btn>
       </div>
     </v-card-title>
     <v-data-table-server
@@ -107,7 +114,13 @@
                 :key="index"
                 class="mx-1 my-1"
               >
-                {{ stam }}
+                <span
+                  style="color: red"
+                  v-if="item.raw.ItemLstOut.includes(stam)"
+                >
+                  {{ stam }}
+                </span>
+                <span v-else>{{ stam }}</span>
               </v-chip>
             </v-card-item>
           </v-card>
@@ -118,6 +131,9 @@
 
   <v-dialog v-model="isShowCreate" persistent width="1000"
     ><Create @btClose="btClose" />
+  </v-dialog>
+  <v-dialog v-model="isShowCreateOdd" persistent width="1000"
+    ><CreateOdd @btClose="btClose" />
   </v-dialog>
   <v-dialog v-model="isShowDel" persistent width="400">
     <v-card>
@@ -155,12 +171,14 @@ import {
 } from "@/helpers/getTime";
 
 import Create from "./components/create.vue";
+import CreateOdd from "./components/createOdd.vue";
 
 import { GetLocalStoreInLst, DelLocalStoreIn } from "@/api/import";
 
 export default {
   components: {
     Create,
+    CreateOdd,
   },
   data() {
     return {
@@ -217,6 +235,7 @@ export default {
       timeStart: new Date(),
       timeEnd: new Date(),
       isShowCreate: false,
+      isShowCreateOdd: false,
       isShowDel: false,
       delInfo: {},
     };
@@ -259,11 +278,21 @@ export default {
           });
           this.isShowDel = false;
           this.getLocalStoreInLst();
+        } else {
+          notify({
+            type: "error",
+            title: "Cảnh báo",
+            text: res.RespText,
+          });
+          this.isShowDel = false;
         }
       });
     },
     btShowCreate() {
       this.isShowCreate = true;
+    },
+    btShowCreateOdd() {
+      this.isShowCreateOdd = true;
     },
     getLocalStoreInLst() {
       GetLocalStoreInLst({
@@ -299,6 +328,7 @@ export default {
     btClose() {
       this.isShowCreate = false;
       this.isShowDel = false;
+      this.isShowCreateOdd = false;
       this.getLocalStoreInLst();
     },
     btPage(data) {

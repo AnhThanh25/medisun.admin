@@ -41,7 +41,7 @@ export const constantRoutes = [
       {
         name: "Xuất hàng",
         path: "/xuat-hang",
-        component: () => import("@/views/customer/index.vue"),
+        component: () => import("@/views/export/index.vue"),
         meta: { title: "Xuất hàng", icon: "mdi-card-outline" },
         role: 1,
       },
@@ -56,7 +56,7 @@ export const constantRoutes = [
       {
         name: "Hóa Đơn",
         path: "/hoa-don",
-        component: () => import("@/views/birthday/index.vue"),
+        component: () => import("@/views/invoice/index.vue"),
         meta: { title: "Hóa Đơn", icon: "mdi-card-outline" },
         role: 1,
       },

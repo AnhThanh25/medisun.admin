@@ -1,11 +1,11 @@
 <template>
   <v-card>
     <v-card-title>
-      <h6 class="text-h6 px-3 py-2">Thêm phiếu nhập kho</h6>
+      <h6 class="text-h6 px-3 py-2">Thêm phiếu nhập lại hàng</h6>
     </v-card-title>
     <v-card-text>
       <v-text-field
-        label="Quét / Nhập mã tem"
+        label="Quét / Nhập mã tem nhập lại hàng"
         v-model="qrcodeImport"
         prepend-inner-icon="mdi-qrcode"
         clearable
@@ -56,7 +56,7 @@ import {
   GetCommuneByCityAndDistrict,
 } from "@/api/default";
 import { getToken } from "@/utils/auth";
-import { GetStampProduct, CreateLocalStoreIn } from "@/api/import";
+import { GetStampImportByID, CreateLocalStoreIn } from "@/api/import";
 import { formatDateDisplayDDMMYY, formatDateUpload } from "@/helpers/getTime";
 export default {
   data() {
@@ -99,14 +99,19 @@ export default {
       qrcodeImport: "",
       dataStampLst: [],
       loading: false,
+      debounceTimer: null,
     };
   },
   emits: ["btClose"],
   watch: {
     qrcodeImport(value) {
-      if (value.length == 12) {
-        this.getStampProduct(value);
-      }
+      clearTimeout(this.debounceTimer);
+      // Gọi debounce mới với giá trị của mã barcode
+      this.debounceTimer = setTimeout(() => {
+        if (value && value.length >= 12) {
+          this.getStampImportByID(value);
+        }
+      }, 300);
     },
   },
   methods: {
@@ -119,9 +124,9 @@ export default {
         };
       });
     },
-    getStampProduct(data) {
+    getStampImportByID(data) {
       this.loading = true;
-      GetStampProduct({
+      GetStampImportByID({
         StampID: data,
       }).then((res) => {
         this.loading = false;

@@ -35,3 +35,11 @@ export function GetStampProduct(data) {
     data: data,
   });
 }
+
+export function GetStampImportByID(data) {
+  return request({
+    url: "LocalStore/GetStampImportByID",
+    method: "post",
+    data: data,
+  });
+}
