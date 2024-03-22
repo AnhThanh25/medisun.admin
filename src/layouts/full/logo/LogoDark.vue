@@ -1,7 +1,7 @@
 <template>
   <div class="logo">
     <RouterLink to="/">
-        <img src="@/assets/images/logos/logotanthinh.png" />
+        <img src="@/assets/images/logos/logo.png" />
     </RouterLink>
     <div class="title">Tân Thịnh</div>
   </div>

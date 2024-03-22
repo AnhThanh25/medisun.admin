@@ -17,7 +17,7 @@ import LoginForm from "@/components/auth/LoginForm.vue";
               <div class="d-flex justify-center py-4">
                 <div class="logo">
                   <RouterLink to="/">
-                    <img src="@/assets/images/logos/logotanthinh.png" />
+                    <img src="@/assets/images/logos/logo.png" />
                   </RouterLink>
                 </div>
               </div>

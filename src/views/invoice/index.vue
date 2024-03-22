@@ -382,15 +382,13 @@ export default {
     },
     getInvoiceLst() {
       GetInvoiceLst({
-        TimeStart: this.timeStart
-          ? formatDateUpload(this.timeStart) + " 00:00:00"
-          : null,
+        TimeStart:  '',
         TimeEnd: this.timeEnd
-          ? formatDateUpload(this.timeEnd) + " 23:59:00"
+          ? formatDateUpload(this.timeEnd) 
           : null,
         PageNumber: this.pageNumber,
         RowspPage: this.rowspPage,
-        Search: this.search,
+        Search: '',
       }).then((res) => {
         this.desserts = res.Data.map((item, index) => {
           return {
