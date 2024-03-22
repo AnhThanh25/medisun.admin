@@ -179,7 +179,6 @@ export default {
               };
             });
         
-
             this.qrcodeScan = "";
           } else {
             if (res.Data.NumberBox == 1) {

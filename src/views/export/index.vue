@@ -97,7 +97,7 @@
       </v-card-title>
       <v-card-text>
         <v-text-field
-          label="Quét | Nhập mã kiện hàng"
+          label="Quét | Nhập mã hóa đơn"
           v-model="qrScanbox"
           prepend-inner-icon="mdi-qrcode"
           clearable
@@ -108,6 +108,9 @@
         <v-spacer></v-spacer>
         <v-btn color="blue-darken-1" variant="text" @click="btClose">
           Đóng
+        </v-btn>
+        <v-btn color="success" variant="text" @click="btConfirm">
+          Xác nhận
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -191,6 +194,7 @@ export default {
       title: "",
       billUpdate: {},
       debounceTimer: null,
+      billInfo: {},
     };
   },
   watch: {
@@ -213,20 +217,15 @@ export default {
         this.getLocalStoreOutLst();
       }
     },
-    qrScanbox(value) {
-      if (value.length > 4) {
-        this.getInvoiceInfo(value);
-      }
-    },
-    qrScanbox(value) {
-      clearTimeout(this.debounceTimer);
-      // Gọi debounce mới với giá trị của mã barcode
-      this.debounceTimer = setTimeout(() => {
-       if (value.length > 4) {
-        this.getInvoiceInfo(value);
-      }
-      }, 300);
-    },
+    // qrScanbox(value) {
+    //   clearTimeout(this.debounceTimer);
+    //   // Gọi debounce mới với giá trị của mã barcode
+    //   this.debounceTimer = setTimeout(() => {
+    //    if (value.length > 4) {
+    //     this.getInvoiceInfo(value);
+    //   }
+    //   }, 300);
+    // },
   },
   methods: {
     btShowUpdate(data) {
@@ -239,6 +238,11 @@ export default {
           this.isShowScanBox = false;
         }
       });
+    },
+    btConfirm() {
+      this.isShowCreate = true;
+      this.isShowScanBox = false;
+      this.billInfo.DocumentID = this.qrScanbox.toLocaleUpperCase();
     },
     getInvoiceInfo(data) {
       GetInvoiceInfo({

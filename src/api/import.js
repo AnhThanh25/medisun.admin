@@ -7,6 +7,15 @@ export function CreateLocalStoreIn(data) {
     data: data,
   });
 }
+
+export function CreateLocalStoreInReturn(data) {
+  return request({
+    url: "LocalStore/CreateLocalStoreInReturn",
+    method: "post",
+    data: data,
+  });
+}
+
 export function UpdateLocalStoreIn(data) {
   return request({
     url: "LocalStore/UpdateLocalStoreIn",

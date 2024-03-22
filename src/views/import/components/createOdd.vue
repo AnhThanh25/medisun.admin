@@ -4,12 +4,25 @@
       <h6 class="text-h6 px-3 py-2">Thêm phiếu nhập lại hàng</h6>
     </v-card-title>
     <v-card-text>
-      <v-text-field
-        label="Quét / Nhập mã tem nhập lại hàng"
-        v-model="qrcodeImport"
-        prepend-inner-icon="mdi-qrcode"
-        clearable
-      ></v-text-field>
+      <v-row>
+        <v-col>
+          <v-text-field
+            label="Quét / Nhập mã tem nhập lại hàng"
+            v-model="qrcodeImport"
+            prepend-inner-icon="mdi-qrcode"
+            clearable
+          ></v-text-field>
+        </v-col>
+        <v-col>
+          <v-text-field
+            label="Ghi chú"
+            v-model="note"
+            prepend-inner-icon="mdi-note"
+            clearable
+          ></v-text-field>
+        </v-col>
+      </v-row>
+
       <v-data-table-server
         no-data-text="Không có dữ liệu"
         :headers="headers"
@@ -49,14 +62,7 @@
 </template>
 
 <script>
-import { GetPlaceByID, UpdatePlaceByID } from "@/api/crm";
-import {
-  GetCity,
-  GetDistrictByCity,
-  GetCommuneByCityAndDistrict,
-} from "@/api/default";
-import { getToken } from "@/utils/auth";
-import { GetStampImportByID, CreateLocalStoreIn } from "@/api/import";
+import { GetStampImportByID, CreateLocalStoreInReturn } from "@/api/import";
 import { formatDateDisplayDDMMYY, formatDateUpload } from "@/helpers/getTime";
 export default {
   data() {
@@ -100,6 +106,7 @@ export default {
       dataStampLst: [],
       loading: false,
       debounceTimer: null,
+      note: "",
     };
   },
   emits: ["btClose"],
@@ -144,6 +151,7 @@ export default {
               return {
                 ...item,
                 Key: index + 1,
+                Note: this.note,
               };
             });
             this.qrcodeImport = "";
@@ -166,7 +174,7 @@ export default {
       });
     },
     createLocalStoreIn() {
-      CreateLocalStoreIn({
+      CreateLocalStoreInReturn({
         Data: this.dataStampLst,
       }).then((res) => {
         if (res.RespCode == 0) {
