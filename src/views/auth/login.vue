@@ -17,7 +17,7 @@ import LoginForm from "@/components/auth/LoginForm.vue";
               <div class="d-flex justify-center py-4">
                 <div class="logo">
                   <RouterLink to="/">
-                    <img src="@/assets/images/logos/logo.png" />
+                    <img src="@/assets/images/logos/medisun.png" />
                   </RouterLink>
                 </div>
               </div>
@@ -25,7 +25,7 @@ import LoginForm from "@/components/auth/LoginForm.vue";
                 class="text-center title"
                 style="color: rgb(var(--v-theme-secondary)); font-weight:600"
               >
-                Dược Phẩm Tân Thịnh
+                Thiết Bị Y Tế - Medisun
               </div>
               <LoginForm />
             </v-card-item>
@@ -39,7 +39,7 @@ import LoginForm from "@/components/auth/LoginForm.vue";
 .logo {
   display: flex;
   img {
-    height: 60px;
+    height: 100px;
   }
 }
 .title {

@@ -1,9 +1,9 @@
 <template>
   <div class="logo">
     <RouterLink to="/">
-        <img src="@/assets/images/logos/logo.png" />
+        <img src="@/assets/images/logos/medisun.png" />
     </RouterLink>
-    <div class="title">Tân Thịnh</div>
+    <div class="title">Thiết Bị Y Tế - Medisun</div>
   </div>
 </template>
 <script setup lang="ts">

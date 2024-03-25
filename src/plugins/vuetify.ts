@@ -16,7 +16,7 @@ const Lighttheme: ThemeDefinition = {
     accent: "#fc4b6c",
     warning: "#fec90f",
     error: "#fc4b6c",
-    secondary: "#043A79",
+    secondary: "#0F7BCA",
     more: "#999",
     blue: "#1e88e5",
     text: "#11142d",
