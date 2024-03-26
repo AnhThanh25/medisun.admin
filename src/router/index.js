@@ -6,93 +6,86 @@ export const constantRoutes = [
     component: () => import("@/views/auth/login.vue"),
     hidden: true,
   },
- 
+
   {
     path: "/",
-    redirect: "/nhap-hang",
+    redirect: "/danh-sach-bai-viet",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Nhập hàng", icon: "mdi-home-import-outline" },
+    meta: { title: "Danh sách bài viết", icon: "mdi-home-import-outline" },
     hidden: true,
   },
   {
-    path: "/nhap-hang",
-    redirect: "/nhap-hang",
+    path: "/danh-sach-bai-viet",
+
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Nhập hàng", icon: "mdi-home-import-outline" },
+    meta: { title: "Danh sách bài viết", icon: "mdi-clipboard-list" },
     children: [
       {
-        name: "Nhập hàng",
-        path: "/nhap-hang",
-        component: () => import("@/views/import/index.vue"),
-        meta: { title: "Nhập hàng", icon: "mdi-home-import-outline" },
+        name: "Danh sách bài viết",
+        path: "/danh-sach-bai-viet",
+        component: () => import("@/views/post/index.vue"),
+        meta: { title: "Danh sách bài viết", icon: "mdi-home-import-outline" },
         role: 1,
       },
     ],
   },
-  
+
   {
-    path: "/xuat-hang",
+    path: "/tao-bai-viet",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Xuất hàng", icon: "mdi-home-export-outline" },
+    meta: { title: "Tạo bài viết", icon: "mdi-file-edit" },
     children: [
       {
-        name: "Xuất hàng",
-        path: "/xuat-hang",
-        component: () => import("@/views/export/index.vue"),
-        meta: { title: "Xuất hàng", icon: "mdi-card-outline" },
+        name: "Tạo bài viết",
+        path: "/tao-bai-viet",
+        component: () => import("@/views/post/CreatePost.vue"),
+        meta: { title: "Tạo bài viết", icon: "mdi-document-edit" },
         role: 1,
+      },
+      {
+        name: "Chi tiết bài viết",
+        path: "/bai-viet/:tab",
+        component: () => import("@/views/post/UpdatePost.vue"),
+        meta: { title: "Tạo bài viết", icon: "mdi-document-edit" },
+        role: 1,
+        hidden:true
       },
     ],
   },
   {
-    path: "/hoa-don",
+    path: "/banner",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Hóa Đơn", icon: "mdi-cellphone-text" },
+    meta: { title: "Banner", icon: "mdi-image-area" },
     children: [
       {
-        name: "Hóa Đơn",
-        path: "/hoa-don",
-        component: () => import("@/views/invoice/index.vue"),
-        meta: { title: "Hóa Đơn", icon: "mdi-card-outline" },
-        role: 1,
-      },
-    ],
-  },
-  {
-    path: "/kiem-kho",
-    component: () => import("@/layouts/full/FullLayout.vue"),
-    role: 1,
-    meta: { title: "Tồn kho", icon: "mdi-warehouse" },
-    children: [
-      {
-        name: "Tồn kho",
-        path: "/kiem-kho",
-        component: () => import("@/views/storage/index.vue"),
-        meta: { title: "Tồn kho", icon: "mdi-card-outline" },
+        name: "Banner",
+        path: "/banner",
+        component: () => import("@/views/post/bannerLst.vue"),
+        meta: { title: "Banner", icon: "mdi-card-outline" },
         role: 1,
       },
     ],
   },
   {
-    path: "/truy-xuat",
+    path: "/san-pham",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Truy xuất", icon: "mdi-file-search" },
+    meta: { title: "Sản phẩm", icon: "mdi-medical-bag" },
     children: [
       {
-        name: "Truy xuất",
-        path: "/truy-xuat",
-        component: () => import("@/views/find-item/index.vue"),
-        meta: { title: "Truy xuất", icon: "mdi-card-outline" },
+        name: "Sản phẩm",
+        path: "/san-pham",
+        component: () => import("@/views/products/ProductListShow.vue"),
+        meta: { title: "Sản phẩm", icon: "mdi-card-outline" },
         role: 1,
       },
     ],
   },
-  
+
   //   ],
   // },
   // { path: "*", redirect: "/", hidden: true, role: 1 },

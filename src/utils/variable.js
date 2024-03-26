@@ -200,7 +200,7 @@ export const careTypeLst = [
 import { getUserName, getToken } from "@/utils/auth";
 
 export function urlUploadImageCare(rowID) {
-  return `http://202.191.56.172/PKPosAPI/File/UploadImageCare?UserName=${getUserName()}&Token=${getToken()}&RowID=${rowID}`;
+  return `http://202.191.56.71/PKPosAPI/File/UploadImageCare?UserName=${getUserName()}&Token=${getToken()}&RowID=${rowID}`;
 }
 export const monthLst = [
   { text: "Tháng 1", value: 1 },

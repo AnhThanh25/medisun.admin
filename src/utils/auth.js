@@ -1,17 +1,17 @@
 import Cookies from "js-cookie";
 
-const TokenKey = "TokenCRM";
-const UserName = "UserNameCRM";
-const FullName = "FullNameCRM";
-const PhoneNumber = "PhoneNumberCRM";
+const TokenKey = "TokenMedi";
+const UserName = "UserNameMedi";
+const FullName = "FullNameMedi";
+const PhoneNumber = "PhoneNumberMedi";
 
-const EmployCode = "CommuneCRM";
-const PlaceName = "PlaceNameCRM";
-const TypePlace = "TypePlaceCRM";
-const PageNumber = "PageNumberCRM";
-const RowspPage = "RowspPageCRM";
-const StatusCustomer = "StatusCustomerCRM";
-const RankCustomer = "RankCustomerCRM";
+const EmployCode = "CommuneMedi";
+const PlaceName = "PlaceNameMedi";
+const TypePlace = "TypePlaceMedi";
+const PageNumber = "PageNumberMedi";
+const RowspPage = "RowspPageMedi";
+const Email = "EmailMedi";
+const StoreCode = "StoreCodeMedi";
 
 export function setToken(token) {
   return Cookies.set(TokenKey, token, { expires: 356 });
@@ -103,22 +103,22 @@ export function removeRowspPage() {
   return Cookies.remove(RowspPage);
 }
 
-export function setStatusCustomer(name) {
-  return Cookies.set(StatusCustomer, name);
+export function setEmail(name) {
+  return Cookies.set(Email, name);
 }
-export function getStatusCustomer() {
-  return Cookies.get(StatusCustomer);
+export function getEmail() {
+  return Cookies.get(Email);
 }
-export function removeStatusCustomer() {
-  return Cookies.remove(StatusCustomer);
+export function removeEmail() {
+  return Cookies.remove(Email);
 }
 
-export function setRankCustomer(name) {
-  return Cookies.set(RankCustomer, name);
+export function setStoreCode(name) {
+  return Cookies.set(StoreCode, name);
 }
-export function getRankCustomer() {
-  return Cookies.get(RankCustomer);
+export function getStoreCode() {
+  return Cookies.get(StoreCode);
 }
-export function removeRankCustomer() {
-  return Cookies.remove(RankCustomer);
+export function removeStoreCode() {
+  return Cookies.remove(StoreCode);
 }

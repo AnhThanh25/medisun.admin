@@ -1,0 +1,68 @@
+$primary-color: #1a9347;
+$primary-midnight: #007252;
+$primary-dark: #00573e;
+$primary-light: #60bc56;
+$primary-bg: rgba(26, 147, 71, 0.1);
+$primary-5: rgba(26, 147, 71, 0.05);
+$item-hover: rgba(26, 147, 71, 0.05);
+
+$link-color: #58ac4f;
+
+$accent-color: #f47a23;
+
+@mixin primary-gradient {
+    background: linear-gradient($primary-light, $primary-dark);
+}
+
+// TextColor
+// $title-color: #222222;
+// $content-color: #334155;
+$title-color: #222222;
+$content-color: #334155;
+$text-gray-color: #4c5c71;
+
+$text-color-1: #222222;
+$text-color-2: rgba(60, 60, 60, 0.66);
+
+$gray-border: rgba(60, 60, 60, 0.16);
+
+$dark-text-color-1: #f0f0f0;
+$dark-text-color-2: rgba(255, 255, 255, 0.85);
+
+$white: rgb(255, 255, 255);
+$white500: rgb(255, 255, 255);
+$white400: #FFFFFFB2;
+$white300: #FFFFFF66;
+$white200: #FFFFFF4C;
+$white100: #FFFFFF19;
+
+$ink500: #22313F;
+$ink400: rgba(1, 18, 34, 0.5);
+$ink300: rgba(1, 18, 34, 0.3);
+$ink200: rgba(1, 18, 34, 0.1);
+$ink100: rgba(1, 18, 34, 0.05);
+
+$blue500: #2F6BFF;
+$blue400: rgba(47, 107, 255, 0.8);
+$blue300: rgba(47, 107, 255, 0.3);
+$blue200: rgba(47, 107, 255, 0.1);
+$blue100: rgba(47, 107, 255, 0.05);
+
+$green500: rgb(0, 188, 60, 1);
+$green400: rgb(0, 188, 60, 0.8);
+$green300: rgb(0, 188, 60, 0.3);
+$green200: rgb(0, 188, 60, 0.1);
+$green100: rgb(0, 188, 60, 0.05);
+
+$orange500: rgb(255, 130, 30, 1);
+$orange400: rgb(255, 130, 30, 0.8);
+$orange300: rgb(255, 130, 30, 0.3);
+$orange200: rgb(255, 130, 30, 0.1);
+$orange100: rgb(255, 130, 30, 0.05);
+
+$red500: rgb(230, 10, 50, 1);
+$red400: rgb(230, 10, 50, 0.8);
+$red300: rgb(230, 10, 50, 0.3);
+$red200: rgb(230, 10, 50, 0.1);
+$red100: rgb(230, 10, 50, 0.05);
+

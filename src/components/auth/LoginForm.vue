@@ -25,7 +25,9 @@
     </v-col>
 
     <v-col cols="12" class="pt-8">
-      <v-btn to="/" color="secondary" size="large" block flat @click="login">Đăng nhập</v-btn>
+      <v-btn to="/" color="secondary" size="large" block flat @click="login"
+        >Đăng nhập</v-btn
+      >
     </v-col>
   </v-row>
   <notifications />
@@ -37,6 +39,8 @@ import {
   setFullName,
   setPhoneNumber,
   setEmployCode,
+  setEmail,
+  setStoreCode,
 } from "@/utils/auth";
 import { Login } from "@/api/user";
 export default {
@@ -55,11 +59,12 @@ export default {
       }).then((res) => {
         if (res) {
           setToken(res.Token);
-          setUserName(res.Data.UserName);
-          setFullName(res.Data.FullName);
-          setPhoneNumber(res.Data.UserName);
-          setEmployCode(res.Data.UserName);
-
+          setUserName(res.Info.UserName);
+          setFullName(res.Info.FullName);
+          setPhoneNumber(res.Info.UserName);
+          setEmployCode(res.Info.UserName);
+          setEmail(res.Info.Email);
+          setStoreCode(res.Info.StoreCode);
           this.$router.push("/");
         }
       });
