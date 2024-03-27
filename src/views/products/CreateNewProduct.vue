@@ -139,6 +139,7 @@
 
 <script>
 import { UpdateProductInfo } from "@/api/productAPI";
+import { getStoreCode } from "@/utils/auth";
 export default {
   data() {
     return {
@@ -170,31 +171,14 @@ export default {
     },
     updateProductInfo() {
       this.isLoadingUpdate = true;
-      var req = {
-        RowID: 1,
-        StoreCode: "sample string 2",
-        ProductID: "sample string 3",
-        ProductName: "sample string 4",
-        Imprice: 5.0,
-        Exprice: 6.0,
-        Barcode: "sample string 7",
-        Quantity: 8,
-        IsBatch: 9,
-        ProductType: "sample string 10",
-        Producer: "sample string 11",
-        Tag: "sample string 12",
-        Unit: "sample string 13",
-        Description: "sample string 14",
-        Favourite: 15,
-        TimeCreate: "sample string 16",
-        ModifyID: "sample string 17",
-        TimeModify: "sample string 18",
-        Creater: "sample string 19",
-        Status: 20,
-        Detail: "sample string 21",
-      };
+
       UpdateProductInfo({
-        Data: req,
+        Data: {
+          ...this.productInfo,
+          StoreCode: getStoreCode(),
+          UnitLst:[],
+          ImgLst:[]
+        },
       }).then((res) => {
         this.isLoadingUpdate = false;
 
