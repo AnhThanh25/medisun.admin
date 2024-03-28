@@ -140,6 +140,7 @@
 <script>
 import { UpdateProductInfo } from "@/api/productAPI";
 import { getStoreCode } from "@/utils/auth";
+import { uploadImage } from "@/api/uploadFile";
 export default {
   data() {
     return {
@@ -171,18 +172,18 @@ export default {
     },
     updateProductInfo() {
       this.isLoadingUpdate = true;
-
       UpdateProductInfo({
         Data: {
           ...this.productInfo,
           StoreCode: getStoreCode(),
-          UnitLst:[],
-          ImgLst:[]
+          UnitLst: [],
+          ImgLst: [],
         },
       }).then((res) => {
         this.isLoadingUpdate = false;
 
         if (res.RespCode == 0) {
+          uploadImage(res.ProductID, this.imgList[0]);
           notify({
             type: "success",
             title: "Thành công",
@@ -195,6 +196,7 @@ export default {
             text: res.RespText,
           });
         }
+        this.onClose();
       });
     },
   },

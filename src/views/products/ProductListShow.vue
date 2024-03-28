@@ -35,13 +35,10 @@
             @click:row="rowClicked"
           >
             <template #item.imgList="{ item }">
-              <!-- {{ item.columns.imgList[0].LinkImage }} -->
-              <div v-if="item.columns.imgList.length === 0">Không có ảnh</div>
+              <div v-if="item.raw.ImgLst.length === 0">Không có ảnh</div>
               <img
                 v-else
-                :src="
-                  item.columns.imgList[0].LinkImage + '?' + new Date().getTime()
-                "
+                :src="item.raw.ImgLst[0].LinkImage + '?' + new Date().getTime()"
                 style="width: 50px; max-height: 50px; object-fit: cover"
               />
             </template>
@@ -52,29 +49,24 @@
   </VRow>
   <VDialog v-model="dialogAdd" persistent width="800">
     <CreateNewProduct
-      v-if="dialogAdd"
       v-model:modelValue="dialogAdd"
       @success="getProductList"
       @close="btClose"
     />
   </VDialog>
-  <!-- <ProductInfo
-    v-if="dialogEdit"
-    v-model:dialog="dialogEdit"
-    :selected-product="selectedProduct"
-    @success="getProductList"
-    @delete="getProductList"
-  /> -->
+  <VDialog v-model="dialogEdit" persistent width="800">
+    <ProductInfo :selected-product="selectedProduct" @btClose="btClose" />
+  </VDialog>
 </template>
 
 <script scoped>
 import { GetProductLst } from "@/api/productAPI";
 import { debounce } from "lodash";
 import CreateNewProduct from "./CreateNewProduct.vue";
-// import ProductInfo from "./ProductInfo.vue";
+import ProductInfo from "./ProductInfo.vue";
 
 export default {
-  components: { CreateNewProduct },
+  components: { CreateNewProduct, ProductInfo },
 
   data() {
     return {
@@ -85,16 +77,23 @@ export default {
       itemsPerPage: 10,
       headers: [
         {
+          key: "Key",
+          title: "STT",
+          sortable: false,
+          align: "center",
+          width: "50",
+        },
+        {
           align: "start",
-          key: "name",
+          key: "ProductName",
           title: "Tên sản phấm",
           sortable: false,
         },
         { key: "imgList", sortable: false, title: "Ảnh SP" },
-        { key: "exprice", sortable: false, title: "Giá bán" },
-        { key: "tag", sortable: false, title: "Loại hàng" },
-        { key: "quantity", sortable: false, title: "Tồn kho" },
-        { key: "unit", sortable: false, title: "Đơn vị" },
+        { key: "Description", sortable: false, title: "Mô tả" },
+        { key: "Tag", sortable: false, title: "Loại" },
+        { key: "Detail", sortable: false, title: "Chi tiết" },
+        { key: "Unit", sortable: false, title: "Đơn vị" },
       ],
       products: [],
       selectedProduct: null,
@@ -144,20 +143,27 @@ export default {
       }).then((res) => {
         this.isLoading = false;
         if (res.RespCode == 0) {
-          this.products = res.Data;
+          this.products = res.Data.map((item, index) => {
+            return {
+              ...item,
+              Key: index + 1,
+            };
+          });
           this.totalRows = res.TotalRows;
         }
       });
     },
     rowClicked(event, item) {
       this.dialogEdit = true;
-      this.selectedProduct = item;
+      this.selectedProduct = item.item.raw;
     },
     newProduct() {
       this.dialogAdd = true;
     },
     btClose() {
       this.dialogAdd = false;
+      this.dialogEdit = false;
+      this.getProductList();
     },
   },
 };
