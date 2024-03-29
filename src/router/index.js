@@ -85,7 +85,21 @@ export const constantRoutes = [
       },
     ],
   },
-
+  {
+    path: "/yeu-cau-ho-tro",
+    component: () => import("@/layouts/full/FullLayout.vue"),
+    role: 1,
+    meta: { title: "Yêu cầu hỗ trợ", icon: "mdi-medical-bag" },
+    children: [
+      {
+        name: "Yêu cầu hỗ trợ",
+        path: "/yeu-cau-ho-tro",
+        component: () => import("@/views/request/index.vue"),
+        meta: { title: "Yêu cầu hỗ trợ", icon: "mdi-card-outline" },
+        role: 1,
+      },
+    ],
+  },
   //   ],
   // },
   // { path: "*", redirect: "/", hidden: true, role: 1 },
