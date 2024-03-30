@@ -145,7 +145,19 @@ export default {
   data() {
     return {
       productInfo: {},
-      tagLst: ["Giới thiệu sản phẩm"],
+      tagLst: [
+        "Máy siêu âm",
+        "XQ+CT+MRI",
+        "Nội soi tai mũi họng",
+        "Nội soi tiêu hóa",
+        "Xét nghiệm sinh hóa",
+        "Xét nghiệm huyết học",
+        "Xét nghiệm nước tiểu",
+        "Xét nghiệm miễn dịch",
+        "Điện giải",
+        "Điện tim",
+        "Điện não đồ",
+      ],
       productTypeLst: ["Public", "Private"],
       unitLst: ["Cái", "Hộp", "Túi", "Thùng"],
       imgList: [],
