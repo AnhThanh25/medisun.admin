@@ -89,7 +89,7 @@ export const constantRoutes = [
     path: "/yeu-cau-ho-tro",
     component: () => import("@/layouts/full/FullLayout.vue"),
     role: 1,
-    meta: { title: "Yêu cầu hỗ trợ", icon: "mdi-medical-bag" },
+    meta: { title: "Yêu cầu hỗ trợ", icon: "mdi-headphones-settings" },
     children: [
       {
         name: "Yêu cầu hỗ trợ",

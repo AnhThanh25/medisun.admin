@@ -140,6 +140,7 @@ export default {
               title: "Thành công",
               text: "Thêm banner thành công'",
             });
+            this.getBannerLst();
           } else {
             this.isUploading = false;
             notify({

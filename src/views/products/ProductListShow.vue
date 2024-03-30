@@ -32,7 +32,6 @@
             fixed-header
             hover
             hide-default-footer
-            @click:row="rowClicked"
           >
             <template #item.imgList="{ item }">
               <div v-if="item.raw.ImgLst.length === 0">Không có ảnh</div>
@@ -41,6 +40,25 @@
                 :src="item.raw.ImgLst[0].LinkImage + '?' + new Date().getTime()"
                 style="width: 50px; max-height: 50px; object-fit: cover"
               />
+            </template>
+            <template v-slot:item.Action="{ item }">
+              <v-icon
+                color="error"
+                size="small"
+                class="me-2"
+                @click="btShowDel(item.raw)"
+                >mdi-delete
+              </v-icon>
+            </template>
+            <template v-slot:item.Key="{ item }">
+              {{ item.raw.Key }}
+              <v-icon
+                color="primary"
+                size="small"
+                class="me-2"
+                @click="rowClicked(item.raw)"
+                >mdi-pencil
+              </v-icon>
             </template>
           </VDataTable>
         </VCardText>
@@ -57,10 +75,25 @@
   <VDialog v-model="dialogEdit" persistent width="800">
     <ProductInfo :selected-product="selectedProduct" @btClose="btClose" />
   </VDialog>
+  <v-dialog max-width="500" v-model="isShowDel">
+    <v-card title="Xóa sản phẩm">
+      <v-card-text>
+        <div style="margin: 8px">Có chắc bạn muốn xóa sản phẩm này không?</div>
+      </v-card-text>
+
+      <v-card-actions>
+        <v-spacer></v-spacer>
+
+        <v-btn text="Đóng" @click="isShowDel = false" color="more"></v-btn>
+        <v-btn text="Xóa" @click="delProduct" color="success"></v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <notifications />
 </template>
 
 <script scoped>
-import { GetProductLst } from "@/api/productAPI";
+import { GetProductLst, DelProductInfo } from "@/api/productAPI";
 import { debounce } from "lodash";
 import CreateNewProduct from "./CreateNewProduct.vue";
 import ProductInfo from "./ProductInfo.vue";
@@ -94,6 +127,7 @@ export default {
         { key: "Tag", sortable: false, title: "Loại" },
         { key: "Detail", sortable: false, title: "Chi tiết" },
         { key: "Unit", sortable: false, title: "Đơn vị" },
+        { key: "Action", sortable: false, title: "", width: 50 },
       ],
       products: [],
       selectedProduct: null,
@@ -103,6 +137,8 @@ export default {
       isLoading: false,
       totalRows: 0,
       totalPages: 0,
+      isShowDel: false,
+      itemDel: {},
     };
   },
   computed: {
@@ -134,6 +170,25 @@ export default {
     this.debouncedGetProductList = debounce(this.getProductList, 300);
   },
   methods: {
+    delProduct() {
+      DelProductInfo({
+        ProductID: this.itemDel.ProductID,
+      }).then((res) => {
+        if (res.RespCode == 0) {
+          this.isShowDel = false;
+          notify({
+            type: "success",
+            title: "Thành công",
+            text: "Xóa sản phẩm thành công",
+          });
+          this.getProductList();
+        }
+      });
+    },
+    btShowDel(data) {
+      this.isShowDel = true;
+      this.itemDel = data;
+    },
     getProductList() {
       this.isLoading = true;
       GetProductLst({
@@ -153,9 +208,9 @@ export default {
         }
       });
     },
-    rowClicked(event, item) {
+    rowClicked(item) {
       this.dialogEdit = true;
-      this.selectedProduct = item.item.raw;
+      this.selectedProduct = item;
     },
     newProduct() {
       this.dialogAdd = true;
