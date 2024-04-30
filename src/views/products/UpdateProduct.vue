@@ -88,7 +88,6 @@
       <div class="divider col"></div>
 
       <v-btn @click="updatePost" size="small">Lưu bài viết</v-btn>
-   
     </el-form>
 
     <div class="product" ref="content">
@@ -228,7 +227,14 @@ export default {
       this.fileHandle = file;
       this.linkImg = file;
     },
-
+    isJSON(str) {
+      try {
+        JSON.parse(str);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
     getProductInfo() {
       GetProductInfo({
         ProductID: this.$route.params.productID,
@@ -236,7 +242,21 @@ export default {
         console.log("res: ", res);
         if (res.RespCode == 0) {
           this.product = res.Data;
-          this.product.contents = JSON.parse(res.Data.Detail);
+          if (this.isJSON(res.Data.Detail)) {
+            this.product.contents = JSON.parse(res.Data.Detail);
+          } else {
+            this.product.contents = [
+              {
+                title: "",
+                desc: res.Data.Detail,
+              },
+              {
+                title: "",
+                desc: "",
+              },
+            ];
+          }
+
           this.linkImg = this.product.ImgLst[0].LinkImage;
         }
       });
@@ -370,23 +390,36 @@ export default {
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
-.post__subtitle {
-  color: #000;
+.post__title {
   font-size: 1.25rem;
-  margin-top: 1rem;
+  color: #26a9e1;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+.post__subtitle {
+  white-space: pre-wrap;
+  font-size: 0.875rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.7;
+  font-family: Roboto, sans-serif;
+  padding-left: 16px;
+}
+.post__tag {
+  border: 1px solid #26a9e1;
+  padding: 4px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  background: #26a9e1;
+  color: #fff;
+  margin-bottom: 8px;
 }
 .product-content__title {
   margin-top: 0rem;
   padding-top: 0rem;
-}
-.post__type {
-  background: #e6e6e6;
-  border-radius: 50px;
-  padding: 6px 10px;
-  color: #00573e;
-  margin-top: -8px;
-  margin-bottom: 8px;
-  font-size: 12px;
+  font-size: 1.1rem;
 }
 </style>
 <style lang="scss">
