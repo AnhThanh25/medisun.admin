@@ -8,6 +8,14 @@ export function GetProductLst(data) {
   });
 }
 
+export function GetProductInfo(data) {
+  return request({
+    url: "Product/GetProductInfo",
+    method: "post",
+    data: data,
+  });
+}
+
 export function UpdateProductInfo(data) {
   return request({
     url: "Product/UpdateProductInfo",

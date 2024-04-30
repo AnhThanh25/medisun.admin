@@ -125,7 +125,7 @@ export default {
         { key: "imgList", sortable: false, title: "Ảnh SP" },
         { key: "Description", sortable: false, title: "Mô tả" },
         { key: "Tag", sortable: false, title: "Loại" },
-        { key: "Detail", sortable: false, title: "Chi tiết" },
+        // { key: "Detail", sortable: false, title: "Chi tiết" },
         { key: "Unit", sortable: false, title: "Đơn vị" },
         { key: "Action", sortable: false, title: "", width: 50 },
       ],
@@ -209,11 +209,15 @@ export default {
       });
     },
     rowClicked(item) {
-      this.dialogEdit = true;
+      // this.dialogEdit = true;
       this.selectedProduct = item;
+      this.$router.push(
+        "/san-pham/chi-tiet-san-pham/" + this.selectedProduct.ProductID
+      );
     },
     newProduct() {
-      this.dialogAdd = true;
+      // this.dialogAdd = true;
+      this.$router.push("/san-pham/tao-san-pham");
     },
     btClose() {
       this.dialogAdd = false;
