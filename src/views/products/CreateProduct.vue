@@ -73,7 +73,7 @@
           class="mb-2"
         ></v-text-field>
         <editor
-          api-key="331t07qwrrzbdipl2nyx7zd9qylllabwvcbip5wciosie5bj"
+          api-key="6w0abawgyowzfiuqw8k55c3k1nnkmg6evr9u8219zn2kf9ob"
           v-model="content.desc"
           :init="editorConfig"
           style="z-index: 1000000"
