@@ -15,46 +15,46 @@ export const constantRoutes = [
     meta: { title: "Danh sách bài viết", icon: "mdi-home-import-outline" },
     hidden: true,
   },
-  // {
-  //   path: "/danh-sach-bai-viet",
+  {
+    path: "/danh-sach-bai-viet",
 
-  //   component: () => import("@/layouts/full/FullLayout.vue"),
-  //   role: 1,
-  //   meta: { title: "Danh sách bài viết", icon: "mdi-clipboard-list" },
-  //   children: [
-  //     {
-  //       name: "Danh sách bài viết",
-  //       path: "/danh-sach-bai-viet",
-  //       component: () => import("@/views/post/index.vue"),
-  //       meta: { title: "Danh sách bài viết", icon: "mdi-home-import-outline" },
-  //       role: 1,
-  //     },
-  //   ],
-  // },
+    component: () => import("@/layouts/full/FullLayout.vue"),
+    role: 1,
+    meta: { title: "Danh sách bài viết", icon: "mdi-clipboard-list" },
+    children: [
+      {
+        name: "Danh sách bài viết",
+        path: "/danh-sach-bai-viet",
+        component: () => import("@/views/post/index.vue"),
+        meta: { title: "Danh sách bài viết", icon: "mdi-home-import-outline" },
+        role: 1,
+      },
+    ],
+  },
 
-  // {
-  //   path: "/tao-bai-viet",
-  //   component: () => import("@/layouts/full/FullLayout.vue"),
-  //   role: 1,
-  //   meta: { title: "Tạo bài viết", icon: "mdi-file-edit" },
-  //   children: [
-  //     {
-  //       name: "Tạo bài viết",
-  //       path: "/tao-bai-viet",
-  //       component: () => import("@/views/post/CreatePost.vue"),
-  //       meta: { title: "Tạo bài viết", icon: "mdi-document-edit" },
-  //       role: 1,
-  //     },
-  //     {
-  //       name: "Chi tiết bài viết",
-  //       path: "/bai-viet/:tab",
-  //       component: () => import("@/views/post/UpdatePost.vue"),
-  //       meta: { title: "Tạo bài viết", icon: "mdi-document-edit" },
-  //       role: 1,
-  //       hidden:true
-  //     },
-  //   ],
-  // },
+  {
+    path: "/tao-bai-viet",
+    component: () => import("@/layouts/full/FullLayout.vue"),
+    role: 1,
+    meta: { title: "Tạo bài viết", icon: "mdi-file-edit" },
+    children: [
+      {
+        name: "Tạo bài viết",
+        path: "/tao-bai-viet",
+        component: () => import("@/views/post/CreatePost.vue"),
+        meta: { title: "Tạo bài viết", icon: "mdi-document-edit" },
+        role: 1,
+      },
+      {
+        name: "Chi tiết bài viết",
+        path: "/bai-viet/:tab",
+        component: () => import("@/views/post/UpdatePost.vue"),
+        meta: { title: "Tạo bài viết", icon: "mdi-document-edit" },
+        role: 1,
+        hidden:true
+      },
+    ],
+  },
   {
     path: "/san-pham",
     component: () => import("@/layouts/full/FullLayout.vue"),
@@ -69,7 +69,7 @@ export const constantRoutes = [
         role: 1,
       },
       {
-        name: "Tạo bài viết",
+        name: "Tạo sản phẩm",
         path: "/san-pham/tao-san-pham",
         component: () => import("@/views/products/CreateProduct.vue"),
         meta: { title: "Tạo bài viết", icon: "mdi-document-edit" },
@@ -77,7 +77,7 @@ export const constantRoutes = [
         hidden: true
       },
       {
-        name: "Chi tiết bài viết",
+        name: "Chi tiết sản phẩm",
         path: "/san-pham/chi-tiet-san-pham/:productID",
         component: () => import("@/views/products/UpdateProduct.vue"),
         meta: { title: "Tạo bài viết", icon: "mdi-document-edit" },
