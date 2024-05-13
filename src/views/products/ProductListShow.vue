@@ -60,6 +60,17 @@
                 >mdi-pencil
               </v-icon>
             </template>
+            <template #bottom>
+              <div class="text-center pt-2">
+                <TablePaginationDefault
+                  v-model:pageCount="pageCount"
+                  v-model:totalItems="totalRows"
+                  v-model:itemsPerPage="itemsPerPage"
+                  v-model:page="page"
+                  label="sản phẩm"
+                />
+              </div>
+            </template>
           </VDataTable>
         </VCardText>
       </VCard>
@@ -97,9 +108,10 @@ import { GetProductLst, DelProductInfo } from "@/api/productAPI";
 import { debounce } from "lodash";
 import CreateNewProduct from "./CreateNewProduct.vue";
 import ProductInfo from "./ProductInfo.vue";
+import TablePaginationDefault from "@/components/TablePaginationDefault.vue";
 
 export default {
-  components: { CreateNewProduct, ProductInfo },
+  components: { CreateNewProduct, ProductInfo, TablePaginationDefault },
 
   data() {
     return {
@@ -199,9 +211,10 @@ export default {
         this.isLoading = false;
         if (res.RespCode == 0) {
           this.products = res.Data.map((item, index) => {
+            var a = (this.page - 1)* this.itemsPerPage
             return {
               ...item,
-              Key: index + 1,
+              Key: index + 1 + a,
             };
           });
           this.totalRows = res.TotalRows;

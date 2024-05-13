@@ -20,7 +20,7 @@
     @dragleave="dragLeaveHandler"
   >
     <h4 class="drag__title">Drag & Drop ảnh ở đây</h4>
-    <p class="drag__subtitle">Ảnh có kích thước 1024px 796px, nhỏ hơn 500KB.</p>
+    <p class="drag__subtitle">Ảnh có kích thước 1024px 796px, nhỏ hơn 1000KB.</p>
     <p class="drag__subtitle">Hỗ trợ file: JPEG, JPG, PNG.</p>
     <p class="drag__or">Hoặc</p>
     <input
@@ -85,7 +85,7 @@ export default {
   },
   methods: {
     onSelectFile(event) {
-      let maxSize = 500 * 1024;
+      let maxSize = 1000 * 1024;
       let widthImage = 1024;
       let heightImage = 796;
       let files = event.target.files;
