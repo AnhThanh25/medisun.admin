@@ -128,7 +128,7 @@ export default {
       formData.append("image", this.fileHandle);
       axios
         .post(
-          `http://202.191.56.71/MediAPI/File/UploadImageBanner?UserName=${this.username}&Token=${this.token}&StoreCode=${this.storeCode}`,
+          `https://medisungroup.vn/api/File/UploadImageBanner?UserName=${this.username}&Token=${this.token}&StoreCode=${this.storeCode}`,
           formData
         )
         .then((res) => {

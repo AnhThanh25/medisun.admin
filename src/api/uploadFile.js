@@ -12,7 +12,7 @@ const token = getToken();
 const storeCode = getStoreCode();
 
 export function uploadImage(productId, image) {
-  var url = `http://202.191.56.71/MediAPI/File/UploadImageProduct?UserName=${userName}&Token=${token}&StoreCode=${storeCode}&ProductID=${productId}&TypeImg=1`;
+  var url = `https://medisungroup.vn/api/File/UploadImageProduct?UserName=${userName}&Token=${token}&StoreCode=${storeCode}&ProductID=${productId}&TypeImg=1`;
   const formData = new FormData();
   formData.append("image", image);
   const error = ref(null);

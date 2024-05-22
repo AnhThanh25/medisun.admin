@@ -134,7 +134,7 @@ export default {
       toolbar:
         "fullscreen | undo redo | styleselect |  bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent | emoticons image media  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap  | fullscreen  preview save print | insertfile template link anchor codesample | ltr rtl",
       images_upload_url:
-        "http://202.191.56.71/MediAPI/File/UploadImageDes?UserName=" +
+        "https://medisungroup.vn/api/File/UploadImageDes?UserName=" +
         username +
         "&Token=" +
         token,
@@ -245,7 +245,7 @@ export default {
     //   formData.append("image", this.fileHandle);
     //   axios
     //     .post(
-    //       `http://202.191.56.71/MediAPI/File/UploadImagePost?UserName=${this.username}&Token=${this.token}&StoreCode=${this.storeCode}&PostID=${postID}`,
+    //       `https://medisungroup.vn/api/File/UploadImagePost?UserName=${this.username}&Token=${this.token}&StoreCode=${this.storeCode}&PostID=${postID}`,
     //       formData
     //     )
     //     .then((response) => {})
