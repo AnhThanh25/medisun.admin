@@ -20,6 +20,19 @@
         class="mb-2"
         hide-details
         label="Phân loại"
+        item-title="Attribute"
+        item-value="Attribute"
+      />
+      <VSelect
+        v-model="product.Tag2"
+        :items="tagLst2"
+        density="compact"
+        clearable
+        class="mb-2"
+        hide-details
+        label="Phân loại 2"
+        item-title="Value"
+        item-value="Value"
       />
       <VSelect
         v-model="product.ProductType"
@@ -121,7 +134,7 @@ import Editor from "@tinymce/tinymce-vue";
 import { getUserName, getToken, getStoreCode } from "@/utils/auth";
 import { UpdateProductInfo, GetProductInfo } from "@/api/productAPI";
 import { uploadImage } from "@/api/uploadFile";
-
+import { DTPGetValue } from "@/api/default";
 export default {
   components: { DragAndDropImage, Editor },
   setup() {
@@ -147,19 +160,8 @@ export default {
   data() {
     return {
       fileHandle: null,
-      tagLst: [
-        "Máy siêu âm",
-        "XQ+CT+MRI",
-        "Nội soi tai mũi họng",
-        "Nội soi tiêu hóa",
-        "Xét nghiệm sinh hóa",
-        "Xét nghiệm huyết học",
-        "Xét nghiệm nước tiểu",
-        "Xét nghiệm miễn dịch",
-        "Điện giải",
-        "Điện tim",
-        "Điện não đồ",
-      ],
+      tagLst: [],
+      tagLst2: [],
       product: {
         contents: [
           {
@@ -172,9 +174,24 @@ export default {
           },
         ],
       },
+      productTypeLst: ["Public", "Private"],
     };
   },
+  watch: {
+    "product.Tag"(value) {
+      this.tagLst2 = this.tagLst.find((p) => p.Attribute == value).Options;
+    },
+  },
   methods: {
+    getValue() {
+      DTPGetValue({
+        Table: "TypeProduct",
+      }).then((res) => {
+        if (res.RespCode == 0) {
+          this.tagLst = res.Data;
+        }
+      });
+    },
     addNewContent() {
       this.product.contents.push({
         title: "",
@@ -239,7 +256,6 @@ export default {
       GetProductInfo({
         ProductID: this.$route.params.productID,
       }).then((res) => {
-        console.log("res: ", res);
         if (res.RespCode == 0) {
           this.product = res.Data;
           if (this.isJSON(res.Data.Detail)) {
@@ -263,6 +279,7 @@ export default {
     },
   },
   created() {
+    this.getValue();
     this.getProductInfo();
   },
 };

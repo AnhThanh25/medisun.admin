@@ -20,6 +20,19 @@
         class="mb-2"
         hide-details
         label="Phân loại"
+        item-title="Attribute"
+        item-value="Attribute"
+      />
+      <VSelect
+        v-model="product.Tag2"
+        :items="tagLst2"
+        density="compact"
+        clearable
+        class="mb-2"
+        hide-details
+        label="Phân loại 2"
+        item-title="Value"
+        item-value="Value"
       />
       <VSelect
         v-model="product.ProductType"
@@ -121,6 +134,8 @@ import { UpdateProductInfo } from "@/api/productAPI";
 import Editor from "@tinymce/tinymce-vue";
 import { uploadImage } from "@/api/uploadFile";
 import { getUserName, getToken, getStoreCode } from "@/utils/auth";
+import { DTPGetValue } from "@/api/default";
+
 export default {
   components: { DragAndDropImage, Editor },
   setup() {
@@ -146,19 +161,8 @@ export default {
   data() {
     return {
       fileHandle: null,
-      tagLst: [
-        "Máy siêu âm",
-        "XQ+CT+MRI",
-        "Nội soi tai mũi họng",
-        "Nội soi tiêu hóa",
-        "Xét nghiệm sinh hóa",
-        "Xét nghiệm huyết học",
-        "Xét nghiệm nước tiểu",
-        "Xét nghiệm miễn dịch",
-        "Điện giải",
-        "Điện tim",
-        "Điện não đồ",
-      ],
+      tagLst: [],
+      tagLst2: [],
       productTypeLst: ["Public", "Private"],
       unitLst: ["Cái", "Hộp", "Túi", "Thùng"],
       product: {
@@ -175,7 +179,21 @@ export default {
       },
     };
   },
+  watch: {
+    "product.Tag"(value) {
+      this.tagLst2 = this.tagLst.find((p) => p.Attribute == value).Options;
+    },
+  },
   methods: {
+    getValue() {
+      DTPGetValue({
+        Table: "TypeProduct",
+      }).then((res) => {
+        if (res.RespCode == 0) {
+          this.tagLst = res.Data;
+        }
+      });
+    },
     addNewContent() {
       this.product.contents.push({
         title: "",
@@ -192,20 +210,8 @@ export default {
     deleteContent(content, index) {
       this.product.contents.splice(index, 1);
     },
-    // generatePostInfo() {
-    //   const desc = this.product.contents;
 
-    //   const postInfo = {
-    //     Title: this.product.Title,
-    //     SubTitle: this.product.SubTitle,
-    //     Type: this.product.Type,
-    //     Description: desc,
-    //   };
-    //   return postInfo;
-    // },
     createProduct() {
-      // const postInfo = this.generatePostInfo();
-      // postInfo.Description = JSON.stringify(postInfo.Description);
       UpdateProductInfo({
         Data: {
           ...this.product,
@@ -239,23 +245,9 @@ export default {
       this.fileHandle = file;
       this.linkImg = file;
     },
-
-    // uploadImg(postID) {
-    //   const formData = new FormData();
-    //   formData.append("image", this.fileHandle);
-    //   axios
-    //     .post(
-    //       `https://medisungroup.vn/api/File/UploadImagePost?UserName=${this.username}&Token=${this.token}&StoreCode=${this.storeCode}&PostID=${postID}`,
-    //       formData
-    //     )
-    //     .then((response) => {})
-    //     .catch((error) => {
-    //       console.error("Error uploading image:", error);
-    //     });
-    // },
   },
   created() {
-    // this.getTypeNew();
+    this.getValue();
   },
 };
 </script>

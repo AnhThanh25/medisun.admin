@@ -64,3 +64,13 @@ export function DelDefaultValue(data) {
   });
 }
 
+
+export function DTPGetValue(data) {
+  return request({
+    url: "Default/DTPGetValue",
+    method: "post",
+    data: data,
+  });
+}
+
+
