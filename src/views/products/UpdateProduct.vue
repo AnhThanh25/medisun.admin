@@ -205,11 +205,9 @@ export default {
       }
       return "Không được để trống";
     },
-
     deleteContent(content, index) {
       this.product.contents.splice(index, 1);
     },
-
     updatePost() {
       UpdateProductInfo({
         Data: {
@@ -239,7 +237,6 @@ export default {
         }
       });
     },
-
     onImageChange(file) {
       console.log("ảnh thay đổi");
       this.fileHandle = file;
