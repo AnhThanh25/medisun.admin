@@ -164,7 +164,7 @@ export default {
       tagLst: [],
       tagLst2: [],
       productTypeLst: ["Public", "Private"],
-      unitLst: ["Cái", "Hộp", "Túi", "Thùng"],
+      unitLst: ["Cái", "Hộp", "Máy", "Test"],
       product: {
         contents: [
           {

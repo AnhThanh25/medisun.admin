@@ -175,6 +175,7 @@ export default {
         ],
       },
       productTypeLst: ["Public", "Private"],
+      unitLst: ["Cái", "Hộp", "Máy", "Test"],
     };
   },
   watch: {
