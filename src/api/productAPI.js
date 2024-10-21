@@ -31,3 +31,12 @@ export function DelProductInfo(data) {
     data: data,
   });
 }
+
+export function DelImageProduct(data) {
+  return request({
+    url: "Product/DelImageProduct",
+    method: "post",
+    data: data,
+  });
+}
+

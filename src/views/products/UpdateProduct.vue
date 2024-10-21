@@ -1,6 +1,6 @@
 <template>
   <div class="container-product">
-    <el-form class="create-product" ref="postRef" :model="product">
+    <div class="create-product" ref="postRef" :model="product">
       <h2 style="margin-top: -12px">Chi tiết sản phẩm</h2>
 
       <v-text-field
@@ -56,12 +56,35 @@
         hide-details
       ></v-textarea>
 
-      <p class="create-post__title">Ảnh bài viết</p>
+      <!-- <p class="create-post__title">Ảnh bài viết</p>
       <drag-and-drop-image
         :fileImg="this.linkImg"
         @onChange="onImageChange"
-      ></drag-and-drop-image>
-
+      ></drag-and-drop-image> -->
+      <v-file-input
+        :rules="rules"
+        accept="image/png, image/jpeg, image/bmp"
+        label="Hình ảnh"
+        placeholder="Chọn ảnh hồ sơ"
+        prepend-inner-icon="mdi-camera"
+        prepend-icon=""
+        class="mt-2"
+        multiple
+        chips
+        v-model="product.RecordLst"
+        @change="btPreviewImage(product)"
+      ></v-file-input>
+      <div style="display: flex; margin: 0 -4px">
+        <div v-for="image in product.ImgLst" :key="image" class="imgPreview">
+          <img :src="image.LinkImage" />
+          <v-icon
+            v-if="image.LinkImage.length > 80"
+            @click="btDelImage(image)"
+            class="icon-close"
+            >mdi-close</v-icon
+          >
+        </div>
+      </div>
       <div class="divider col"></div>
       <div>Mô tả chi tiết</div>
 
@@ -101,7 +124,7 @@
       <div class="divider col"></div>
 
       <v-btn @click="updatePost" size="small">Lưu bài viết</v-btn>
-    </el-form>
+    </div>
 
     <div class="product" ref="content">
       <h2 class="header">Xem trước</h2>
@@ -132,7 +155,11 @@
 import DragAndDropImage from "@/components/DragAndDropImage.vue";
 import Editor from "@tinymce/tinymce-vue";
 import { getUserName, getToken, getStoreCode } from "@/utils/auth";
-import { UpdateProductInfo, GetProductInfo } from "@/api/productAPI";
+import {
+  UpdateProductInfo,
+  GetProductInfo,
+  DelImageProduct,
+} from "@/api/productAPI";
 import { uploadImage } from "@/api/uploadFile";
 import { DTPGetValue } from "@/api/default";
 export default {
@@ -159,6 +186,16 @@ export default {
   },
   data() {
     return {
+      rules: [
+        (value) => {
+          return (
+            !value ||
+            !value.length ||
+            value[0].size < 2000000 ||
+            "Avatar size should be less than 2 MB!"
+          );
+        },
+      ],
       fileHandle: null,
       tagLst: [],
       tagLst2: [],
@@ -180,10 +217,36 @@ export default {
   },
   watch: {
     "product.Tag"(value) {
-      this.tagLst2 = this.tagLst.find((p) => p.Attribute == value).Options;
+      var item = this.tagLst.find((p) => p.Attribute == value);
+      console.log("item", item);
+      if (item) {
+        this.tagLst2 = item.Options;
+      }
     },
   },
   methods: {
+    btPreviewImage(data) {
+      data.ImgLst = data.ImgLst.filter((p) => p.LinkImage.length > 80);
+      for (let index = 0; index < data.RecordLst.length; index++) {
+        const element = data.RecordLst[index];
+        // console.log(URL.createObjectURL(element))
+        data.ImgLst.push({ LinkImage: URL.createObjectURL(element) });
+      }
+    },
+    btDelImage(image) {
+      DelImageProduct({
+        RowID: image.RowID,
+      }).then((res) => {
+        if (res.RespCode == 0) {
+          this.getProductInfo();
+          notify({
+            type: "success",
+            title: "Thành công",
+            text: "Xóa ảnh thành công",
+          });
+        }
+      });
+    },
     getValue() {
       DTPGetValue({
         Table: "TypeProduct",
@@ -220,14 +283,25 @@ export default {
         },
       }).then((res) => {
         if (res.RespCode == 0) {
-          uploadImage(res.ProductID, this.fileHandle);
+          // uploadImage(res.ProductID, this.fileHandle);
+          for (let index = 0; index < this.product.RecordLst.length; index++) {
+            const element = this.product.RecordLst[index];
+            this.uploadImageWithDelay(
+              this.product.ProductID,
+              element,
+              index * 100
+            );
+          }
+          setTimeout(() => {
+            notify({
+              type: "success",
+              title: "Thành công",
+              text: "Cập nhật bài viết thành công",
+            });
+            this.getProductInfo();
+          }, this.product.RecordLst.length * 100);
 
-          notify({
-            type: "success",
-            title: "Thành công",
-            text: "Cập nhật bài viết thành công",
-          });
-          this.product = {};
+          // this.product = {};
         } else {
           notify({
             type: "error",
@@ -236,6 +310,11 @@ export default {
           });
         }
       });
+    },
+    uploadImageWithDelay(productID, image, delay) {
+      setTimeout(() => {
+        uploadImage(productID, image);
+      }, delay);
     },
     onImageChange(file) {
       console.log("ảnh thay đổi");
@@ -435,6 +514,44 @@ export default {
   margin-top: 0rem;
   padding-top: 0rem;
   font-size: 1.1rem;
+}
+.imgPreview {
+  border: 1px solid #20438e;
+  border-radius: 8px;
+  margin: 4px;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+    text-align: center;
+    object-fit: contain;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .icon-close {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    color: red;
+    font-size: 16px;
+    background: rgba(255, 0, 0, 0.15);
+    border-radius: 50%;
+    // padding: 2px;
+    padding-bottom: 2px;
+    padding-right: 2px;
+    display: none;
+    cursor: pointer;
+  }
+  &:hover {
+    .icon-close {
+      display: block;
+    }
+  }
 }
 </style>
 <style lang="scss">
